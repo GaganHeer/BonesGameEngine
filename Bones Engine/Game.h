@@ -25,6 +25,7 @@ private:
 	void ProcessInput();
 	void UpdateGame();
 	void GenerateOutput();
+	bool LoadShaders();
 	void LoadData();
 	void UnloadData();
 
@@ -34,7 +35,7 @@ private:
 	std::vector<class Actor*> pendingActors;
 
 	SDL_Window* window;
-	SDL_Renderer* renderer;
+	SDL_GLContext context;
 	Uint32 ticksCount;
 	bool isRunning;
 	bool updatingActors;

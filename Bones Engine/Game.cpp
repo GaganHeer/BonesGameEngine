@@ -2,10 +2,11 @@
 #include <algorithm>
 #include "SDL_image.h"
 #include "Actor.h"
+#include <GL/glew.h>
 
 Game::Game()
 	:window(nullptr),
-	renderer(nullptr),
+	context(nullptr),
 	ticksCount(0),
 	isRunning(true),
 	updatingActors(false)
@@ -19,13 +20,35 @@ bool Game::Initialize() {
 		return false;
 	}
 
+	//Use OpenGL Core
+	SDL_GL_SetAttribute(
+		SDL_GL_CONTEXT_PROFILE_MASK,
+		SDL_GL_CONTEXT_PROFILE_CORE
+	);
+
+	//OpenGL v3.3
+	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
+	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 3);
+
+	//Colour buffer
+	SDL_GL_SetAttribute(SDL_GL_RED_SIZE, 8);
+	SDL_GL_SetAttribute(SDL_GL_GREEN_SIZE, 8);
+	SDL_GL_SetAttribute(SDL_GL_BLUE_SIZE, 8);
+	SDL_GL_SetAttribute(SDL_GL_ALPHA_SIZE, 8);
+
+	//Double buffering
+	SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
+	
+	//Force OpenGL to use hardware acceleration
+	SDL_GL_SetAttribute(SDL_GL_ACCELERATED_VISUAL, 1);
+
 	window = SDL_CreateWindow(
 		"Bones Engine",	//Window Title
 		100,			//Top left x-coordinates of window
 		100,			//Top left y-coordinates of window
 		1024,			//Width of window
 		768,			//Height of window
-		0				//Flags
+		SDL_WINDOW_OPENGL				//Flags
 	);
 
 	if (!window) {
@@ -33,16 +56,25 @@ bool Game::Initialize() {
 		return false;
 	}
 
-	renderer = SDL_CreateRenderer(
-		window,
-		-1,
-		SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC
-	);
+	context = SDL_GL_CreateContext(window);
 
-	if (!renderer) {
-		SDL_Log("Failed to create renderer: %s", SDL_GetError());
+	glewExperimental = GL_TRUE;
+	if (glewInit() != GLEW_OK) {
+		SDL_Log("Failed to initialize GLEW.");
 		return false;
 	}
+	
+	glGetError();
+
+	if (!LoadShaders()) {
+		SDL_Log("Failed to load shaders");
+		return false;
+	}
+
+	glClearColor(0.75f, .25f, .25f, 1.0f);
+	glClear(GL_COLOR_BUFFER_BIT);
+
+	SDL_GL_SwapWindow(window);
 
 	LoadData();
 
@@ -119,17 +151,24 @@ void Game::UpdateGame() {
 }
 
 void Game::GenerateOutput() {
-	SDL_SetRenderDrawColor(
-		renderer,
-		100,
-		100,
-		100,
-		255
-	);
+	glClearColor(0.75f, 0.25f, 0.25f, 1.0f);
+	glClear(GL_COLOR_BUFFER_BIT);
 
-	SDL_RenderClear(renderer);
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-	SDL_RenderPresent(renderer);
+	SDL_GL_SwapWindow(window);
+}
+
+bool Game::LoadShaders() {
+	float width = 1024.0f;
+	float height = 768.0f;
+	Eigen::Matrix4f viewProj;
+	viewProj << 2.0f / width, 0.0f, 0.0f, 0.0f,
+				0.0f, 2.0f / height, 0.0f, 0.0f,
+				0.0f, 0.0f, 1.0f, 0.0f,
+				0.0f, 0.0f, 1.0f, 1.0f;
+	return true;
 }
 
 void Game::LoadData() {
@@ -147,7 +186,7 @@ void Game::UnloadData() {
 	textures.clear();
 }
 
-SDL_Texture* Game::GetTexture(const std::string& fileName) {
+/*SDL_Texture* Game::GetTexture(const std::string& fileName) {
 	SDL_Texture* tex = nullptr;
 
 	auto iter = textures.find(fileName);
@@ -171,7 +210,7 @@ SDL_Texture* Game::GetTexture(const std::string& fileName) {
 		textures.emplace(fileName.c_str(), tex);
 	}
 	return tex;
-}
+} */
 
 void Game::AddActor(Actor* actor) {
 	if (updatingActors) {
@@ -199,7 +238,7 @@ void Game::RemoveActor(Actor* actor) {
 void Game::Shutdown() {
 	UnloadData();
 	IMG_Quit();
-	SDL_DestroyRenderer(renderer);
+	SDL_GL_DeleteContext(context);
 	SDL_DestroyWindow(window);
 	SDL_Quit();
 }
