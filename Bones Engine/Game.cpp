@@ -3,6 +3,7 @@
 #include "SDL_image.h"
 #include "Actor.h"
 #include <GL/glew.h>
+#include "Texture.h"
 
 Game::Game()
 	:window(nullptr),
@@ -180,10 +181,19 @@ void Game::UnloadData() {
 		delete actors.back();
 	}
 
-	for (auto i : textures) {
+	/*	for (auto i : textures) {
 		SDL_DestroyTexture(i.second);
 	}
 	textures.clear();
+	*/
+	// Destroy textures
+	for (auto i : textures)
+	{
+		i.second->Unload();
+		delete i.second;
+	}
+	textures.clear();
+
 }
 
 /*SDL_Texture* Game::GetTexture(const std::string& fileName) {
@@ -235,10 +245,59 @@ void Game::RemoveActor(Actor* actor) {
 	}
 }
 
+void Game::AddSprite(SpriteComponent* sprite)
+{
+	// Find the insertion point in the sorted vector
+	// (The first element with a higher draw order than me)
+	int myDrawOrder = sprite->GetDrawOrder();
+	auto iter = mSprites.begin();
+	for (;
+		iter != mSprites.end();
+		++iter)
+	{
+		if (myDrawOrder < (*iter)->GetDrawOrder())
+		{
+			break;
+		}
+	}
+
+	// Inserts element before position of iterator
+	mSprites.insert(iter, sprite);
+}
+
+void Game::RemoveSprite(SpriteComponent* sprite)
+{
+	auto iter = std::find(mSprites.begin(), mSprites.end(), sprite);
+	mSprites.erase(iter);
+}
 void Game::Shutdown() {
 	UnloadData();
 	IMG_Quit();
 	SDL_GL_DeleteContext(context);
 	SDL_DestroyWindow(window);
 	SDL_Quit();
+}
+
+Texture* Game::GetTexture(const std::string& fileName)
+{
+	Texture* tex = nullptr;
+	auto iter = textures.find(fileName);
+	if (iter != textures.end())
+	{
+		tex = iter->second;
+	}
+	else
+	{
+		tex = new Texture();
+		if (tex->Load(fileName))
+		{
+			textures.emplace(fileName, tex);
+		}
+		else
+		{
+			delete tex;
+			tex = nullptr;
+		}
+	}
+	return tex;
 }

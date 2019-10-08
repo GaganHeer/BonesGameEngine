@@ -2,6 +2,7 @@
 #include "Component.h"
 #include "Game.h"
 #include <algorithm>
+#include "Math.h"
 
 Actor::Actor(Game* game) :
 	state(Active),
@@ -55,5 +56,34 @@ void Actor::RemoveComponent(Component* component) {
 	auto iter = std::find(components.begin(), components.end(), component);
 	if (iter != components.end()) {
 		components.erase(iter);
+	}
+}
+
+void Actor::ComputeWorldTransform()
+{
+	if (recomputeWorldTransform)
+	{
+		recomputeWorldTransform = false;
+
+		// Scale, then rotate, then translate
+		worldTransform = Math::CreateScale4f(scale, scale, 1.0f);
+		worldTransform *= Math::CreateRotationZ4f(rotation);
+		//Going to change this to Vector3 later / use Math.h
+		Eigen::Matrix4f retVal;
+		retVal << 1.0f, 0.0f, 0.0f, 0.0f,
+			0.0f, 1.0f, 0.0f, 0.0f,
+			0.0f, 0.0f, 1.0f, 0.0f,
+			position[0], position[1], 1.0f, 1.0f;
+		worldTransform *= retVal;
+
+		//Eigen::Vector3f temp = { position.x, position.y, 1.0f };
+
+		//worldTransform *= Math::CreateTranslation4f(position);
+
+		// Inform components world transform updated
+		for (auto comp : components)
+		{
+			comp->OnUpdateWorldTransform();
+		}
 	}
 }
