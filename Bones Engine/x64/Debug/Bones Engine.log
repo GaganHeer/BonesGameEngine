@@ -1,7 +1,9 @@
 ﻿  Actor.cpp
+  Component.cpp
   Game.cpp
   main.cpp
+  Math.cpp
   Shader.cpp
   Vertex.cpp
   Generating Code...
-  Bones Engine.vcxproj -> C:\Users\a00952521\Desktop\bones\Bones-Engine\x64\Debug\Bones Engine.exe
+  Bones Engine.vcxproj -> C:\Users\Jason\Downloads\Bones-Engine-develop\Bones\Bones-Engine\x64\Debug\Bones Engine.exe
