@@ -19,6 +19,9 @@ public:
 	void UpdateComponents(float deltaTime);
 	virtual void UpdateActor(float deltaTime);
 
+	void ProcessInput(const uint8_t* keyState);
+	virtual void ActorInput(const uint8_t* keyState);
+
 	const Eigen::Vector2f& GetPosition() const {
 		return this->position;
 	}
@@ -55,14 +58,20 @@ public:
 		return this->game;
 	}
 
+	void ComputeWorldTransform();
+	const Eigen::Matrix4f& GetWorldTransform() const { return worldTransform; }
+
 	void AddComponent(class Component* component);
 	void RemoveComponent(class Component* component);
 
 private:
 	State state;
+
+	Eigen::Matrix4f worldTransform;
 	Eigen::Vector2f position;
 	float scale;
 	float rotation;
+	bool recomputeWorldTransform;
 
 	std::vector<class Component*> components;
 	class Game* game;

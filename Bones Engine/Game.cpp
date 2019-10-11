@@ -1,11 +1,9 @@
 #include "Game.h"
-#include <algorithm>
-#include "SDL_image.h"
-#include "Actor.h"
-#include <GL/glew.h>
+
 
 Game::Game()
 	:window(nullptr),
+	spriteShader(nullptr),
 	context(nullptr),
 	ticksCount(0),
 	isRunning(true),
@@ -76,6 +74,9 @@ bool Game::Initialize() {
 
 	SDL_GL_SwapWindow(window);
 
+	//2D
+	//CreateSpriteVerts();
+	
 	LoadData();
 
 	ticksCount = SDL_GetTicks();
@@ -101,10 +102,34 @@ void Game::ProcessInput() {
 		}
 	}
 
+	const Uint8* keyState = SDL_GetKeyboardState(NULL);
+	if (keyState[SDL_SCANCODE_ESCAPE]) {
+		isRunning = false;
+	}
+
+	updatingActors = true;
+	for (auto actor : actors) {
+		actor->ProcessInput(keyState);
+	}
+	updatingActors = false;
+
+	/*
+	SDL_Event event;
+	while (SDL_PollEvent(&event)) {
+		switch (event.type) {
+		case SDL_QUIT:
+			isRunning = false;
+			break;
+		}
+	}
+
 	const Uint8* state = SDL_GetKeyboardState(NULL);
 	if (state[SDL_SCANCODE_ESCAPE]) {
 		isRunning = false;
 	}
+	*/
+	
+
 }
 
 void Game::UpdateGame() {
@@ -158,16 +183,37 @@ void Game::GenerateOutput() {
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 	SDL_GL_SwapWindow(window);
+
+
+	// For 2D Rendering
+
+	// Draw all sprite components and shader
+	/*
+	spriteShader->SetActive();
+	spriteVerts->SetActive();
+	for (auto sprite : mSprites)
+	{
+		sprite->Draw(spriteShader);
+	}
+	SDL_GL_SwapWindow(window);
+	*/
+	
 }
 
 bool Game::LoadShaders() {
-	float width = 1024.0f;
-	float height = 768.0f;
+	/*
+	spriteShader = new Shader();
+	if (!spriteShader->Load("Shaders/Shader.vert", "Shaders/Shader.frag")) {
+		return false;
+	}
+	*/
+
+	//spriteShader->SetActive();
+
 	Eigen::Matrix4f viewProj;
-	viewProj << 2.0f / width, 0.0f, 0.0f, 0.0f,
-				0.0f, 2.0f / height, 0.0f, 0.0f,
-				0.0f, 0.0f, 1.0f, 0.0f,
-				0.0f, 0.0f, 1.0f, 1.0f;
+	viewProj = Math::CreateSimpleViewProj4f(1024.0f, 768.0f);
+
+	//spriteShader->SetMatrixUniform("uViewProj", viewProj);
 	return true;
 }
 
@@ -180,10 +226,19 @@ void Game::UnloadData() {
 		delete actors.back();
 	}
 
-	for (auto i : textures) {
+	/*	for (auto i : textures) {
 		SDL_DestroyTexture(i.second);
 	}
 	textures.clear();
+	*/
+	// Destroy textures
+	for (auto i : textures)
+	{
+		i.second->Unload();
+		delete i.second;
+	}
+	textures.clear();
+
 }
 
 /*SDL_Texture* Game::GetTexture(const std::string& fileName) {
@@ -212,6 +267,30 @@ void Game::UnloadData() {
 	return tex;
 } */
 
+Texture* Game::GetTexture(const std::string& fileName)
+{
+	Texture* tex = nullptr;
+	auto iter = textures.find(fileName);
+	if (iter != textures.end())
+	{
+		tex = iter->second;
+	}
+	else
+	{
+		tex = new Texture();
+		if (tex->Load(fileName))
+		{
+			textures.emplace(fileName, tex);
+		}
+		else
+		{
+			delete tex;
+			tex = nullptr;
+		}
+	}
+	return tex;
+}
+
 void Game::AddActor(Actor* actor) {
 	if (updatingActors) {
 		pendingActors.emplace_back(actor);
@@ -235,10 +314,59 @@ void Game::RemoveActor(Actor* actor) {
 	}
 }
 
+void Game::AddSprite(SpriteComponent* sprite)
+{
+	// Insertion point in the sorted vector
+	int drawOrder = sprite->GetDrawOrder();
+	auto iter = mSprites.begin();
+
+	for (;iter != mSprites.end(); ++iter) {
+		if (drawOrder < (*iter)->GetDrawOrder()) {
+			break;
+		}
+	}
+
+	mSprites.insert(iter, sprite);
+}
+
+void Game::RemoveSprite(SpriteComponent* sprite)
+{
+	auto iter = std::find(mSprites.begin(), mSprites.end(), sprite);
+	mSprites.erase(iter);
+}
+
 void Game::Shutdown() {
 	UnloadData();
 	IMG_Quit();
 	SDL_GL_DeleteContext(context);
 	SDL_DestroyWindow(window);
 	SDL_Quit();
+
+	// 2D 
+	/*
+	UnloadData();
+	delete spriteVerts;
+	spriteShader->Unload();
+	delete spriteShader;
+	SDL_GL_DeleteContext(context);
+	SDL_DestroyWindow(window);
+	SDL_Quit();
+	*/
+}
+
+void Game::CreateSpriteVerts()
+{
+	float vertices[] = {
+		-0.5f,  0.5f, 0.f, 0.f, 0.f, // top left
+		 0.5f,  0.5f, 0.f, 1.f, 0.f, // top right
+		 0.5f, -0.5f, 0.f, 1.f, 1.f, // bottom right
+		-0.5f, -0.5f, 0.f, 0.f, 1.f  // bottom left
+	};
+
+	unsigned int indices[] = {
+		0, 1, 2,
+		2, 3, 0
+	};
+
+	spriteVerts = new Vertex(vertices, 4, indices, 6);
 }
