@@ -1,10 +1,17 @@
 #pragma once
-#include "SDL.h"
 #include <unordered_map>
 #include <string>
 #include <vector>
+#include <algorithm>
+#include <GL/glew.h>
+#include <SDL.h>
 #include "Texture.h"
 #include "SpriteComponent.h"
+#include "Math.h"
+#include "Vertex.h"
+#include "SDL_image.h"
+#include "Actor.h"
+
 
 #undef main
 
@@ -22,6 +29,7 @@ public:
 	void AddActor(class Actor* actor);
 	void RemoveActor(class Actor* actor);
 
+	// 2D Sprites
 	void AddSprite(class SpriteComponent* sprite);
 	void RemoveSprite(class SpriteComponent* sprite);
 
@@ -35,6 +43,7 @@ private:
 	bool LoadShaders();
 	void LoadData();
 	void UnloadData();
+	void CreateSpriteVerts();
 
 	std::unordered_map<std::string, class Texture*> textures;
 
@@ -42,8 +51,8 @@ private:
 	std::vector<class Actor*> pendingActors;
 	std::vector<class SpriteComponent*> mSprites;
 
-	class Shader* mSpriteShader;
-	class VertexArray* mSpriteVerts;
+	class Shader* spriteShader;
+	class Vertex* spriteVerts;
 
 	SDL_Window* window;
 	SDL_GLContext context;

@@ -43,6 +43,7 @@
   <ItemGroup>
     <None Include="Shader.frag" />
     <None Include="Shader.vert" />
+    <None Include="Transform.vert" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>

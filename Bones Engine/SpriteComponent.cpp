@@ -1,52 +1,39 @@
 #include "SpriteComponent.h"
-#include "Texture.h"
-#include "Shader.h"
-#include "Actor.h"
-#include "Game.h"
-#include "Eigen/Dense"
-#include "Math.h"
 
 SpriteComponent::SpriteComponent(Actor* owner, int drawOrder)
-	:Component(owner)
-	, mTexture(nullptr)
-	, mDrawOrder(drawOrder)
-	, mTexWidth(0)
-	, mTexHeight(0)
-{
+	:Component(owner),
+	 texture(nullptr),
+	 drawOrder(drawOrder),
+	 texWidth(0),
+	 texHeight(0) {
 	this->owner->GetGame()->AddSprite(this);
 }
 
-SpriteComponent::~SpriteComponent()
-{
+SpriteComponent::~SpriteComponent() {
 	owner->GetGame()->RemoveSprite(this);
 }
 
-void SpriteComponent::Draw(Shader* shader)
-{
-	if (mTexture)
+void SpriteComponent::Draw(Shader* shader) {
+	if (texture)
 	{
 		// Scale the quad by the width/height of texture
 		Eigen::Matrix4f scaleMat;
-		scaleMat = Math::CreateScale4f(mTexWidth, mTexHeight, 1.0f);
+		scaleMat = Math::CreateScale4f(texWidth, texHeight, 1.0f);
 
 		Eigen::Matrix4f world = scaleMat * owner->GetWorldTransform();
 
-		// Since all sprites use the same shader/vertices,
-		// the game first sets them active before any sprite draws
+		// Set shaders and verts active before drawing sprites
 
-		// Set world transform
+		// World transform
 		shader->SetMatrixUniform("uWorldTransform", world);
-		// Set current texture
-		mTexture->SetActive();
+		texture->SetActive();
 		// Draw quad
 		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
 	}
 }
 
-void SpriteComponent::SetTexture(Texture* texture)
-{
-	mTexture = texture;
-	// Set width/height
-	mTexWidth = texture->GetWidth();
-	mTexHeight = texture->GetHeight();
+void SpriteComponent::SetTexture(Texture* texture) {
+	texture = texture;
+	texWidth = texture->GetWidth();
+	texHeight = texture->GetHeight();
 }

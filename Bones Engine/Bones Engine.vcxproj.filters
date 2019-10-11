@@ -82,5 +82,8 @@
     <None Include="Shader.vert">
       <Filter>Shaders</Filter>
     </None>
+    <None Include="Transform.vert">
+      <Filter>Shaders</Filter>
+    </None>
   </ItemGroup>
 </Project>

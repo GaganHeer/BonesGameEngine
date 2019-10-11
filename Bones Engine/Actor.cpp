@@ -9,7 +9,8 @@ Actor::Actor(Game* game) :
 	position(Eigen::Vector2f::Zero()),
 	scale(1.0f),
 	rotation(0.0f),
-	game(game) {
+	game(game),
+	recomputeWorldTransform(true) {
 
 	this->game->AddActor(this);
 }
@@ -39,6 +40,20 @@ void Actor::UpdateActor(float deltaTime) {
 	
 }
 
+void Actor::ProcessInput(const uint8_t* keyState)
+{
+	if (state == Active) {
+		for (auto comp : components) {
+			comp->ProcessInput(keyState);
+		}
+		ActorInput(keyState);
+	}
+}
+
+void Actor::ActorInput(const uint8_t* keyState)
+{
+}
+
 void Actor::AddComponent(Component* component) {
 	int myOrder = component->GetUpdateOrder();
 	auto iter = components.begin();
@@ -65,10 +80,11 @@ void Actor::ComputeWorldTransform()
 	{
 		recomputeWorldTransform = false;
 
+		//******** 2D *********
 		// Scale, then rotate, then translate
 		worldTransform = Math::CreateScale4f(scale, scale, 1.0f);
 		worldTransform *= Math::CreateRotationZ4f(rotation);
-		//Going to change this to Vector3 later / use Math.h
+
 		Eigen::Matrix4f retVal;
 		retVal << 1.0f, 0.0f, 0.0f, 0.0f,
 			0.0f, 1.0f, 0.0f, 0.0f,
@@ -76,13 +92,10 @@ void Actor::ComputeWorldTransform()
 			position[0], position[1], 1.0f, 1.0f;
 		worldTransform *= retVal;
 
-		//Eigen::Vector3f temp = { position.x, position.y, 1.0f };
-
-		//worldTransform *= Math::CreateTranslation4f(position);
+		//*****************************************************
 
 		// Inform components world transform updated
-		for (auto comp : components)
-		{
+		for (auto comp : components) {
 			comp->OnUpdateWorldTransform();
 		}
 	}

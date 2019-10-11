@@ -19,6 +19,9 @@ public:
 	void UpdateComponents(float deltaTime);
 	virtual void UpdateActor(float deltaTime);
 
+	void ProcessInput(const uint8_t* keyState);
+	virtual void ActorInput(const uint8_t* keyState);
+
 	const Eigen::Vector2f& GetPosition() const {
 		return this->position;
 	}
