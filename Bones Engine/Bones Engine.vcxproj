@@ -116,11 +116,11 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>C:\Users\A00934249\Documents\libraries\glew\include;C:\Users\A00934249\Documents\libraries\SDL2\include;C:\Users\A00934249\Documents\libraries\soil\include;C:\Users\A00934249\Documents\libraries\eigen</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)\libraries\glew\include;$(SolutionDir)\libraries\SDL2\include;$(SolutionDir)\libraries\soil\include;$(SolutionDir)\libraries\eigen</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
-      <AdditionalLibraryDirectories>C:\Users\A00934249\Documents\libraries\SDL2\lib\x64;C:\Users\A00934249\Documents\libraries\soil\libs;C:\Users\A00934249\Documents\libraries\glew\lib\Release\x64</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)\libraries\SDL2\lib\x64;$(SolutionDir)\libraries\soil\libs;$(SolutionDir)\libraries\glew\lib\Release\x64</AdditionalLibraryDirectories>
       <AdditionalDependencies>SDL2.lib;SDL2main.lib;SDL2_image.lib;opengl32.lib;glew32.lib;glew32s.lib;SOIL.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>

@@ -1,2 +1,2 @@
-﻿  Actor.cpp
-  Bones Engine.vcxproj -> C:\Users\A00934249\Documents\Bones-Engine\Bones-Engine\x64\Debug\Bones Engine.exe
+﻿LINK : warning LNK4098: defaultlib 'MSVCRT' conflicts with use of other libs; use /NODEFAULTLIB:library
+  Bones Engine.vcxproj -> C:\Users\renzd\Documents\Engine\Bones-Engine\x64\Debug\Bones Engine.exe
