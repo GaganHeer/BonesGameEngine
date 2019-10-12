@@ -9,8 +9,7 @@
 #include "Game.h"
 #include "Math.h"
 
-class SpriteComponent : public Component
-{
+class SpriteComponent : public Component {
 public:
 	SpriteComponent(class Actor* owner, int drawOrder = 100);
 	~SpriteComponent();

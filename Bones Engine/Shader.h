@@ -13,6 +13,8 @@ public:
 	void Unload();
 	void SetActive();
 	void SetMatrixUniform(const char* name, const Eigen::Matrix4f& matrix);
+	void SetVectorUniform(const char* name, const Eigen::Vector3f& vector);
+	void SetFloatUniform(const char* name, float value);
 private:
 	bool CompileShader(const std::string& fileName,
 		GLenum shaderType,

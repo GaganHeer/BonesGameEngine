@@ -1,16 +1,21 @@
 #include "SpriteComponent.h"
+#include "Texture.h"
+#include "Shader.h"
+#include "Actor.h"
+#include "Game.h"
+#include "Renderer.h"
 
 SpriteComponent::SpriteComponent(Actor* owner, int drawOrder)
 	:Component(owner),
 	 texture(nullptr),
 	 drawOrder(drawOrder),
-	 texWidth(0),
-	 texHeight(0) {
-	this->owner->GetGame()->AddSprite(this);
+	 texWidth(0.0f),
+	 texHeight(0.0f) {
+	this->owner->GetGame()->GetRenderer()->AddSprite(this);
 }
 
 SpriteComponent::~SpriteComponent() {
-	owner->GetGame()->RemoveSprite(this);
+	owner->GetGame()->GetRenderer()->RemoveSprite(this);
 }
 
 void SpriteComponent::Draw(Shader* shader) {

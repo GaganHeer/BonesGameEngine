@@ -1,4 +1,6 @@
 #include "Shader.h"
+#include "Texture.h"
+#include "Math.h"
 #include <SDL.h>
 #include <fstream>
 #include <sstream>
@@ -48,7 +50,19 @@ void Shader::SetActive() {
 
 void Shader::SetMatrixUniform(const char* name, const Eigen::Matrix4f& matrix) {
 	GLuint loc = glGetUniformLocation(shaderProgram, name);
-	glUniformMatrix4fv(loc, 1, GL_TRUE, reinterpret_cast<const float*>(&matrix));
+	glUniformMatrix4fv(loc, 1, GL_TRUE, Math::GetAsFloatPtr4f(&matrix));
+}
+
+void Shader::SetVectorUniform(const char* name, const Eigen::Vector3f& vector) {
+	GLuint loc = glGetUniformLocation(shaderProgram, name);
+	// Send the vector data
+	glUniform3fv(loc, 1, Math::GetAsFloatPtrV3f(vector));
+}
+
+void Shader::SetFloatUniform(const char* name, float value) {
+	GLuint loc = glGetUniformLocation(shaderProgram, name);
+	// Send the float data
+	glUniform1f(loc, value);
 }
 
 bool Shader::CompileShader(const std::string& fileName, GLenum shaderType, GLuint& outShader) {
