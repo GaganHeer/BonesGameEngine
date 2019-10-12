@@ -20,6 +20,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Actor.cpp" />
+    <ClCompile Include="AudioEngine.cpp" />
     <ClCompile Include="CameraActor.cpp" />
     <ClCompile Include="Component.cpp" />
     <ClCompile Include="Game.cpp" />
@@ -36,6 +37,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Actor.h" />
+    <ClInclude Include="AudioEngine.h" />
     <ClInclude Include="CameraActor.h" />
     <ClInclude Include="Component.h" />
     <ClInclude Include="Game.h" />
@@ -131,12 +133,12 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)\libraries\rapidjson\include;$(SolutionDir)\libraries\SDL2\include;$(SolutionDir)\libraries\eigen;$(SolutionDir)\libraries\soil\include;$(SolutionDir)\libraries\glew\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)\libraries\rapidjson\include;$(SolutionDir)\libraries\SDL2\include;$(SolutionDir)\libraries\eigen;$(SolutionDir)\libraries\soil\include;$(SolutionDir)\libraries\glew\include;$(SolutionDir)libraries\FMOD Studio API Windows\api\studio\inc;$(SolutionDir)libraries\FMOD Studio API Windows\api\core\inc</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
-      <AdditionalLibraryDirectories>$(SolutionDir)\libraries\soil\libs;$(SolutionDir)\libraries\glew\lib\Release\x64;$(SolutionDir)\libraries\SDL2\lib\x64</AdditionalLibraryDirectories>
-      <AdditionalDependencies>SDL2.lib;SDL2main.lib;SDL2_image.lib;opengl32.lib;glew32.lib;glew32s.lib;SOIL.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)\libraries\soil\libs;$(SolutionDir)\libraries\glew\lib\Release\x64;$(SolutionDir)\libraries\SDL2\lib\x64;$(SolutionDir)libraries\FMOD Studio API Windows\api\studio\lib\x64;$(SolutionDir)libraries\FMOD Studio API Windows\api\core\lib\x64</AdditionalLibraryDirectories>
+      <AdditionalDependencies>SDL2.lib;SDL2main.lib;SDL2_image.lib;opengl32.lib;glew32.lib;glew32s.lib;SOIL.lib;fmodstudio_vc.lib;fmodstudioL_vc.lib;fmod_vc.lib;fmodL_vc.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">

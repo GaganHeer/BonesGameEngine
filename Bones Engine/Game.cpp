@@ -6,6 +6,8 @@
 #include "MeshComponent.h"
 #include "CameraActor.h"
 #include "InputSystem.h"
+#include "AudioEngine.h"
+#include "thread"
 
 Game::Game()
 	:renderer(nullptr),
@@ -13,6 +15,7 @@ Game::Game()
 	updatingActors(false)
 {
 	inputSystem = new InputSystem();
+	AE = new AudioEngine();
 }
 
 bool Game::Initialize() {
@@ -35,6 +38,9 @@ bool Game::Initialize() {
 		renderer = nullptr;
 		return false;
 	}
+
+	AE->setup();
+	AE->sfx("{8a6a04bd-f459-4efe-9b9f-5b2bd9969d8c}");
 	
 	LoadData();
 
@@ -74,6 +80,7 @@ void Game::ProcessInput() {
 			if (state.Keyboard.GetKeyState(SDL_SCANCODE_W) == ButtonState::Pressed)
 			{
 				printf("W Button Pressed \n");
+				AE->sfx("{ce969287-97e3-4324-b52b-f2f31edf0143}");
 			}
 
 			//Button held down
@@ -87,6 +94,7 @@ void Game::ProcessInput() {
 			if (state.Keyboard.GetKeyState(SDL_SCANCODE_A) == ButtonState::Released)
 			{
 				printf("A Buton Released \n");
+				AE->sfx("{cecb4df2-fbcf-4d3e-94ef-d261ec18747b}");
 			}
 
 			if (state.Keyboard.GetKeyState(SDL_SCANCODE_W) == ButtonState::Released)
@@ -105,6 +113,7 @@ void Game::ProcessInput() {
 }
 
 void Game::UpdateGame() {
+	AE->update();
 	//Compute delta time
 	while (!SDL_TICKS_PASSED(SDL_GetTicks(), ticksCount + 16));
 
