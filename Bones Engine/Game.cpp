@@ -201,13 +201,13 @@ void Game::LoadData() {
 	a = new Actor(this);
 	a->SetPosition(Eigen::Vector3f(-350.0f, -350.0f, 0.0f));
 	SpriteComponent* sc = new SpriteComponent(a);
-	//sc->SetTexture(renderer->GetTexture("Assets/HealthBar.png"));
+	sc->SetTexture(renderer->GetTexture("hp.png"));
 
 	a = new Actor(this);
 	a->SetPosition(Eigen::Vector3f(-350.0f, -350.0f, 0.0f));
 	a->SetScale(0.75f);
 	sc = new SpriteComponent(a);
-	//sc->SetTexture(renderer->GetTexture("Assets/Radar.png"));
+	sc->SetTexture(renderer->GetTexture("radar.png"));
 }
 
 void Game::UnloadData() {
