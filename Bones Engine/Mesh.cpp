@@ -19,7 +19,6 @@ Mesh::~Mesh() {
 
 }
 
-
 bool Mesh::Load(const std::string& fileName, Renderer* renderer) {
 	std::ifstream file(fileName);
 
@@ -41,8 +40,6 @@ bool Mesh::Load(const std::string& fileName, Renderer* renderer) {
 	}
 
 	int ver = doc["version"].GetInt();
-
-	// Check the version
 	if (ver != 1) {
 		SDL_Log("Mesh %s not version 1", fileName.c_str());
 		return false;
@@ -104,13 +101,12 @@ bool Mesh::Load(const std::string& fileName, Renderer* renderer) {
 			radius = lengthSq;
 		}
 
-		// Add the floats
 		for (rapidjson::SizeType i = 0; i < vert.Size(); i++) {
 			vertices.emplace_back(static_cast<float>(vert[i].GetDouble()));
 		}
 	}
 
-	radius = sqrt(radius); //Revert back from length squared
+	radius = sqrt(radius); //Reverted back from length squared
 
 	// Indices
 	const rapidjson::Value& indJson = doc["indices"];
