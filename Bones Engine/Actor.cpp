@@ -6,9 +6,9 @@
 
 Actor::Actor(Game* game) :
 	state(Active),
-	position(Eigen::Vector2f::Zero()),
+	position(Eigen::Vector3f::Zero()),
 	scale(1.0f),
-	rotation(0.0f),
+	rotation(Eigen::Quaternionf::Identity()),
 	game(game),
 	recomputeWorldTransform(true) {
 
@@ -25,8 +25,10 @@ Actor::~Actor() {
 
 void Actor::Update(float deltaTime) {
 	if (state == Active) {
+		ComputeWorldTransform();
 		UpdateComponents(deltaTime);
 		UpdateActor(deltaTime);
+		ComputeWorldTransform();
 	}
 }
 
@@ -54,6 +56,19 @@ void Actor::ActorInput(const uint8_t* keyState)
 {
 }
 
+void Actor::ComputeWorldTransform() {
+	if (recomputeWorldTransform) {
+		recomputeWorldTransform = false;
+		worldTransform = Math::CreateScale4f(scale);
+		worldTransform *= Math::CreateFromQuaternion4f(rotation);
+		worldTransform *= Math::CreateTranslation4f(position);
+
+		for (auto comp : components) {
+			comp->OnUpdateWorldTransform();
+		}
+	}
+}
+
 void Actor::AddComponent(Component* component) {
 	int myOrder = component->GetUpdateOrder();
 	auto iter = components.begin();
@@ -71,32 +86,5 @@ void Actor::RemoveComponent(Component* component) {
 	auto iter = std::find(components.begin(), components.end(), component);
 	if (iter != components.end()) {
 		components.erase(iter);
-	}
-}
-
-void Actor::ComputeWorldTransform()
-{
-	if (recomputeWorldTransform)
-	{
-		recomputeWorldTransform = false;
-
-		//******** 2D *********
-		// Scale, then rotate, then translate
-		worldTransform = Math::CreateScale4f(scale, scale, 1.0f);
-		worldTransform *= Math::CreateRotationZ4f(rotation);
-
-		Eigen::Matrix4f retVal;
-		retVal << 1.0f, 0.0f, 0.0f, 0.0f,
-			0.0f, 1.0f, 0.0f, 0.0f,
-			0.0f, 0.0f, 1.0f, 0.0f,
-			position[0], position[1], 1.0f, 1.0f;
-		worldTransform *= retVal;
-
-		//*****************************************************
-
-		// Inform components world transform updated
-		for (auto comp : components) {
-			comp->OnUpdateWorldTransform();
-		}
 	}
 }
