@@ -36,6 +36,7 @@ private:
 	std::vector<class Actor*> pendingActors;
 
 	class InputSystem* inputSystem;
+	class AudioEngine* AE;
 	class Renderer* renderer;
 	Uint32 ticksCount;
 	bool isRunning;
