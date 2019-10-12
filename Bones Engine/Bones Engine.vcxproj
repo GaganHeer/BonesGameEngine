@@ -131,7 +131,7 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)\libraries\SDL2\include;$(SolutionDir)\libraries\eigen;$(SolutionDir)\libraries\soil\include;$(SolutionDir)\libraries\glew\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)\libraries\rapidjson\include;$(SolutionDir)\libraries\SDL2\include;$(SolutionDir)\libraries\eigen;$(SolutionDir)\libraries\soil\include;$(SolutionDir)\libraries\glew\include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>

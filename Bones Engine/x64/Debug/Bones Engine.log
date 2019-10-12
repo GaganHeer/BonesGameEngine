@@ -1,19 +1,5 @@
-<<<<<<< HEAD
-﻿  Bones Engine.vcxproj -> C:\Users\a00952521\Desktop\Bones-Engine\x64\Debug\Bones Engine.exe
-=======
-﻿  Actor.cpp
-  CameraActor.cpp
-  Game.cpp
-  InputSystem.cpp
-  main.cpp
+﻿  Game.cpp
   MeshComponent.cpp
   Renderer.cpp
-  SpriteComponent.cpp
-C:\Users\gagan\Desktop\BonesEngineRepo\Bones-Engine\Bones Engine\SpriteComponent.cpp(12,11): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
-C:\Users\gagan\Desktop\BonesEngineRepo\Bones-Engine\Bones Engine\SpriteComponent.cpp(13,12): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
-C:\Users\gagan\Desktop\BonesEngineRepo\Bones-Engine\Bones Engine\SpriteComponent.cpp(26,44): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
   Generating Code...
-C:\Users\gagan\Desktop\BonesEngineRepo\Bones-Engine\Bones Engine\SpriteComponent.cpp(26,34): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-LINK : warning LNK4098: defaultlib 'MSVCRT' conflicts with use of other libs; use /NODEFAULTLIB:library
-  Bones Engine.vcxproj -> C:\Users\gagan\Desktop\BonesEngineRepo\Bones-Engine\x64\Debug\Bones Engine.exe
->>>>>>> e3ca89ee282acf3ea316df3fba258fecf86031ea
+C:\Users\A00934249\Documents\new\Bones-Engine\Bones Engine\MeshComponent.h(11,27): error C2061:  syntax error: identifier 'Mesh'

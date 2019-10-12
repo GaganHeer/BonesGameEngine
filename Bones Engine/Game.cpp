@@ -158,13 +158,13 @@ void Game::LoadData() {
 		Math::CreateQuaternionFromAngleAxis(Eigen::Vector3f::UnitZ(), Math::Pi + Math::Pi / 4.0f));
 	a->SetRotation(q);
 	MeshComponent* mc = new MeshComponent(a);
-	//mc->SetMesh(renderer->GetMesh("Assets/Cube.gpmesh"));
+	mc->SetMesh(renderer->GetMesh("Cube.gpmesh"));
 
 	a = new Actor(this);
 	a->SetPosition(Eigen::Vector3f(200.0f, -75.0f, 0.0f));
 	a->SetScale(3.0f);
 	mc = new MeshComponent(a);
-	//mc->SetMesh(renderer->GetMesh("Assets/Sphere.gpmesh"));
+	mc->SetMesh(renderer->GetMesh("Sphere.gpmesh"));
 
 	const float start = -1250.0f;
 	const float size = 250.0f;
