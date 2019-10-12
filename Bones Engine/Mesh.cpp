@@ -22,21 +22,20 @@ Mesh::~Mesh() {
 
 bool Mesh::Load(const std::string& fileName, Renderer* renderer) {
 	std::ifstream file(fileName);
-	if (!file.is_open())
-	{
+
+	if (!file.is_open()) {
 		SDL_Log("File not found: Mesh %s", fileName.c_str());
 		return false;
 	}
 
-	std::stringstream fileStream;
-	fileStream << file.rdbuf();
-	std::string contents = fileStream.str();
+	std::stringstream fs;
+	fs << file.rdbuf();
+	std::string contents = fs.str();
 	rapidjson::StringStream jsonStr(contents.c_str());
 	rapidjson::Document doc;
 	doc.ParseStream(jsonStr);
 
-	if (!doc.IsObject())
-	{
+	if (!doc.IsObject()) {
 		SDL_Log("Mesh %s is not valid json", fileName.c_str());
 		return false;
 	}
@@ -44,40 +43,32 @@ bool Mesh::Load(const std::string& fileName, Renderer* renderer) {
 	int ver = doc["version"].GetInt();
 
 	// Check the version
-	if (ver != 1)
-	{
+	if (ver != 1) {
 		SDL_Log("Mesh %s not version 1", fileName.c_str());
 		return false;
 	}
 
 	shaderName = doc["shader"].GetString();
-
-	// Skip the vertex format/shader for now
-	// (This is changed in a later chapter's code)
 	size_t vertSize = 8;
 
-	// Load textures
+	//textures
 	const rapidjson::Value& tex = doc["textures"];
-	if (!tex.IsArray() || tex.Size() < 1)
-	{
+	
+	if (!tex.IsArray() || tex.Size() < 1) {
 		SDL_Log("Mesh %s has no textures, there should be at least one", fileName.c_str());
 		return false;
 	}
 
 	specPower = static_cast<float>(doc["specularPower"].GetDouble());
 
-	for (rapidjson::SizeType i = 0; i < tex.Size(); i++)
-	{
-		// Is this texture already loaded?
+	for (rapidjson::SizeType i = 0; i < tex.Size(); i++) {
+		// Check for texture
 		std::string texName = tex[i].GetString();
 		Texture* t = renderer->GetTexture(texName);
-		if (t == nullptr)
-		{
-			// Try loading the texture
+		if (t == nullptr) {
+			// Load the texture
 			t = renderer->GetTexture(texName);
-			if (t == nullptr)
-			{
-				// If it's still null, just use the default texture
+			if (t == nullptr) {
 				t = renderer->GetTexture("Assets/Default.png");
 			}
 		}
@@ -86,21 +77,20 @@ bool Mesh::Load(const std::string& fileName, Renderer* renderer) {
 
 	// Load in the vertices
 	const rapidjson::Value& vertsJson = doc["vertices"];
-	if (!vertsJson.IsArray() || vertsJson.Size() < 1)
-	{
+	if (!vertsJson.IsArray() || vertsJson.Size() < 1) {
 		SDL_Log("Mesh %s has no vertices", fileName.c_str());
+	
 		return false;
 	}
 
 	std::vector<float> vertices;
 	vertices.reserve(vertsJson.Size() * vertSize);
 	radius = 0.0f;
-	for (rapidjson::SizeType i = 0; i < vertsJson.Size(); i++)
-	{
-		// For now, just assume we have 8 elements
+	
+	for (rapidjson::SizeType i = 0; i < vertsJson.Size(); i++) {
 		const rapidjson::Value& vert = vertsJson[i];
-		if (!vert.IsArray() || vert.Size() != 8)
-		{
+
+		if (!vert.IsArray() || vert.Size() != 8) {
 			SDL_Log("Unexpected vertex format for %s", fileName.c_str());
 			return false;
 		}
@@ -115,30 +105,25 @@ bool Mesh::Load(const std::string& fileName, Renderer* renderer) {
 		}
 
 		// Add the floats
-		for (rapidjson::SizeType i = 0; i < vert.Size(); i++)
-		{
+		for (rapidjson::SizeType i = 0; i < vert.Size(); i++) {
 			vertices.emplace_back(static_cast<float>(vert[i].GetDouble()));
 		}
 	}
 
-	// We were computing length squared earlier
-	radius = sqrt(radius);
+	radius = sqrt(radius); //Revert back from length squared
 
-	// Load in the indices
+	// Indices
 	const rapidjson::Value& indJson = doc["indices"];
-	if (!indJson.IsArray() || indJson.Size() < 1)
-	{
+	if (!indJson.IsArray() || indJson.Size() < 1) {
 		SDL_Log("Mesh %s has no indices", fileName.c_str());
 		return false;
 	}
 
 	std::vector<unsigned int> indices;
 	indices.reserve(indJson.Size() * 3);
-	for (rapidjson::SizeType i = 0; i < indJson.Size(); i++)
-	{
+	for (rapidjson::SizeType i = 0; i < indJson.Size(); i++) {
 		const rapidjson::Value& ind = indJson[i];
-		if (!ind.IsArray() || ind.Size() != 3)
-		{
+		if (!ind.IsArray() || ind.Size() != 3) {
 			SDL_Log("Invalid indices for %s", fileName.c_str());
 			return false;
 		}
@@ -148,9 +133,11 @@ bool Mesh::Load(const std::string& fileName, Renderer* renderer) {
 		indices.emplace_back(ind[2].GetUint());
 	}
 
-	// Now create a vertex array
-	vertex = new Vertex(vertices.data(), static_cast<unsigned>(vertices.size()) / vertSize,
-		indices.data(), static_cast<unsigned>(indices.size()));
+	// Vertex array
+	vertex = new Vertex(vertices.data(), 
+						static_cast<unsigned>(vertices.size()) / vertSize, 
+						indices.data(), 
+						static_cast<unsigned>(indices.size()));
 	return true;
 }
 
@@ -161,12 +148,9 @@ void Mesh::Unload() {
 
 Texture* Mesh::GetTexture(size_t index)
 {
-	if (index < textures.size())
-	{
+	if (index < textures.size()) {
 		return textures[index];
-	}
-	else
-	{
+	} else {
 		return nullptr;
 	}
 }

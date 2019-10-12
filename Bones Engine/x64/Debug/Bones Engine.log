@@ -1,6 +1,5 @@
-﻿  Mesh.cpp
-C:\Users\A00934249\Documents\new\Bones-Engine\Bones Engine\Mesh.cpp(108,82): warning C4244:  'argument': conversion from 'double' to 'const float', possible loss of data
-C:\Users\A00934249\Documents\new\Bones-Engine\Bones Engine\Mesh.cpp(108,61): warning C4244:  'argument': conversion from 'double' to 'const float', possible loss of data
-C:\Users\A00934249\Documents\new\Bones-Engine\Bones Engine\Mesh.cpp(108,40): warning C4244:  'argument': conversion from 'double' to 'const float', possible loss of data
-C:\Users\A00934249\Documents\new\Bones-Engine\Bones Engine\Mesh.cpp(153,57): warning C4267:  'argument': conversion from 'size_t' to 'unsigned int', possible loss of data
-  Bones Engine.vcxproj -> C:\Users\A00934249\Documents\new\Bones-Engine\x64\Debug\Bones Engine.exe
+﻿  Game.cpp
+  MeshComponent.cpp
+  Renderer.cpp
+  Generating Code...
+C:\Users\A00934249\Documents\new\Bones-Engine\Bones Engine\MeshComponent.h(11,27): error C2061:  syntax error: identifier 'Mesh'

@@ -15,6 +15,5 @@ public:
 protected:
 	int updateOrder;
 	class Actor* owner;
-
 };
 
