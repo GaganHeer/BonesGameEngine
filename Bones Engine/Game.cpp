@@ -7,6 +7,8 @@
 #include "CameraActor.h"
 #include "InputSystem.h"
 
+using namespace std;
+
 Game::Game()
 	:renderer(nullptr),
 	isRunning(true),
@@ -70,12 +72,6 @@ void Game::ProcessInput() {
 				isRunning = false;
 			}
 
-			//Button just pressed down
-			if (state.Keyboard.GetKeyState(SDL_SCANCODE_W) == ButtonState::Pressed)
-			{
-				printf("W Button Pressed \n");
-			}
-
 			//Button held down
 			if (state.Keyboard.GetKeyState(SDL_SCANCODE_A) == ButtonState::Held)
 			{
@@ -91,17 +87,17 @@ void Game::ProcessInput() {
 
 			if (state.Keyboard.GetKeyState(SDL_SCANCODE_W) == ButtonState::Released)
 			{
-				printf("W Buton Released \n");
+				//printf("W Buton Released \n");
 			}
 		}
 	}
 
-	/*updatingActors = true;
+	updatingActors = true;
 	for (auto actor : actors)
 	{
 		actor->ProcessInput(state);
 	}
-	updatingActors = false;*/
+	updatingActors = false;
 }
 
 void Game::UpdateGame() {
@@ -134,7 +130,7 @@ void Game::UpdateGame() {
 	//Add dead actors to a temp vector
 	std::vector<Actor*> deadActors;
 	for (auto actor : actors) {
-		if (actor->GetState() == Actor::Dead) {
+		if (actor->GetState() == Actor::State::Dead) {
 			deadActors.emplace_back(actor);
 		}
 	}
@@ -158,13 +154,13 @@ void Game::LoadData() {
 		Math::CreateQuaternionFromAngleAxis(Eigen::Vector3f::UnitZ(), Math::Pi + Math::Pi / 4.0f));
 	a->SetRotation(q);
 	MeshComponent* mc = new MeshComponent(a);
-	mc->SetMesh(renderer->GetMesh("Cube.gpmesh"));
+	mc->SetMesh(renderer->GetMesh("cube.gpmesh"));
 
 	a = new Actor(this);
 	a->SetPosition(Eigen::Vector3f(200.0f, -75.0f, 0.0f));
 	a->SetScale(3.0f);
 	mc = new MeshComponent(a);
-	mc->SetMesh(renderer->GetMesh("Sphere.gpmesh"));
+	//mc->SetMesh(renderer->GetMesh("Sphere.gpmesh"));
 
 	const float start = -1250.0f;
 	const float size = 250.0f;

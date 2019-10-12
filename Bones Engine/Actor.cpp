@@ -5,7 +5,7 @@
 #include "Math.h"
 
 Actor::Actor(Game* game) :
-	state(Active),
+	state(State::Active),
 	position(Eigen::Vector3f::Zero()),
 	scale(1.0f),
 	rotation(Eigen::Quaternionf::Identity()),
@@ -24,7 +24,7 @@ Actor::~Actor() {
 }
 
 void Actor::Update(float deltaTime) {
-	if (state == Active) {
+	if (state == State::Active) {
 		ComputeWorldTransform();
 		UpdateComponents(deltaTime);
 		UpdateActor(deltaTime);
@@ -42,9 +42,16 @@ void Actor::UpdateActor(float deltaTime) {
 	
 }
 
-void Actor::ProcessInput(const uint8_t* keyState)
+void Actor::ProcessInput(InputState keyState)
 {
-	if (state == Active) {
+
+	//Button just pressed down
+	if (keyState.Keyboard.GetKeyState(SDL_SCANCODE_W) == ButtonState::Pressed)
+	{
+		printf("W Button Pressed \n");
+	}
+
+	if (state == State::Active) {
 		for (auto comp : components) {
 			comp->ProcessInput(keyState);
 		}
@@ -52,7 +59,7 @@ void Actor::ProcessInput(const uint8_t* keyState)
 	}
 }
 
-void Actor::ActorInput(const uint8_t* keyState)
+void Actor::ActorInput(InputState keyState)
 {
 }
 
