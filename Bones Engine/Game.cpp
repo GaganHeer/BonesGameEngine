@@ -5,18 +5,25 @@
 #include "SpriteComponent.h"
 #include "MeshComponent.h"
 #include "CameraActor.h"
+#include "InputSystem.h"
 
 Game::Game()
 	:renderer(nullptr),
 	isRunning(true),
 	updatingActors(false)
 {
-
+	inputSystem = new InputSystem();
 }
 
 bool Game::Initialize() {
 	if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO) != 0) {
 		SDL_Log("Unable to initialize SDL: %s", SDL_GetError());
+		return false;
+	}
+
+	if (!inputSystem->Initialize())
+	{
+		SDL_Log("Failed to initialize input system");
 		return false;
 	}
 
@@ -46,28 +53,60 @@ void Game::RunLoop() {
 
 void Game::ProcessInput() {
 	SDL_Event event;
+	//const Uint8* state = SDL_GetKeyboardState(NULL);
+	inputSystem->BeforeUpdate();
+	const InputState& state = inputSystem->GetState();
+
 	while (SDL_PollEvent(&event)) {
 		switch (event.type) {
-		case SDL_QUIT:
-			isRunning = false;
-			break;
+			/*case SDL_QUIT:
+				isRunning = false;
+				break;*/
+
+		case SDL_KEYDOWN:
+			//Quit Game
+			if (state.Keyboard.GetKeyState(SDL_SCANCODE_ESCAPE) == ButtonState::Pressed)
+			{
+				isRunning = false;
+			}
+
+			//Button just pressed down
+			if (state.Keyboard.GetKeyState(SDL_SCANCODE_W) == ButtonState::Pressed)
+			{
+				printf("W Button Pressed \n");
+			}
+
+			//Button held down
+			if (state.Keyboard.GetKeyState(SDL_SCANCODE_A) == ButtonState::Held)
+			{
+				printf("A Button Held \n");
+			}
+
+		case SDL_KEYUP:
+			//Button released after being pressed or held
+			if (state.Keyboard.GetKeyState(SDL_SCANCODE_A) == ButtonState::Released)
+			{
+				printf("A Buton Released \n");
+			}
+
+			if (state.Keyboard.GetKeyState(SDL_SCANCODE_W) == ButtonState::Released)
+			{
+				printf("W Buton Released \n");
+			}
 		}
 	}
 
-	const Uint8* keyState = SDL_GetKeyboardState(NULL);
-	if (keyState[SDL_SCANCODE_ESCAPE]) {
-		isRunning = false;
+	/*updatingActors = true;
+	for (auto actor : actors)
+	{
+		actor->ProcessInput(state);
 	}
-
-	for (auto actor : actors) {
-		actor->ProcessInput(keyState);
-	}
+	updatingActors = false;*/
 }
 
 void Game::UpdateGame() {
 	//Compute delta time
-	while (!SDL_TICKS_PASSED(SDL_GetTicks(), ticksCount + 16))
-		;
+	while (!SDL_TICKS_PASSED(SDL_GetTicks(), ticksCount + 16));
 
 	float deltaTime = (SDL_GetTicks() - ticksCount) / 1000.0f;
 
@@ -119,13 +158,13 @@ void Game::LoadData() {
 		Math::CreateQuaternionFromAngleAxis(Eigen::Vector3f::UnitZ(), Math::Pi + Math::Pi / 4.0f));
 	a->SetRotation(q);
 	MeshComponent* mc = new MeshComponent(a);
-	mc->SetMesh(renderer->GetMesh("Assets/Cube.gpmesh"));
+	//mc->SetMesh(renderer->GetMesh("Assets/Cube.gpmesh"));
 
 	a = new Actor(this);
 	a->SetPosition(Eigen::Vector3f(200.0f, -75.0f, 0.0f));
 	a->SetScale(3.0f);
 	mc = new MeshComponent(a);
-	mc->SetMesh(renderer->GetMesh("Assets/Sphere.gpmesh"));
+	//mc->SetMesh(renderer->GetMesh("Assets/Sphere.gpmesh"));
 
 	const float start = -1250.0f;
 	const float size = 250.0f;
@@ -162,13 +201,13 @@ void Game::LoadData() {
 	a = new Actor(this);
 	a->SetPosition(Eigen::Vector3f(-350.0f, -350.0f, 0.0f));
 	SpriteComponent* sc = new SpriteComponent(a);
-	sc->SetTexture(renderer->GetTexture("Assets/HealthBar.png"));
+	//sc->SetTexture(renderer->GetTexture("Assets/HealthBar.png"));
 
 	a = new Actor(this);
 	a->SetPosition(Eigen::Vector3f(-350.0f, -350.0f, 0.0f));
 	a->SetScale(0.75f);
 	sc = new SpriteComponent(a);
-	sc->SetTexture(renderer->GetTexture("Assets/Radar.png"));
+	//sc->SetTexture(renderer->GetTexture("Assets/Radar.png"));
 }
 
 void Game::UnloadData() {
