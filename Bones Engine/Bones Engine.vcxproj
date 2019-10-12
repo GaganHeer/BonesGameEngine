@@ -23,6 +23,7 @@
     <ClCompile Include="CameraActor.cpp" />
     <ClCompile Include="Component.cpp" />
     <ClCompile Include="Game.cpp" />
+    <ClCompile Include="InputSystem.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Math.cpp" />
     <ClCompile Include="Mesh.cpp" />
@@ -38,6 +39,7 @@
     <ClInclude Include="CameraActor.h" />
     <ClInclude Include="Component.h" />
     <ClInclude Include="Game.h" />
+    <ClInclude Include="InputSystem.h" />
     <ClInclude Include="main.h" />
     <ClInclude Include="Math.h" />
     <ClInclude Include="Mesh.h" />
@@ -125,7 +127,7 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)\libraries\SDL2\include;$(SolutionDir)\libraries\eigen;$(SolutionDir)\libraries\soil\include;$(SolutionDir)\libraries\glew\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)\libraries\rapidjson\include;$(SolutionDir)\libraries\SDL2\include;$(SolutionDir)\libraries\eigen;$(SolutionDir)\libraries\soil\include;$(SolutionDir)\libraries\glew\include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
