@@ -16,6 +16,9 @@
     <Filter Include="Shaders">
       <UniqueIdentifier>{9c367540-e5a6-420c-b724-89ba01bd65ff}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Assets">
+      <UniqueIdentifier>{c88def7d-ba70-43c8-998a-b273e71a5b92}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -109,5 +112,13 @@
     <None Include="Transform.vert">
       <Filter>Shaders</Filter>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="..\..\..\Documents\hp.png">
+      <Filter>Assets</Filter>
+    </Image>
+    <Image Include="..\..\..\Documents\radar.png">
+      <Filter>Assets</Filter>
+    </Image>
   </ItemGroup>
 </Project>

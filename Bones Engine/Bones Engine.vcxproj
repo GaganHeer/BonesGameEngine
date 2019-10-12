@@ -53,6 +53,10 @@
     <None Include="Shader.vert" />
     <None Include="Transform.vert" />
   </ItemGroup>
+  <ItemGroup>
+    <Image Include="..\..\..\Documents\hp.png" />
+    <Image Include="..\..\..\Documents\radar.png" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
     <ProjectGuid>{EF90C6B2-42E9-4A27-88DA-C91FE2203536}</ProjectGuid>
@@ -125,11 +129,11 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>C:\Users\Jason\Downloads\Bones-Engine-develop\Bones-Engine\libraries\SDL2\include;C:\Users\Jason\Downloads\Bones-Engine-develop\Bones-Engine\libraries\eigen;C:\Users\Jason\Downloads\Bones-Engine-develop\Bones-Engine\libraries\soil\include;C:\Users\Jason\Downloads\Bones-Engine-develop\Bones-Engine\libraries\glew\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\a00952521\Desktop\Bones-Engine\libraries\soil\include;C:\Users\a00952521\Desktop\Bones-Engine\libraries\SDL2\include;C:\Users\a00952521\Desktop\Bones-Engine\libraries\glew\include;C:\Users\a00952521\Desktop\Bones-Engine\libraries\eigen</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
-      <AdditionalLibraryDirectories>C:\Users\Jason\Downloads\Bones-Engine-develop\Bones-Engine\libraries\soil\libs;C:\Users\Jason\Downloads\Bones-Engine-develop\Bones-Engine\libraries\glew\lib\Release\x64;C:\Users\Jason\Downloads\Bones-Engine-develop\Bones-Engine\libraries\SDL2\lib\x64</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>C:\Users\a00952521\Desktop\Bones-Engine\libraries\soil\libs;C:\Users\a00952521\Desktop\Bones-Engine\libraries\glew\lib\Release\x64;C:\Users\a00952521\Desktop\Bones-Engine\libraries\SDL2\lib\x64</AdditionalLibraryDirectories>
       <AdditionalDependencies>SDL2.lib;SDL2main.lib;SDL2_image.lib;opengl32.lib;glew32.lib;glew32s.lib;SOIL.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>

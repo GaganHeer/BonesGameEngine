@@ -206,7 +206,7 @@ Mesh* Renderer::GetMesh(const std::string& fileName) {
 bool Renderer::LoadShaders() {
 	// Create sprite shader
 	spriteShader = new Shader();
-	if (!spriteShader->Load("Shaders/Sprite.vert", "Shaders/Sprite.frag")) {
+	if (!spriteShader->Load("Shader.vert", "Shader.frag")) {
 		return false;
 	}
 
@@ -217,7 +217,7 @@ bool Renderer::LoadShaders() {
 
 	// Create basic mesh shader
 	meshShader = new Shader();
-	if (!meshShader->Load("Shaders/Phong.vert", "Shaders/Phong.frag")) {
+	if (!meshShader->Load("Shader.vert", "Shader.frag")) {
 		return false;
 	}
 

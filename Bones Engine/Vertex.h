@@ -10,7 +10,7 @@ public:
 	unsigned int GetNumIndices() const { return numIndices; }
 	unsigned int GetNumVerts() const { return numVerts; }
 private:
-	unsigned numVerts;
+	unsigned int numVerts;
 	unsigned int numIndices;
 	unsigned int vertexBuffer;
 	unsigned int indexBuffer;
