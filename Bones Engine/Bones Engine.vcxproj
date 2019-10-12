@@ -23,6 +23,7 @@
     <ClCompile Include="CameraActor.cpp" />
     <ClCompile Include="Component.cpp" />
     <ClCompile Include="Game.cpp" />
+    <ClCompile Include="InputSystem.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Math.cpp" />
     <ClCompile Include="Mesh.cpp" />
@@ -38,6 +39,7 @@
     <ClInclude Include="CameraActor.h" />
     <ClInclude Include="Component.h" />
     <ClInclude Include="Game.h" />
+    <ClInclude Include="InputSystem.h" />
     <ClInclude Include="main.h" />
     <ClInclude Include="Math.h" />
     <ClInclude Include="Mesh.h" />
@@ -129,11 +131,11 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>C:\Users\a00952521\Desktop\Bones-Engine\libraries\soil\include;C:\Users\a00952521\Desktop\Bones-Engine\libraries\SDL2\include;C:\Users\a00952521\Desktop\Bones-Engine\libraries\glew\include;C:\Users\a00952521\Desktop\Bones-Engine\libraries\eigen</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)\libraries\SDL2\include;$(SolutionDir)\libraries\eigen;$(SolutionDir)\libraries\soil\include;$(SolutionDir)\libraries\glew\include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
-      <AdditionalLibraryDirectories>C:\Users\a00952521\Desktop\Bones-Engine\libraries\soil\libs;C:\Users\a00952521\Desktop\Bones-Engine\libraries\glew\lib\Release\x64;C:\Users\a00952521\Desktop\Bones-Engine\libraries\SDL2\lib\x64</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)\libraries\soil\libs;$(SolutionDir)\libraries\glew\lib\Release\x64;$(SolutionDir)\libraries\SDL2\lib\x64</AdditionalLibraryDirectories>
       <AdditionalDependencies>SDL2.lib;SDL2main.lib;SDL2_image.lib;opengl32.lib;glew32.lib;glew32s.lib;SOIL.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
