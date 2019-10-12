@@ -57,6 +57,10 @@
     <None Include="Shader.vert" />
     <None Include="Transform.vert" />
   </ItemGroup>
+  <ItemGroup>
+    <Image Include="..\..\..\Documents\hp.png" />
+    <Image Include="..\..\..\Documents\radar.png" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
     <ProjectGuid>{EF90C6B2-42E9-4A27-88DA-C91FE2203536}</ProjectGuid>
@@ -129,7 +133,7 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)\libraries\SDL2\include;$(SolutionDir)\libraries\eigen;$(SolutionDir)\libraries\soil\include;$(SolutionDir)\libraries\glew\include;$(SolutionDir)libraries\FMOD Studio API Windows\api\studio\inc;$(SolutionDir)libraries\FMOD Studio API Windows\api\core\inc</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)\libraries\rapidjson\include;$(SolutionDir)\libraries\SDL2\include;$(SolutionDir)\libraries\eigen;$(SolutionDir)\libraries\soil\include;$(SolutionDir)\libraries\glew\include;$(SolutionDir)libraries\FMOD Studio API Windows\api\studio\inc;$(SolutionDir)libraries\FMOD Studio API Windows\api\core\inc</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>

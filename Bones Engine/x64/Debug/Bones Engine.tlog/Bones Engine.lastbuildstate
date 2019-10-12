@@ -1,2 +1,6 @@
 #TargetFrameworkVersion=v4.0:PlatformToolSet=v142:EnableManagedIncrementalBuild=false:VCToolArchitecture=Native32Bit:WindowsTargetPlatformVersion=10.0
+<<<<<<< HEAD
 Debug|x64|C:\Users\A00986529\Desktop\Bones-Engine\|
+=======
+Debug|x64|C:\Users\A00934249\Documents\new\Bones-Engine\|
+>>>>>>> 75b75762378a8f9485b953ba24b3e79351340d03
