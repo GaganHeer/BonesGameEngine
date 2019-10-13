@@ -11,11 +11,14 @@
 
 using namespace std;
 
-Game::Game()
+Game::Game(int argc, char** argv)
 	:renderer(nullptr),
 	isRunning(true),
 	updatingActors(false)
 {
+	_argc = argc;
+	_argv = argv;
+
 	inputSystem = new InputSystem();
 	AE = new AudioEngine();
 }
@@ -47,6 +50,8 @@ bool Game::Initialize() {
 	LoadData();
 
 	ticksCount = SDL_GetTicks();
+
+	InitGUI();
 
 	return true;
 }
@@ -253,10 +258,23 @@ void Game::RemoveActor(Actor* actor) {
 	}
 }
 
+void Game::InitGUI()
+{
+	gui = new GUI(_argc, _argv);
+	gui->createWindow();
+}
+
+void Game::Quit_GUI()
+{
+	delete gui;
+}
+
 void Game::Shutdown() {
 	UnloadData();
 	if (renderer) {
 		renderer->Shutdown();
 	}
 	SDL_Quit();
+
+	Quit_GUI();
 }

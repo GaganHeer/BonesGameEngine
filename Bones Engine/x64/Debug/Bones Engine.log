@@ -1,32 +1,35 @@
-<<<<<<< HEAD
-﻿  Game.cpp
-C:\Users\gagan\Desktop\BonesEngineRepo\Bones-Engine\Bones Engine\Actor.h(5,10): warning C4067: unexpected tokens following preprocessor directive - expected a newline
-LINK : warning LNK4098: defaultlib 'MSVCRT' conflicts with use of other libs; use /NODEFAULTLIB:library
-  Bones Engine.vcxproj -> C:\Users\gagan\Desktop\BonesEngineRepo\Bones-Engine\x64\Debug\Bones Engine.exe
-=======
-<<<<<<< HEAD
-﻿  AudioEngine.cpp
-  Game.cpp
-  Generating Code...
-  Bones Engine.vcxproj -> C:\Users\A00986529\Desktop\Bones-Engine\x64\Debug\Bones Engine.exe
-=======
 ﻿  Actor.cpp
+  AudioEngine.cpp
+  CameraActor.cpp
+C:\Users\happi\Documents\BonesEngine\Bones Engine\Actor.h(5,10): warning C4067: unexpected tokens following preprocessor directive - expected a newline
   Component.cpp
+C:\Users\happi\Documents\BonesEngine\Bones Engine\Actor.h(5,10): warning C4067: unexpected tokens following preprocessor directive - expected a newline
   Game.cpp
+C:\Users\happi\Documents\BonesEngine\Bones Engine\Actor.h(5,10): warning C4067: unexpected tokens following preprocessor directive - expected a newline
+  GUI.cpp
+  InputSystem.cpp
+  main.cpp
+C:\Users\happi\Documents\BonesEngine\Bones Engine\Actor.h(5,10): warning C4067: unexpected tokens following preprocessor directive - expected a newline
+  Math.cpp
   Mesh.cpp
-C:\Users\A00934249\Documents\new\Bones-Engine\Bones Engine\Mesh.cpp(95,82): warning C4244:  'argument': conversion from 'double' to 'const float', possible loss of data
-C:\Users\A00934249\Documents\new\Bones-Engine\Bones Engine\Mesh.cpp(95,61): warning C4244:  'argument': conversion from 'double' to 'const float', possible loss of data
-C:\Users\A00934249\Documents\new\Bones-Engine\Bones Engine\Mesh.cpp(95,40): warning C4244:  'argument': conversion from 'double' to 'const float', possible loss of data
+C:\Users\happi\Documents\BonesEngine\Bones Engine\Actor.h(5,10): warning C4067: unexpected tokens following preprocessor directive - expected a newline
+C:\Users\happi\Documents\BonesEngine\Bones Engine\Mesh.cpp(95,82): warning C4244: 'argument': conversion from 'double' to 'const float', possible loss of data
+C:\Users\happi\Documents\BonesEngine\Bones Engine\Mesh.cpp(95,61): warning C4244: 'argument': conversion from 'double' to 'const float', possible loss of data
+C:\Users\happi\Documents\BonesEngine\Bones Engine\Mesh.cpp(95,40): warning C4244: 'argument': conversion from 'double' to 'const float', possible loss of data
   MeshComponent.cpp
+C:\Users\happi\Documents\BonesEngine\Bones Engine\Mesh.cpp(136,45): warning C4267: 'argument': conversion from 'size_t' to 'unsigned int', possible loss of data
   Renderer.cpp
+C:\Users\happi\Documents\BonesEngine\Bones Engine\Actor.h(5,10): warning C4067: unexpected tokens following preprocessor directive - expected a newline
+  Shader.cpp
   SpriteComponent.cpp
-C:\Users\A00934249\Documents\new\Bones-Engine\Bones Engine\Mesh.cpp(136,45): warning C4267:  'argument': conversion from 'size_t' to 'unsigned int', possible loss of data
-C:\Users\A00934249\Documents\new\Bones-Engine\Bones Engine\SpriteComponent.cpp(12,11): warning C4244:  'initializing': conversion from 'float' to 'int', possible loss of data
-C:\Users\A00934249\Documents\new\Bones-Engine\Bones Engine\SpriteComponent.cpp(13,12): warning C4244:  'initializing': conversion from 'float' to 'int', possible loss of data
-C:\Users\A00934249\Documents\new\Bones-Engine\Bones Engine\SpriteComponent.cpp(26,44): warning C4244:  'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\happi\Documents\BonesEngine\Bones Engine\Actor.h(5,10): warning C4067: unexpected tokens following preprocessor directive - expected a newline
+C:\Users\happi\Documents\BonesEngine\Bones Engine\Actor.h(5,10): warning C4067: unexpected tokens following preprocessor directive - expected a newline
+C:\Users\happi\Documents\BonesEngine\Bones Engine\SpriteComponent.cpp(12,11): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+C:\Users\happi\Documents\BonesEngine\Bones Engine\SpriteComponent.cpp(13,12): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+C:\Users\happi\Documents\BonesEngine\Bones Engine\SpriteComponent.cpp(26,44): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+  Texture.cpp
+  Vertex.cpp
   Generating Code...
-C:\Users\A00934249\Documents\new\Bones-Engine\Bones Engine\SpriteComponent.cpp(26,34): warning C4244:  'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\happi\Documents\BonesEngine\Bones Engine\SpriteComponent.cpp(26,34): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
 LINK : warning LNK4098: defaultlib 'MSVCRT' conflicts with use of other libs; use /NODEFAULTLIB:library
-  Bones Engine.vcxproj -> C:\Users\A00934249\Documents\new\Bones-Engine\x64\Debug\Bones Engine.exe
->>>>>>> 75b75762378a8f9485b953ba24b3e79351340d03
->>>>>>> f745a718441685af2d8584bcffd9c35f86f3df8d
+  Bones Engine.vcxproj -> C:\Users\happi\Documents\BonesEngine\x64\Debug\Bones Engine.exe
