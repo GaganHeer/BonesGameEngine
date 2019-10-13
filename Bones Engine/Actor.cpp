@@ -2,13 +2,15 @@
 #include "Component.h"
 #include "Game.h"
 #include <algorithm>
+#include "Math.h"
 
 Actor::Actor(Game* game) :
-	state(Active),
-	position(Eigen::Vector2f::Zero()),
+	state(State::Active),
+	position(Eigen::Vector3f::Zero()),
 	scale(1.0f),
-	rotation(0.0f),
-	game(game) {
+	rotation(Eigen::Quaternionf::Identity()),
+	game(game),
+	recomputeWorldTransform(true) {
 
 	this->game->AddActor(this);
 }
@@ -22,9 +24,11 @@ Actor::~Actor() {
 }
 
 void Actor::Update(float deltaTime) {
-	if (state == Active) {
+	if (state == State::Active) {
+		ComputeWorldTransform();
 		UpdateComponents(deltaTime);
 		UpdateActor(deltaTime);
+		ComputeWorldTransform();
 	}
 }
 
@@ -36,6 +40,40 @@ void Actor::UpdateComponents(float deltaTime) {
 
 void Actor::UpdateActor(float deltaTime) {
 	
+}
+
+void Actor::ProcessInput(InputState keyState)
+{
+
+	//Button just pressed down
+	if (keyState.Keyboard.GetKeyState(SDL_SCANCODE_W) == ButtonState::Pressed)
+	{
+		printf("W Button Pressed \n");
+	}
+
+	if (state == State::Active) {
+		for (auto comp : components) {
+			comp->ProcessInput(keyState);
+		}
+		ActorInput(keyState);
+	}
+}
+
+void Actor::ActorInput(InputState keyState)
+{
+}
+
+void Actor::ComputeWorldTransform() {
+	if (recomputeWorldTransform) {
+		recomputeWorldTransform = false;
+		worldTransform = Math::CreateScale4f(scale);
+		worldTransform *= Math::CreateFromQuaternion4f(rotation);
+		worldTransform *= Math::CreateTranslation4f(position);
+
+		for (auto comp : components) {
+			comp->OnUpdateWorldTransform();
+		}
+	}
 }
 
 void Actor::AddComponent(Component* component) {

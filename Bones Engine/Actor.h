@@ -2,11 +2,11 @@
 #include <iostream>
 #include <vector>
 #include <Eigen/Dense>
+#include "InputSystem.h";
 
-class Actor
-{
+class Actor {
 public:
-	enum State {
+	enum class State {
 		Active,
 		Paused,
 		Dead
@@ -15,18 +15,26 @@ public:
 	Actor(class Game* game);
 	virtual ~Actor();
 
+	//Update
 	void Update(float deltaTime);
 	void UpdateComponents(float deltaTime);
 	virtual void UpdateActor(float deltaTime);
 
-	const Eigen::Vector2f& GetPosition() const {
+	//Process input
+	void ProcessInput(InputState keyState);
+	virtual void ActorInput(InputState keyState);
+
+	//Getters and Setters
+	//Position
+	const Eigen::Vector3f& GetPosition() const {
 		return this->position;
 	}
 
-	void SetPosition(const Eigen::Vector2f& pos) {
+	void SetPosition(const Eigen::Vector3f& pos) {
 		position = pos;
 	}
 
+	//Scale
 	float GetScale() const {
 		return this->scale;
 	}
@@ -35,22 +43,36 @@ public:
 		this->scale = scale;
 	}
 
-	float GetRotation() const {
+	//Rotation
+	Eigen::Quaternionf GetRotation() const {
 		return this->rotation;
 	}
 
-	void SetRotation(float rot) {
-		rotation = rot;
+	void SetRotation(Eigen::Quaternionf quaternion) {
+		this->rotation = quaternion;
 	}
 
+	//State
 	State GetState() const {
-		return this->state;
+		return state;
 	}
 
 	void SetState(State state) {
 		this->state = state;
 	}
 
+	//World transform
+	void ComputeWorldTransform();
+	const Eigen::Matrix4f& GetWorldTransform() {
+		return this->worldTransform;
+	}
+
+	//Forward
+	Eigen::Vector3f GetForward() const {
+		return rotation * Eigen::Vector3f::UnitX();
+	}
+
+	//Game
 	class Game* GetGame() {
 		return this->game;
 	}
@@ -60,9 +82,12 @@ public:
 
 private:
 	State state;
-	Eigen::Vector2f position;
+
+	Eigen::Matrix4f worldTransform;
+	Eigen::Vector3f position;
+	Eigen::Quaternionf rotation;
 	float scale;
-	float rotation;
+	bool recomputeWorldTransform;
 
 	std::vector<class Component*> components;
 	class Game* game;
