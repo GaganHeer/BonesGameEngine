@@ -1,4 +1,13 @@
 #include "Game.h"
+#include <algorithm>
+#include "Renderer.h"
+#include "Actor.h"
+#include "SpriteComponent.h"
+#include "MeshComponent.h"
+#include "CameraActor.h"
+#include "InputSystem.h"
+#include "AudioEngine.h"
+#include "thread"
 
 using namespace std;
 
