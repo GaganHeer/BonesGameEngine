@@ -124,12 +124,21 @@
     <None Include="Transform.vert">
       <Filter>Shaders</Filter>
     </None>
+    <None Include="knight1.gpmesh">
+      <Filter>Assets</Filter>
+    </None>
+    <None Include="cube.gpmesh">
+      <Filter>Assets</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Image Include="..\..\..\Documents\hp.png">
       <Filter>Assets</Filter>
     </Image>
     <Image Include="..\..\..\Documents\radar.png">
+      <Filter>Assets</Filter>
+    </Image>
+    <Image Include="knight1.png">
       <Filter>Assets</Filter>
     </Image>
   </ItemGroup>

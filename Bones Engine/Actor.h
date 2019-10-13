@@ -2,10 +2,11 @@
 #include <iostream>
 #include <vector>
 #include <Eigen/Dense>
+#include "InputSystem.h";
 
 class Actor {
 public:
-	enum State {
+	enum class State {
 		Active,
 		Paused,
 		Dead
@@ -20,8 +21,8 @@ public:
 	virtual void UpdateActor(float deltaTime);
 
 	//Process input
-	void ProcessInput(const uint8_t* keyState);
-	virtual void ActorInput(const uint8_t* keyState);
+	void ProcessInput(InputState keyState);
+	virtual void ActorInput(InputState keyState);
 
 	//Getters and Setters
 	//Position

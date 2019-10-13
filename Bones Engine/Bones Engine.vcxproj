@@ -53,6 +53,8 @@
     <ClInclude Include="Vertex.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="cube.gpmesh" />
+    <None Include="knight1.gpmesh" />
     <None Include="Shader.frag" />
     <None Include="Shader.vert" />
     <None Include="Transform.vert" />
@@ -60,6 +62,7 @@
   <ItemGroup>
     <Image Include="..\..\..\Documents\hp.png" />
     <Image Include="..\..\..\Documents\radar.png" />
+    <Image Include="knight1.png" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>

@@ -6,7 +6,7 @@ public:
 	CameraActor(class Game* game);
 
 	void UpdateActor(float deltaTime) override;
-	void ActorInput(const uint8_t* keys) override;
+	void ActorInput(InputState keys) override;
 private:
 	class MoveComponent* moveComp;
 };

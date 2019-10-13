@@ -1,4 +1,10 @@
 <<<<<<< HEAD
+﻿  Game.cpp
+C:\Users\gagan\Desktop\BonesEngineRepo\Bones-Engine\Bones Engine\Actor.h(5,10): warning C4067: unexpected tokens following preprocessor directive - expected a newline
+LINK : warning LNK4098: defaultlib 'MSVCRT' conflicts with use of other libs; use /NODEFAULTLIB:library
+  Bones Engine.vcxproj -> C:\Users\gagan\Desktop\BonesEngineRepo\Bones-Engine\x64\Debug\Bones Engine.exe
+=======
+<<<<<<< HEAD
 ﻿  AudioEngine.cpp
   Game.cpp
   Generating Code...
@@ -23,3 +29,4 @@ C:\Users\A00934249\Documents\new\Bones-Engine\Bones Engine\SpriteComponent.cpp(2
 LINK : warning LNK4098: defaultlib 'MSVCRT' conflicts with use of other libs; use /NODEFAULTLIB:library
   Bones Engine.vcxproj -> C:\Users\A00934249\Documents\new\Bones-Engine\x64\Debug\Bones Engine.exe
 >>>>>>> 75b75762378a8f9485b953ba24b3e79351340d03
+>>>>>>> f745a718441685af2d8584bcffd9c35f86f3df8d
