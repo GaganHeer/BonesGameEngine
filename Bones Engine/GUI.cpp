@@ -35,6 +35,17 @@ void GUI::displayFunction()
 	glutSwapBuffers();
 }
 
+void GUI::resizeWindow(int width, int height)
+{
+	// TODO: do something useful here
+}
+
+void GUI::renderAnimation()
+{
+	// animation should take place in the back buffer if using a double buffer.
+
+}
+
 void GUI::createWindow() const
 {
 	glutCreateWindow("a test window");
@@ -42,6 +53,14 @@ void GUI::createWindow() const
 	init();
 	// Register a callback function for the window's repainting event
 	glutDisplayFunc(displayFunction);
+
+	// this will handle the window resize so 
+	glutReshapeFunc(resizeWindow);
+
+	// idle function
+	// it is called when there are no events being sent
+	glutIdleFunc(renderAnimation);
+	
 	// enter GLUT event processing cycle
 	glutMainLoop();
 }
