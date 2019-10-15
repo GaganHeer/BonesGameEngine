@@ -5,6 +5,7 @@ int main(int argc, char** argv)
 	Game* game = new Game(argc, argv);
 	
 	bool success = game->Initialize();
+
 	if (success)
 	{
 		game->RunLoop();

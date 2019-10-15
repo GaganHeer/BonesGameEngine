@@ -18,6 +18,9 @@ public:
 
 private:
 	static void displayFunction();
+	static void resizeWindow(int width, int height);
+	static void renderAnimation();
+
 	void init() const;
 };
 
