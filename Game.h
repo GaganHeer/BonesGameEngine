@@ -6,7 +6,9 @@
 #include "Math.h"
 #include "InputSystem.h"
 #include "AudioEngine.h"
-
+#include "PlayerCombatSystem.h"
+#include "EnemyCombatSystem.h"
+#include "LevelUpSystem.h"
 class Game
 {
 public:
@@ -60,4 +62,7 @@ private:
 
 	//Game Specific
 	class CameraTargetActor* cameraTargetActor;
+	class PlayerCombatSystem* playerCombat;
+	class LevelUpSystem* playerLevels;
+	class EnemyCombatSystem* enemyCombat;
 };

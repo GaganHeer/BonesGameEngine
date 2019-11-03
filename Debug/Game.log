@@ -1,2 +1,17 @@
-﻿  Renderer.cpp
-  Game.vcxproj -> C:\Users\Jason\Downloads\BonesEng\BonesEngineV2\Debug\Game.exe
+﻿  Actor.cpp
+  CameraComponent.cpp
+  CameraTargetActor.cpp
+  CircleComponent.cpp
+  Component.cpp
+  Game.cpp
+  Main.cpp
+  MeshComponent.cpp
+  MoveComponent.cpp
+  PlaneActor.cpp
+  PointLightComponent.cpp
+  Renderer.cpp
+  SpriteComponent.cpp
+  TopDownCamera.cpp
+  Generating Code...
+C:\Users\gagan\Desktop\BonesRepo\Bones-Engine\Game.cpp(133,15): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
+  Game.vcxproj -> C:\Users\gagan\Desktop\BonesRepo\Bones-Engine\Debug\Game.exe

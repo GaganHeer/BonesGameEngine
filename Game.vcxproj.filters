@@ -85,6 +85,24 @@
     <ClCompile Include="ShadowInfo.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="PlayerCombatSystem.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="EnemyCombatSystem.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="LevelUpSystem.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="enemy.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Generator.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="room.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Actor.h">
@@ -156,6 +174,12 @@
     <ClInclude Include="ShadowInfo.h">
       <Filter>Headers</Filter>
     </ClInclude>
+    <ClInclude Include="PlayerCombatSystem.h" />
+    <ClInclude Include="EnemyCombatSystem.h" />
+    <ClInclude Include="LevelUpSystem.h" />
+    <ClInclude Include="enemy.h" />
+    <ClInclude Include="Generator.h" />
+    <ClInclude Include="room.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Shaders\Sprite.frag">
