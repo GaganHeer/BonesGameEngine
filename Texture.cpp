@@ -84,6 +84,25 @@ void Texture::CreateForRendering(int _width, int _height, unsigned int format) {
 	// For a texture we'll render to, just use nearest neighbor
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+}
+
+void Texture::CreateForRenderingShadowMap(int _width, int _height, unsigned int format) {
+	width = _width;
+	height = _height;
+	// Create the texture id
+	glGenTextures(1, &textureID);
+	glBindTexture(GL_TEXTURE_2D, textureID);
+	// Set the image width/height with null initial data
+	glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, format,
+		GL_FLOAT, nullptr);
+
+	// For a texture we'll render to, just use nearest neighbor
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 }
 
 void Texture::SetActive(int index){

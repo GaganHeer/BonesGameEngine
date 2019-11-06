@@ -10,6 +10,7 @@ public:
 	void Unload();
 	void CreateFromSurface(struct SDL_Surface* surface);
 	void CreateForRendering(int _width, int _height, unsigned int format);
+	void CreateForRenderingShadowMap(int _width, int _height, unsigned int format);
 	
 	void SetActive(int index = 0);
 	

@@ -85,6 +85,9 @@
     <ClCompile Include="ShadowInfo.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="CubeActor.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Actor.h">
@@ -156,6 +159,9 @@
     <ClInclude Include="ShadowInfo.h">
       <Filter>Headers</Filter>
     </ClInclude>
+    <ClInclude Include="CubeActor.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Shaders\Sprite.frag">
@@ -189,6 +195,18 @@
       <Filter>Shaders</Filter>
     </None>
     <None Include="Shaders\Skinned.vert">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="Shaders\Shadows.frag">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="Shaders\Shadows.vert">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="Shaders\DepthMap.frag">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="Shaders\DepthMap.vert">
       <Filter>Shaders</Filter>
     </None>
   </ItemGroup>
