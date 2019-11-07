@@ -18,6 +18,10 @@ Game::Game()
 	inputSystem = new InputSystem();
 	AE = new AudioEngine();
 	ticksCount = 0;
+
+	playerCombat = new PlayerCombatSystem();
+	playerLevels = new LevelUpSystem();
+	enemyCombat = new EnemyCombatSystem(25, 10, 100);
 }
 
 bool Game::Initialize(){
@@ -109,6 +113,87 @@ void Game::ProcessInput() {
 				isLoading = true;
 				scene = 0;
 				//AE->sfx("{cecb4df2-fbcf-4d3e-94ef-d261ec18747b}");
+			}
+
+			if (state.Keyboard.GetKeyState(SDL_SCANCODE_H) == ButtonState::Pressed) {
+				printf("H Button Pressed \n");
+
+				printf("\n\n");
+				cout << "------PRE COMBAT ROUND------\n" << endl;
+
+				cout << "***PLAYER STATS***" << endl;
+				cout << "Player Base Health: " << playerCombat->getBaseHealth() << endl;
+				cout << "Player Current Health: " << playerCombat->getCurrentHealth() << endl;
+				cout << "Player Base Atk: " << playerCombat->getBaseAtk() << endl;
+				cout << "Player Current Atk: " << playerCombat->getCurrentAtk() << endl;
+				cout << "Player Debuff Amount: " << playerCombat->getDebuffAmt() << endl;
+				printf("\n\n");
+
+				cout << "***PLAYER LEVELS***" << endl;
+				cout << "Player is Level: " << playerLevels->getCurrentLevel() << endl;
+				cout << "Player has " << playerLevels->getCurrentXP() << " XP right now" << endl;
+				cout << "Player needs " << playerLevels->getRequiredXP() << " XP to level up" << endl;
+				printf("\n\n");
+
+				cout << "***ENEMY STATS***" << endl;
+				cout << "Enemy Health: " << enemyCombat->getHealth() << endl;
+				cout << "Enemy Atk: " << enemyCombat->getAtk() << endl;
+				printf("\n\n");
+
+				//Combat stuff
+				//rand atk just to randomly switch between light and heavy atks, but when it's implemented in game we'll let the player decide what they wanna do
+				int randAtk;
+				srand(time(NULL));
+				randAtk = rand() % 2;
+				int playerAtk = playerCombat->dealDmg(randAtk);
+				cout << "Enemy took " << playerAtk << " damage" << endl;
+				enemyCombat->takeDmg(playerAtk);
+				int enemyAtk = enemyCombat->performAtk();
+				playerCombat->takeDmg(enemyAtk);
+				string playerStatus;
+				string enemyStatus;
+				if (playerCombat->checkIfDead()) {
+					playerStatus = "dead";
+				}
+				else {
+					playerStatus = "alive";
+				}
+
+				if (enemyCombat->checkIfDead()) {
+					enemyStatus = "dead";
+					int XPAmt = enemyCombat->getXP();
+					bool doesLevel = playerLevels->addXP(XPAmt);
+					if (doesLevel) {
+						playerCombat->increaseStats();
+					}
+				}
+				else {
+					enemyStatus = "alive";
+				}
+
+				printf("\n\n");
+				cout << "------POST COMBAT ROUND------\n" << endl;
+
+				cout << "***PLAYER STATS***" << endl;
+				cout << "Player Base Health: " << playerCombat->getBaseHealth() << endl;
+				cout << "Player Current Health: " << playerCombat->getCurrentHealth() << endl;
+				cout << "Player Base Atk: " << playerCombat->getBaseAtk() << endl;
+				cout << "Player Current Atk: " << playerCombat->getCurrentAtk() << endl;
+				cout << "Player Debuff Amount: " << playerCombat->getDebuffAmt() << endl;
+				cout << "Player is " << playerStatus << endl;
+				printf("\n\n");
+
+				cout << "***PLAYER LEVELS***" << endl;
+				cout << "Player is Level: " << playerLevels->getCurrentLevel() << endl;
+				cout << "Player has " << playerLevels->getCurrentXP() << " XP right now" << endl;
+				cout << "Player needs " << playerLevels->getRequiredXP() << " XP to level up" << endl;
+				printf("\n\n");
+
+				cout << "***ENEMY STATS***" << endl;
+				cout << "Enemy Health: " << enemyCombat->getHealth() << endl;
+				cout << "Enemy Atk: " << enemyCombat->getAtk() << endl;
+				cout << "Enemy is " << enemyStatus << endl;
+				printf("\n\n");
 			}
 
 		case SDL_KEYUP:

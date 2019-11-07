@@ -839,7 +839,6 @@ public:
 		return Matrix4(temp);
 	}
 
-	// Create "Simple" View-Projection Matrix from Chapter 6
 	static Matrix4 CreateSimpleViewProj(float width, float height)
 	{
 		float temp[4][4] =
@@ -877,8 +876,7 @@ public:
 	}
 
 	// Construct the quaternion from an axis and angle
-	// It is assumed that axis is already normalized,
-	// and the angle is in radians
+	// the angle is in radians
 	explicit Quaternion(const Vector3& axis, float angle)
 	{
 		float scalar = Math::Sin(angle / 2.0f);
@@ -888,7 +886,6 @@ public:
 		w = Math::Cos(angle / 2.0f);
 	}
 
-	// Directly set the internal components
 	void Set(float inX, float inY, float inZ, float inW)
 	{
 		x = inX;
@@ -923,7 +920,7 @@ public:
 		w /= length;
 	}
 
-	// Normalize the provided quaternion
+	// Normalize the quaternion
 	static Quaternion Normalize(const Quaternion& q)
 	{
 		Quaternion retVal = q;
