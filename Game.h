@@ -56,12 +56,15 @@ private:
 	class AudioEngine* AE;
 	class Renderer* renderer;
 	Uint32 ticksCount;
+	int scene;
 	GameState gameState;
 	bool isRunning;
+	bool isLoading;
 	bool updatingActors;
 
 	//Game Specific
 	class CameraTargetActor* cameraTargetActor;
+	class CubeActor* cubeActor;
 	class PlayerCombatSystem* playerCombat;
 	class LevelUpSystem* playerLevels;
 	class EnemyCombatSystem* enemyCombat;

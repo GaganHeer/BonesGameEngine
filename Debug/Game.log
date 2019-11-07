@@ -1,17 +1,51 @@
 ﻿  Actor.cpp
+  AudioEngine.cpp
   CameraComponent.cpp
   CameraTargetActor.cpp
   CircleComponent.cpp
   Component.cpp
+  CubeActor.cpp
+  enemy.cpp
+  EnemyCombatSystem.cpp
   Game.cpp
+C:\Users\Jason\Downloads\Bones-Engine\Bones-Engine\Bones-Engine\EnemyCombatSystem.cpp(12,12): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
+  GBuffer.cpp
+  Generator.cpp
+C:\Users\Jason\Downloads\Bones-Engine\Bones-Engine\Bones-Engine\Game.cpp(146,15): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
+  GUI.cpp
+  InputSystem.cpp
+  LevelUpSystem.cpp
   Main.cpp
+  Math.cpp
+  Mesh.cpp
+C:\Users\Jason\Downloads\Bones-Engine\Bones-Engine\Bones-Engine\Generator.cpp(35,12): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
+C:\Users\Jason\Downloads\Bones-Engine\Bones-Engine\Bones-Engine\Mesh.cpp(108,74): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\Users\Jason\Downloads\Bones-Engine\Bones-Engine\Bones-Engine\Mesh.cpp(108,53): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\Users\Jason\Downloads\Bones-Engine\Bones-Engine\Bones-Engine\Mesh.cpp(108,32): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
   MeshComponent.cpp
   MoveComponent.cpp
+  Generating Code...
+C:\Users\Jason\Downloads\Bones-Engine\Bones-Engine\Bones-Engine\Mesh.cpp(139,28): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+  Compiling...
   PlaneActor.cpp
+  PlayerCombatSystem.cpp
+C:\Users\Jason\Downloads\Bones-Engine\Bones-Engine\Bones-Engine\enemy.cpp(23): warning C4172: returning address of local variable or temporary: size
   PointLightComponent.cpp
   Renderer.cpp
+  room.cpp
+C:\Users\Jason\Downloads\Bones-Engine\Bones-Engine\Bones-Engine\PlayerCombatSystem.cpp(62,12): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
+  Shader.cpp
+  ShadowInfo.cpp
   SpriteComponent.cpp
+  Texture.cpp
   TopDownCamera.cpp
+  VertexArray.cpp
   Generating Code...
-C:\Users\gagan\Desktop\BonesRepo\Bones-Engine\Game.cpp(133,15): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
-  Game.vcxproj -> C:\Users\gagan\Desktop\BonesRepo\Bones-Engine\Debug\Game.exe
+C:\Users\Jason\Downloads\Bones-Engine\Bones-Engine\Bones-Engine\room.cpp(208,20): warning C4018: '<': signed/unsigned mismatch
+C:\Users\Jason\Downloads\Bones-Engine\Bones-Engine\Bones-Engine\room.cpp(139): warning C4172: returning address of local variable or temporary: size
+  LINK : C:\Users\Jason\Downloads\Bones-Engine\Bones-Engine\Bones-Engine\Debug\Game.exe not found or not built by the last incremental link; performing full link
+SOIL.lib(image_DXT.obj) : warning LNK4099: PDB 'vc120.pdb' was not found with 'SOIL.lib(image_DXT.obj)' or at 'C:\Users\Jason\Downloads\Bones-Engine\Bones-Engine\Bones-Engine\Debug\vc120.pdb'; linking object as if no debug info
+SOIL.lib(image_helper.obj) : warning LNK4099: PDB 'vc120.pdb' was not found with 'SOIL.lib(image_helper.obj)' or at 'C:\Users\Jason\Downloads\Bones-Engine\Bones-Engine\Bones-Engine\Debug\vc120.pdb'; linking object as if no debug info
+SOIL.lib(SOIL.obj) : warning LNK4099: PDB 'vc120.pdb' was not found with 'SOIL.lib(SOIL.obj)' or at 'C:\Users\Jason\Downloads\Bones-Engine\Bones-Engine\Bones-Engine\Debug\vc120.pdb'; linking object as if no debug info
+SOIL.lib(stb_image_aug.obj) : warning LNK4099: PDB 'vc120.pdb' was not found with 'SOIL.lib(stb_image_aug.obj)' or at 'C:\Users\Jason\Downloads\Bones-Engine\Bones-Engine\Bones-Engine\Debug\vc120.pdb'; linking object as if no debug info
+  Game.vcxproj -> C:\Users\Jason\Downloads\Bones-Engine\Bones-Engine\Bones-Engine\Debug\Game.exe

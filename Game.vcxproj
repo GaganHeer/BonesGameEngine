@@ -17,6 +17,7 @@
     <ClCompile Include="CameraTargetActor.cpp" />
     <ClCompile Include="CircleComponent.cpp" />
     <ClCompile Include="Component.cpp" />
+    <ClCompile Include="CubeActor.cpp" />
     <ClCompile Include="enemy.cpp" />
     <ClCompile Include="EnemyCombatSystem.cpp" />
     <ClCompile Include="Game.cpp" />
@@ -49,6 +50,7 @@
     <ClInclude Include="CameraTargetActor.h" />
     <ClInclude Include="CircleComponent.h" />
     <ClInclude Include="Component.h" />
+    <ClInclude Include="CubeActor.h" />
     <ClInclude Include="enemy.h" />
     <ClInclude Include="EnemyCombatSystem.h" />
     <ClInclude Include="Game.h" />
@@ -76,12 +78,16 @@
   <ItemGroup>
     <None Include="Shaders\BasicMesh.frag" />
     <None Include="Shaders\BasicMesh.vert" />
+    <None Include="Shaders\DepthMap.frag" />
+    <None Include="Shaders\DepthMap.vert" />
     <None Include="Shaders\GBufferGlobal.frag" />
     <None Include="Shaders\GBufferGlobal.vert" />
     <None Include="Shaders\GBufferPointLight.frag" />
     <None Include="Shaders\GBufferWrite.frag" />
     <None Include="Shaders\Phong.frag" />
     <None Include="Shaders\Phong.vert" />
+    <None Include="Shaders\Shadows.frag" />
+    <None Include="Shaders\Shadows.vert" />
     <None Include="Shaders\Skinned.vert" />
     <None Include="Shaders\Sprite.frag" />
     <None Include="Shaders\Sprite.vert" />

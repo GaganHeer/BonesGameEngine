@@ -85,6 +85,9 @@
     <ClCompile Include="ShadowInfo.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="CubeActor.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="PlayerCombatSystem.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -174,12 +177,27 @@
     <ClInclude Include="ShadowInfo.h">
       <Filter>Headers</Filter>
     </ClInclude>
-    <ClInclude Include="PlayerCombatSystem.h" />
-    <ClInclude Include="EnemyCombatSystem.h" />
-    <ClInclude Include="LevelUpSystem.h" />
-    <ClInclude Include="enemy.h" />
-    <ClInclude Include="Generator.h" />
-    <ClInclude Include="room.h" />
+    <ClInclude Include="CubeActor.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="enemy.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="EnemyCombatSystem.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="Generator.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="LevelUpSystem.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="PlayerCombatSystem.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="room.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Shaders\Sprite.frag">
@@ -213,6 +231,18 @@
       <Filter>Shaders</Filter>
     </None>
     <None Include="Shaders\Skinned.vert">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="Shaders\Shadows.frag">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="Shaders\Shadows.vert">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="Shaders\DepthMap.frag">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="Shaders\DepthMap.vert">
       <Filter>Shaders</Filter>
     </None>
   </ItemGroup>

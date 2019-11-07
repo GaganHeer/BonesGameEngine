@@ -16,6 +16,7 @@ Renderer::Renderer(Game* gameInst)
 	meshShader(nullptr),
 	skinnedShader(nullptr),
 	mirrorBuffer(0),
+	depthMapFBO(0),
 	mirrorTexture(nullptr),
 	_GBuffer(nullptr),
 	GGlobalShader(nullptr),
@@ -70,6 +71,11 @@ bool Renderer::Initialize(float newScreenWidth, float newScreenHeight){
 		return false;
 	}
 
+	if (!CreateShadowMapTarget()) {
+		SDL_Log("Failed to create render target for shadow map.");
+		return false;
+	}
+
 	_GBuffer = new GBuffer();
 	int width = static_cast<int>(screenWidth);
 	int height = static_cast<int>(screenHeight);
@@ -77,7 +83,6 @@ bool Renderer::Initialize(float newScreenWidth, float newScreenHeight){
 		SDL_Log("Failed to create G-buffer.");
 		return false;
 	}
-	pointLightMesh = GetMesh("Assets/PointLight.obj");
 
 	return true;
 }
@@ -109,10 +114,10 @@ void Renderer::UnloadData(){
 void Renderer::Draw(){
 	// Draw to the mirror texture first
 	Draw3DScene(mirrorBuffer, mirrorView, projection, 0.25f);
+	//Draw the shadow map texture
+	DrawDepthMap(depthMapFBO, view, projection, 1.0f);
 	// Draw the 3D scene to the G-buffer
 	Draw3DScene(_GBuffer->GetBufferID(), view, projection, 1.0f, false);
-	//Draw the shadow map texture
-	Draw3DScene(shadowMapBuffer, view, projection, 1.0f);
 	// Set the frame buffer back to zero (screen's frame buffer)
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	// Draw from the GBuffer
@@ -207,6 +212,13 @@ Mesh* Renderer::GetMesh(const std::string & fileName){
 	return m;
 }
 
+void Renderer::DrawDepthMap(unsigned int framebuffer, const Matrix4& view, const Matrix4& proj, float viewPortScale, bool lit) {
+	glViewport(0, 0, static_cast<int>(screenWidth * viewPortScale), static_cast<int>(screenHeight * viewPortScale));
+	glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
+	glClear(GL_DEPTH_BUFFER_BIT);
+
+}
+
 void Renderer::Draw3DScene(unsigned int framebuffer, const Matrix4& view, const Matrix4& proj,
 	float viewPortScale, bool lit) {
 	// Set the current frame buffer
@@ -291,30 +303,36 @@ bool Renderer::CreateMirrorTarget() {
 }
 
 bool Renderer::CreateShadowMapTarget() {
-	glGenFramebuffers(1, &shadowMapBuffer);
-	glBindFramebuffer(GL_FRAMEBUFFER, shadowMapBuffer);
+	glGenFramebuffers(1, &depthMapFBO);
 
-	shadowMapTexture = new Texture();
-	shadowMapTexture->CreateForRendering(1024, 1024, GL_DEPTH_COMPONENT16);
+	depthMapTexture = new Texture();
+	depthMapTexture->CreateForRenderingShadowMap(1024, 1024, GL_DEPTH_COMPONENT);
 
-	glFramebufferTexture(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, shadowMapTexture->GetTextureID(), 0);
+	glBindFramebuffer(GL_FRAMEBUFFER, depthMapFBO);
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, depthMapTexture->GetTextureID(), 0);
 
 	glDrawBuffer(GL_NONE); // No color buffer is drawn to.
+	glReadBuffer(GL_NONE);
+
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
 	// Always check that our framebuffer is ok
 	if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
-		glDeleteFramebuffers(1, &shadowMapBuffer);
-		shadowMapTexture->Unload();
-		delete shadowMapTexture;
-		shadowMapTexture = nullptr;
+		glDeleteFramebuffers(1, &depthMapFBO);
+		depthMapTexture->Unload();
+		delete depthMapTexture;
+		depthMapTexture = nullptr;
 		return false;
 	}
-
 	return true;
 }
 
 void Renderer::DrawFromGBuffer()
 {
+	// Clear the current framebuffer
+	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
 	// Disable depth testing for the global lighting pass
 	glDisable(GL_DEPTH_TEST);
 	// Activate global G-buffer shader
@@ -342,6 +360,7 @@ void Renderer::DrawFromGBuffer()
 
 	// Set the point light shader and mesh as active
 	GPointLightShader->SetActive();
+	pointLightMesh = GetMesh("Assets/PointLight.obj");
 	pointLightMesh->GetVertexArray()->SetActive();
 	// Set the view-projeciton matrix
 	GPointLightShader->SetMatrixUniform("uViewProj",
@@ -360,6 +379,7 @@ void Renderer::DrawFromGBuffer()
 }
 
 bool Renderer::LoadShaders() {
+	//Sprite Shader
 	spriteShader = new Shader();
 
 	if (!spriteShader->Load("Shaders/Sprite.vert", "Shaders/Sprite.frag")) {
@@ -369,9 +389,27 @@ bool Renderer::LoadShaders() {
 	spriteShader->SetActive();
 	Matrix4 spriteViewProj = Matrix4::CreateSimpleViewProj(screenWidth, screenHeight);
 	spriteShader->SetMatrixUniform("uViewProj", spriteViewProj);
+	
+	//Depth Shader
+	depthShader = new Shader();
+	if (!depthShader->Load("Shaders/Shadows.vert", "Shaders/Shadows.frag")) {
+		return false;
+	}
+	depthShader->SetActive();
+	float near_plane = 1.0f, far_plane = 7.5f;
+	Matrix4 lightProjection = Matrix4::CreateOrtho(10.0f, 10.0f, near_plane, far_plane);
+
+	Matrix4 lightView = Matrix4::CreateLookAt(Vector3(-2.0f, 4.0f, -1.0f),
+		Vector3(0.0f, 0.0f, 0.0f),
+		Vector3(0.0f, 1.0f, 0.0f));
+
+	Matrix4 lightSpaceMatrix = lightProjection * lightView;
+	depthShader->SetMatrixUniform("lightSpaceMatrix", lightSpaceMatrix);
+
+	//Mesh Shader
 	meshShader = new Shader();
 
-	if (!meshShader->Load("Shaders/Phong.vert", "Shaders/Phong.frag")) {
+	if (!meshShader->Load("Shaders/Phong.vert", "Shaders/GBufferWrite.frag")) {
 		return false;
 	}
 
@@ -421,6 +459,7 @@ bool Renderer::LoadShaders() {
 	GPointLightShader->SetIntUniform("uGWorldPos", 2);
 	GPointLightShader->SetVector2Uniform("uScreenDimensions",
 		Vector2(screenWidth, screenHeight));
+
 	return true;
 }
 
@@ -451,6 +490,4 @@ void Renderer::SetLightUniforms(Shader* shader, const Matrix4& view){
 	shader->SetVectorUniform("uDirLight.mDirection", dirLight.direction);
 	shader->SetVectorUniform("uDirLight.mDiffuseColor", dirLight.diffuseColor);
 	shader->SetVectorUniform("uDirLight.mSpecColor", dirLight.specColor);
-	
-	
 }

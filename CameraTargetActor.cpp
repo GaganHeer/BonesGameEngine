@@ -11,8 +11,9 @@ CameraTargetActor::CameraTargetActor(Game* game) :
 	moveComponent = new MoveComponent(this);
 
 	meshComponent = new MeshComponent(this);
-	meshComponent->SetMesh(game->GetRenderer()->GetMesh("Assets/Sphere.obj"));
-	SetPosition(Vector3(0.0f, 0.0f, -25.0f));
+	meshComponent->SetMesh(game->GetRenderer()->GetMesh("Assets/Cube.obj"));
+	SetPosition(Vector3(0.0f, 0.0f, -50.0f));
+	SetScale(50.f);
 
 	cameraComponent = new TopDownCamera(this);
 	cameraComponent->SnapToIdeal();
