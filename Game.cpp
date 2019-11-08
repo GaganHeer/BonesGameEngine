@@ -8,6 +8,7 @@
 #include "CameraTargetActor.h"
 #include "PointLightComponent.h"
 #include "CubeActor.h"
+#include "Generator.h"
 
 Game::Game()
 	:renderer(nullptr),
@@ -288,47 +289,100 @@ void Game::LoadData(){
 		cubeActor->SetPosition(Vector3(0.0f, 75.0f, 0.0f));
 		cubeActor->SetScale(50.f);
 
-		// Setup floor
-		const float start = -500.0f;
-		const float size = 100.0f;
-		for (int i = 0; i < 10; i++)
-		{
-			for (int j = 0; j < 10; j++)
-			{
-				a = new PlaneActor(this);
-				Vector3 pos = Vector3(start + i * size, start + j * size, -100.0f);
-				a->SetPosition(pos);
-				a->SetScale(1.f);
-				// Create some point lights
-				a = new Actor(this);
-				pos.z += 50.f;
-				a->SetPosition(pos);
-				PointLightComponent* p = new PointLightComponent(a);
-				Vector3 color;
-				switch ((i + j) % 5)
-				{
-				case 0:
-					color = Color::Green;
-					break;
-				case 1:
-					color = Color::Blue;
-					break;
-				case 2:
-					color = Color::Red;
-					break;
-				case 3:
-					color = Color::Yellow;
-					break;
-				case 4:
-					color = Color::LightPink;
-					break;
-				}
-				p->diffuseColor = color;
-				p->innerRadius = 50.0f;
-				p->outerRadius = 100.0f;
-			}
+		Generator randGen;
+		Room* rooms = randGen.generate();
+
+		int offsetX = 0;
+		int offsetY = 0;
+
+		int map_rows = 400;
+		int map_cols = 400;
+
+		map2D = new int* [map_rows];
+
+		for (int i = 0; i < map_rows; i++) {
+			map2D[i] = new int[map_cols + 1];
+			map2D[i][0] = map_cols;
+
+			for (int j = 1; j <= map_cols; j++)
+				map2D[i][j] = NULL;
 		}
 
+		//{ _width, _height, _entry, _entryDoor, _exit, _exitDoor, _isStart, _isEnd, _stairX, _stairY, _nextRoomCorridor };
+		//for each room
+		for (int r = 0; r < randGen.getNumRooms(); r++) {
+			int* paramsTemp = rooms[r].getParameters();
+
+			int width1 = randGen.getWidth(r);
+			int height1 = randGen.getHeight(r);
+			cout << "WIDTH: " << width1 << endl;
+			cout << "HEIGHT: " << height1 << endl;
+			cout << "OFFSETx: " << offsetX << endl;
+			cout << "OFFSETy: " << offsetY << endl;
+			cout << "CORRIDOR LENGTH: " << randGen.getCorridorLength(r) << endl;
+			cout << "entryDoor: " << randGen.getEntryDoor(r) << endl;
+
+			const float start = 0;
+			const float size = 100.0f;
+			int rows = 0;
+			int cols = 0;
+			//generates for each tile
+			for (int i = 0; i < height1; i++) {
+				for (int j = 0; j < width1; j++) {
+					rows = offsetY + start + i;
+					cols = offsetX + start + j;
+					map2D[rows + 50][cols + 50] = 1;
+					a = new PlaneActor(this);
+					Vector3 pos = Vector3(rows * size, cols * size, -100.0f);
+					a->SetPosition(pos);
+					a->SetScale(1.f);
+					CreatePointLights(a, pos, i+j);
+
+				}
+			}
+
+			//for corridor
+			if (!randGen.getIsEnd(r)) {
+				if ((bool)randGen.getExitLocation(r)) { // if north
+					for (int z = 0; z < randGen.getCorridorLength(r); z++) {
+						rows = offsetY + height1 + z;
+						cols = offsetX + randGen.getExitDoor(r);
+						map2D[rows + 50][cols + 50] = 1;
+						a = new PlaneActor(this);
+						
+						Vector3 pos = Vector3(rows * size, cols * size, -100.0f);
+						a->SetPosition(pos);
+						a->SetScale(1.f);
+						CreatePointLights(a, pos, z);
+						
+					}
+					cout << "corridor placement: " << offsetX + randGen.getExitLocation(r) << endl;
+					cout << " IS True " << endl;
+					offsetY += height1 + randGen.getCorridorLength(r);
+					offsetX += randGen.getExitDoor(r) - randGen.getEntryDoor(r + 1);
+
+
+				}
+				else { //if east
+					for (int z = 0; z < randGen.getCorridorLength(r); z++) {
+						rows = offsetY + randGen.getExitDoor(r);
+						cols = offsetX + width1 + z;
+						map2D[rows + 50][cols + 50] = 1;
+						a = new PlaneActor(this);
+						
+						Vector3 pos = Vector3(rows * size, cols * size, -100.0f);
+						a->SetPosition(pos);
+						a->SetScale(1.f);
+						CreatePointLights(a, pos, z);
+
+					}
+					cout << "corridor placement: " << offsetY + randGen.getExitLocation(r) << endl;
+					cout << " IS FALSE " << endl;
+					offsetX += width1 + randGen.getCorridorLength(r);
+					offsetY += randGen.getExitDoor(r) - randGen.getEntryDoor(r + 1);
+				}
+			}
+		}
 		// Setup lights
 		renderer->SetAmbientLight(Vector3(1.f, 1.f, 1.f));
 		DirectionalLight& dir = renderer->GetDirectionalLight();
@@ -349,6 +403,48 @@ void Game::LoadData(){
 	}
 }
 
+bool Game::IsWalkable(int row, int col) {
+	bool walkable;
+	if (map2D[row + 50][col + 50] == 1) {
+		walkable = true;
+	}
+	else {
+		walkable = false;
+	}
+	return walkable;
+}
+
+void Game::CreatePointLights(Actor*& a, Vector3& pos, int z)
+{
+	// Create some point lights
+	a = new Actor(this);
+	pos.z += 50.f;
+	a->SetPosition(pos);
+	PointLightComponent* p = new PointLightComponent(a);
+	Vector3 color;
+	switch (z % 5)
+	{
+	case 0:
+		color = Color::Green;
+		break;
+	case 1:
+		color = Color::Blue;
+		break;
+	case 2:
+		color = Color::Red;
+		break;
+	case 3:
+		color = Color::Yellow;
+		break;
+	case 4:
+		color = Color::LightPink;
+		break;
+	}
+	p->diffuseColor = color;
+	p->innerRadius = 50.0f;
+	p->outerRadius = 100.0f;
+}
+
 void Game::UnloadData(){
 	while (!actors.empty()){
 		delete actors.back();
@@ -357,6 +453,10 @@ void Game::UnloadData(){
 	if (renderer){
 		renderer->UnloadData();
 	}
+
+	for (int i = 0; i < 400; i++)
+		delete[] map2D[i];
+	delete[] map2D;
 }
 
 void Game::Shutdown(){

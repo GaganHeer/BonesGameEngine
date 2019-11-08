@@ -31,7 +31,7 @@ void Generator::setParams(int newX, int newY, int newVariance) {
 }
 
 //Generates the Rooms. Stores room objects in an array.
-void Generator::generate() {
+Room* Generator::generate() {
 	srand(time(NULL));
 
 	bool temp = false;
@@ -41,11 +41,52 @@ void Generator::generate() {
 	}
 	//prints room parameters
 	for (int n = 0; n < NUM_ROOMS; n++) {
-		int* temp = rooms[n].getParameters();
-		cout << "Room: " << n << " -> " << "[" << temp[0] << ", " << temp[1] << "]";
-		printf("\n");
+		int* returnedParams = rooms[n].getParameters();
+		//cout << "Room: " << n << " -> " << "[" << temp[0] << ", " << temp[1] << "]";
+		//printf("\n");
+		cout << " CORRIDOR LENGTH TWO: " << returnedParams[10] << endl;
 	}
+
+	return rooms;
 }
 
+int Generator::getNumRooms() {
+	return NUM_ROOMS;
+}
 
+//{ _width, _height, _entry, _entryDoor, _exit, _exitDoor, _isStart, _isEnd, _stairX, _stairY, _nextRoomCorridor };
+
+int Generator::getWidth(int i) {
+	return rooms[i].getParameters()[0];
+}
+int Generator::getHeight(int i) {
+	return rooms[i].getParameters()[1];
+}
+int Generator::getEntryLocation(int i) {
+	return rooms[i].getParameters()[2];
+}
+int Generator::getEntryDoor(int i) {
+	return rooms[i].getParameters()[3];
+}
+int Generator::getExitLocation(int i) {
+	return rooms[i].getParameters()[4];
+}
+int Generator::getExitDoor(int i) {
+	return rooms[i].getParameters()[5];
+}
+int Generator::getIsStart(int i) {
+	return rooms[i].getParameters()[6];
+}
+int Generator::getIsEnd(int i) {
+	return rooms[i].getParameters()[7];
+}
+int Generator::getStairX(int i) {
+	return rooms[i].getParameters()[8];
+}
+int Generator::getStairY(int i) {
+	return rooms[i].getParameters()[9];
+}
+int Generator::getCorridorLength(int i) {
+	return rooms[i].getParameters()[10];
+}
 

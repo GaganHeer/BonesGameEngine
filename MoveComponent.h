@@ -1,5 +1,6 @@
 #pragma once
 #include "Component.h"
+#include "Game.h"
 
 class MoveComponent : public Component
 {
@@ -27,4 +28,5 @@ public:
 private:
 	float horizontalMove;
 	float verticalMove;
+	Game* game;
 };

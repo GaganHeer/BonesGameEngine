@@ -42,11 +42,14 @@ public:
 		gameState = state;
 	}
 
+	bool IsWalkable(int row, int col);
+
 private:
 	void ProcessInput();
 	void UpdateGame();
 	void GenerateOutput();
 	void LoadData();
+	void CreatePointLights(Actor*& a, Vector3& pos, int z);
 	void UnloadData();
 	
 	std::vector<class Actor*> actors;
@@ -61,6 +64,13 @@ private:
 	bool isRunning;
 	bool isLoading;
 	bool updatingActors;
+
+	int exit_posX;
+	int exit_posY;
+	int start_posX;
+	int start_posY;
+
+	int** map2D;
 
 	//Game Specific
 	class CameraTargetActor* cameraTargetActor;
