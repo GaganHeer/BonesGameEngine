@@ -10,8 +10,11 @@ out vec4 outColor;
 // This is used for the texture sampling
 uniform sampler2D uTexture;
 
+uniform sampler2D depthMap;
+
 void main()
 {
+	float depthValue = texture(depthMap, fragTexCoord).r;
 	// Sample color from texture
-    outColor = texture(uTexture, fragTexCoord);
+    outColor = vec4(vec3(depthValue), 1.0) * texture(uTexture, fragTexCoord);
 }

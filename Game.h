@@ -6,7 +6,9 @@
 #include "Math.h"
 #include "InputSystem.h"
 #include "AudioEngine.h"
-
+#include "PlayerCombatSystem.h"
+#include "EnemyCombatSystem.h"
+#include "LevelUpSystem.h"
 class Game
 {
 public:
@@ -54,10 +56,16 @@ private:
 	class AudioEngine* AE;
 	class Renderer* renderer;
 	Uint32 ticksCount;
+	int scene;
 	GameState gameState;
 	bool isRunning;
+	bool isLoading;
 	bool updatingActors;
 
 	//Game Specific
 	class CameraTargetActor* cameraTargetActor;
+	class CubeActor* cubeActor;
+	class PlayerCombatSystem* playerCombat;
+	class LevelUpSystem* playerLevels;
+	class EnemyCombatSystem* enemyCombat;
 };

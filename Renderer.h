@@ -65,10 +65,14 @@ public:
 	}
 
 	void SetMirrorView(const Matrix4& view) { mirrorView = view; }
+	void SetDepthMapView(const Matrix4& view) { depthMapView = view; }
+	Texture* GetDepthMap() { return depthMapTexture; }
 	class Texture* GetMirrorTexture() { return mirrorTexture; }
 	class GBuffer* GetGBuffer() { return _GBuffer; }
 private:
 	void Draw3DScene(unsigned int framebuffer, const Matrix4& view, const Matrix4& proj,
+		float viewPortScale = 1.0f, bool lit = true);
+	void DrawDepthMap(unsigned int franebuffer, const Matrix4& view, const Matrix4& proj,
 		float viewPortScale = 1.0f, bool lit = true);
 	bool CreateMirrorTarget();
 	bool CreateShadowMapTarget();
@@ -87,6 +91,7 @@ private:
 	class VertexArray* spriteVerts;
 	class Shader* meshShader;
 	class Shader* skinnedShader;
+	class Shader* depthShader;
 
 	Matrix4 view;
 	Matrix4 projection;
@@ -101,9 +106,9 @@ private:
 	class Texture* mirrorTexture;
 	Matrix4 mirrorView;
 
-	unsigned int shadowMapBuffer;
-	class Texture* shadowMapTexture;
-	Matrix4 shadowMapProj;
+	unsigned int depthMapFBO;
+	class Texture* depthMapTexture;
+	Matrix4 depthMapView;
 
 	class GBuffer* _GBuffer;
 	// GBuffer shader

@@ -7,15 +7,21 @@
 #include "PlaneActor.h"
 #include "CameraTargetActor.h"
 #include "PointLightComponent.h"
+#include "CubeActor.h"
 
 Game::Game()
 	:renderer(nullptr),
 	isRunning(true),
-	updatingActors(false)
+	updatingActors(false),
+	scene(0)
 {
 	inputSystem = new InputSystem();
 	AE = new AudioEngine();
 	ticksCount = 0;
+
+	playerCombat = new PlayerCombatSystem();
+	playerLevels = new LevelUpSystem();
+	enemyCombat = new EnemyCombatSystem(25, 10, 100);
 }
 
 bool Game::Initialize(){
@@ -48,9 +54,16 @@ bool Game::Initialize(){
 
 void Game::RunLoop(){
 	while (isRunning){
-		ProcessInput();
-		UpdateGame();
-		GenerateOutput();
+		if (isLoading) {
+			UnloadData();
+			LoadData();
+			isLoading = false;
+		}
+		else {
+			ProcessInput();
+			UpdateGame();
+			GenerateOutput();
+		}
 	}
 }
 
@@ -89,13 +102,98 @@ void Game::ProcessInput() {
 
 			if (state.Keyboard.GetKeyState(SDL_SCANCODE_Q) == ButtonState::Pressed){
 				printf("Q Button Held \n");
-				AE->sfx("{ce969287-97e3-4324-b52b-f2f31edf0143}");
+				isLoading = true;
+				scene = 1;
+				//AE->sfx("{ce969287-97e3-4324-b52b-f2f31edf0143}");
 			}
 
 
 			if (state.Keyboard.GetKeyState(SDL_SCANCODE_E) == ButtonState::Pressed){
 				printf("E Button Held \n");
-				AE->sfx("{cecb4df2-fbcf-4d3e-94ef-d261ec18747b}");
+				isLoading = true;
+				scene = 0;
+				//AE->sfx("{cecb4df2-fbcf-4d3e-94ef-d261ec18747b}");
+			}
+
+			if (state.Keyboard.GetKeyState(SDL_SCANCODE_H) == ButtonState::Pressed) {
+				printf("H Button Pressed \n");
+
+				printf("\n\n");
+				cout << "------PRE COMBAT ROUND------\n" << endl;
+
+				cout << "***PLAYER STATS***" << endl;
+				cout << "Player Base Health: " << playerCombat->getBaseHealth() << endl;
+				cout << "Player Current Health: " << playerCombat->getCurrentHealth() << endl;
+				cout << "Player Base Atk: " << playerCombat->getBaseAtk() << endl;
+				cout << "Player Current Atk: " << playerCombat->getCurrentAtk() << endl;
+				cout << "Player Debuff Amount: " << playerCombat->getDebuffAmt() << endl;
+				printf("\n\n");
+
+				cout << "***PLAYER LEVELS***" << endl;
+				cout << "Player is Level: " << playerLevels->getCurrentLevel() << endl;
+				cout << "Player has " << playerLevels->getCurrentXP() << " XP right now" << endl;
+				cout << "Player needs " << playerLevels->getRequiredXP() << " XP to level up" << endl;
+				printf("\n\n");
+
+				cout << "***ENEMY STATS***" << endl;
+				cout << "Enemy Health: " << enemyCombat->getHealth() << endl;
+				cout << "Enemy Atk: " << enemyCombat->getAtk() << endl;
+				printf("\n\n");
+
+				//Combat stuff
+				//rand atk just to randomly switch between light and heavy atks, but when it's implemented in game we'll let the player decide what they wanna do
+				int randAtk;
+				srand(time(NULL));
+				randAtk = rand() % 2;
+				int playerAtk = playerCombat->dealDmg(randAtk);
+				cout << "Enemy took " << playerAtk << " damage" << endl;
+				enemyCombat->takeDmg(playerAtk);
+				int enemyAtk = enemyCombat->performAtk();
+				playerCombat->takeDmg(enemyAtk);
+				string playerStatus;
+				string enemyStatus;
+				if (playerCombat->checkIfDead()) {
+					playerStatus = "dead";
+				}
+				else {
+					playerStatus = "alive";
+				}
+
+				if (enemyCombat->checkIfDead()) {
+					enemyStatus = "dead";
+					int XPAmt = enemyCombat->getXP();
+					bool doesLevel = playerLevels->addXP(XPAmt);
+					if (doesLevel) {
+						playerCombat->increaseStats();
+					}
+				}
+				else {
+					enemyStatus = "alive";
+				}
+
+				printf("\n\n");
+				cout << "------POST COMBAT ROUND------\n" << endl;
+
+				cout << "***PLAYER STATS***" << endl;
+				cout << "Player Base Health: " << playerCombat->getBaseHealth() << endl;
+				cout << "Player Current Health: " << playerCombat->getCurrentHealth() << endl;
+				cout << "Player Base Atk: " << playerCombat->getBaseAtk() << endl;
+				cout << "Player Current Atk: " << playerCombat->getCurrentAtk() << endl;
+				cout << "Player Debuff Amount: " << playerCombat->getDebuffAmt() << endl;
+				cout << "Player is " << playerStatus << endl;
+				printf("\n\n");
+
+				cout << "***PLAYER LEVELS***" << endl;
+				cout << "Player is Level: " << playerLevels->getCurrentLevel() << endl;
+				cout << "Player has " << playerLevels->getCurrentXP() << " XP right now" << endl;
+				cout << "Player needs " << playerLevels->getRequiredXP() << " XP to level up" << endl;
+				printf("\n\n");
+
+				cout << "***ENEMY STATS***" << endl;
+				cout << "Enemy Health: " << enemyCombat->getHealth() << endl;
+				cout << "Enemy Atk: " << enemyCombat->getAtk() << endl;
+				cout << "Enemy is " << enemyStatus << endl;
+				printf("\n\n");
 			}
 
 		case SDL_KEYUP:
@@ -176,40 +274,79 @@ void Game::GenerateOutput(){
 
 void Game::LoadData(){
 	
-	Actor* a = new Actor(this);
-	a->SetPosition(Vector3(200.0f, 75.0f, 0.0f));
-	a->SetScale(100.0f);
-	Quaternion q(Vector3::UnitY, -Math::PiOver2);
-	q = Quaternion::Concatenate(q, Quaternion(Vector3::UnitZ, Math::Pi + Math::Pi / 4.0f));
-	a->SetRotation(q);
-	MeshComponent* mc = new MeshComponent(a);
-	mc->SetMesh(renderer->GetMesh("Assets/Cube.obj"));
+	if (scene == 0) {
+		Actor * a = new Actor(this);
+		a->SetPosition(Vector3(200.0f, 75.0f, 0.0f));
+		a->SetScale(100.0f);
+		Quaternion q(Vector3::UnitY, -Math::PiOver2);
+		q = Quaternion::Concatenate(q, Quaternion(Vector3::UnitZ, Math::Pi + Math::Pi / 4.0f));
+		a->SetRotation(q);
+		MeshComponent* mc = new MeshComponent(a);
+		mc->SetMesh(renderer->GetMesh("Assets/Cube.obj"));
 
-	// Setup floor
-	const float start = -500.0f;
-	const float size = 100.0f;
-	for (int i = 0; i < 10; i++){
-		for (int j = 0; j < 10; j++){
-			a = new PlaneActor(this);
-			a->SetPosition(Vector3(start + i * size, start + j * size, -100.0f));
-			a->SetScale(1.f);
+		cubeActor = new CubeActor(this);
+		cubeActor->SetPosition(Vector3(0.0f, 75.0f, 0.0f));
+		cubeActor->SetScale(50.f);
+
+		// Setup floor
+		const float start = -500.0f;
+		const float size = 100.0f;
+		for (int i = 0; i < 10; i++)
+		{
+			for (int j = 0; j < 10; j++)
+			{
+				a = new PlaneActor(this);
+				Vector3 pos = Vector3(start + i * size, start + j * size, -100.0f);
+				a->SetPosition(pos);
+				a->SetScale(1.f);
+				// Create some point lights
+				a = new Actor(this);
+				pos.z += 50.f;
+				a->SetPosition(pos);
+				PointLightComponent* p = new PointLightComponent(a);
+				Vector3 color;
+				switch ((i + j) % 5)
+				{
+				case 0:
+					color = Color::Green;
+					break;
+				case 1:
+					color = Color::Blue;
+					break;
+				case 2:
+					color = Color::Red;
+					break;
+				case 3:
+					color = Color::Yellow;
+					break;
+				case 4:
+					color = Color::LightPink;
+					break;
+				}
+				p->diffuseColor = color;
+				p->innerRadius = 50.0f;
+				p->outerRadius = 100.0f;
+			}
 		}
+
+		// Setup lights
+		renderer->SetAmbientLight(Vector3(1.f, 1.f, 1.f));
+		DirectionalLight& dir = renderer->GetDirectionalLight();
+		dir.direction = Vector3(.0f, .0f, .0f);
+		dir.diffuseColor = Vector3(0.78f, 0.88f, 1.0f);
+		dir.specColor = Vector3(11.8f, 0.5f, 0.5f);
+
+		// UI elements
+		a = new Actor(this);
+		a->SetPosition(Vector3(-350.0f, -350.0f, 0.0f));
+		SpriteComponent* sc = new SpriteComponent(a);
+		sc->SetTexture(renderer->GetTexture("Assets/cyan.png"));
+
+		cameraTargetActor = new CameraTargetActor(this);
 	}
+	else if (scene == 1) {
 
-	// Setup lights
-	renderer->SetAmbientLight(Vector3(1.f, 1.f, 1.f));
-	DirectionalLight& dir = renderer->GetDirectionalLight();
-	dir.direction = Vector3(1., -0.707f, -0.707f);
-	dir.diffuseColor = Vector3(0.78f, 0.88f, 1.0f);
-	dir.specColor = Vector3(0.8f, 0.8f, 0.8f);
-
-	// UI elements
-	//a = new Actor(this);
-	//a->SetPosition(Vector3(-350.0f, -350.0f, 0.0f));
-	//SpriteComponent* sc = new SpriteComponent(a);
-	//sc->SetTexture(renderer->GetTexture("Assets/cyan.png"));
-
-	cameraTargetActor = new CameraTargetActor(this);
+	}
 }
 
 void Game::UnloadData(){

@@ -8,16 +8,19 @@ in vec2 fragTexCoord;
 in vec3 fragNormal;
 // Position (in world space)
 in vec3 fragWorldPos;
+// Light Position
+in vec4 fragPosLightSpace;
 
 // This corresponds to the output color to the color buffer
 out vec4 outColor;
 
 // This is used for the texture sampling
 uniform sampler2D uTexture;
+// Shadow Map
+uniform sampler2D shadowMap;
 
 // Create a struct for directional light
-struct DirectionalLight
-{
+struct DirectionalLight {
 	// Direction of light
 	vec3 mDirection;
 	// Diffuse color
@@ -37,6 +40,16 @@ uniform vec3 uAmbientLight;
 // Directional Light
 uniform DirectionalLight uDirLight;
 
+float ShadowCalculation(vec4 fragPosLightSpace) {
+    vec3 projCoords = fragPosLightSpace.xyz / fragPosLightSpace.w;
+	projCoords = projCoords * 0.5 + 0.5;
+	float closestDepth = texture(shadowMap, projCoords.xy).r; 
+    float currentDepth = projCoords.z;
+    float shadow = currentDepth > closestDepth  ? 1.0 : 0.0;
+
+    return shadow;
+}
+
 void main()
 {
 	// Surface normal
@@ -47,6 +60,8 @@ void main()
 	vec3 V = normalize(uCameraPos - fragWorldPos);
 	// Reflection of -L about N
 	vec3 R = normalize(reflect(-L, N));
+
+	float shadow = ShadowCalculation(fragPosLightSpace);
 
 	// Compute phong reflection
 	vec3 Phong = uAmbientLight;
