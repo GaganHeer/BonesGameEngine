@@ -399,7 +399,127 @@ void Game::LoadData(){
 		cameraTargetActor = new CameraTargetActor(this);
 	}
 	else if (scene == 1) {
+	Actor* a = new Actor(this);
+	a->SetPosition(Vector3(200.0f, 75.0f, 0.0f));
+	a->SetScale(100.0f);
+	Quaternion q(Vector3::UnitY, -Math::PiOver2);
+	q = Quaternion::Concatenate(q, Quaternion(Vector3::UnitZ, Math::Pi + Math::Pi / 4.0f));
+	a->SetRotation(q);
+	MeshComponent* mc = new MeshComponent(a);
+	mc->SetMesh(renderer->GetMesh("Assets/Cube.obj"));
 
+	cubeActor = new CubeActor(this);
+	cubeActor->SetPosition(Vector3(0.0f, 75.0f, 0.0f));
+	cubeActor->SetScale(50.f);
+
+	Generator randGen;
+	Room* rooms = randGen.generate();
+
+	int offsetX = 0;
+	int offsetY = 0;
+
+	int map_rows = 400;
+	int map_cols = 400;
+
+	map2D = new int* [map_rows];
+
+	for (int i = 0; i < map_rows; i++) {
+		map2D[i] = new int[map_cols + 1];
+		map2D[i][0] = map_cols;
+
+		for (int j = 1; j <= map_cols; j++)
+			map2D[i][j] = NULL;
+	}
+
+	//{ _width, _height, _entry, _entryDoor, _exit, _exitDoor, _isStart, _isEnd, _stairX, _stairY, _nextRoomCorridor };
+	//for each room
+	for (int r = 0; r < randGen.getNumRooms(); r++) {
+		int* paramsTemp = rooms[r].getParameters();
+
+		int width1 = randGen.getWidth(r);
+		int height1 = randGen.getHeight(r);
+		cout << "WIDTH: " << width1 << endl;
+		cout << "HEIGHT: " << height1 << endl;
+		cout << "OFFSETx: " << offsetX << endl;
+		cout << "OFFSETy: " << offsetY << endl;
+		cout << "CORRIDOR LENGTH: " << randGen.getCorridorLength(r) << endl;
+		cout << "entryDoor: " << randGen.getEntryDoor(r) << endl;
+
+		const float start = 0;
+		const float size = 100.0f;
+		int rows = 0;
+		int cols = 0;
+		//generates for each tile
+		for (int i = 0; i < height1; i++) {
+			for (int j = 0; j < width1; j++) {
+				rows = offsetY + start + i;
+				cols = offsetX + start + j;
+				map2D[rows + 50][cols + 50] = 1;
+				a = new PlaneActor(this);
+				Vector3 pos = Vector3(rows * size, cols * size, -100.0f);
+				a->SetPosition(pos);
+				a->SetScale(1.f);
+				CreatePointLights(a, pos, i + j);
+
+			}
+		}
+
+		//for corridor
+		if (!randGen.getIsEnd(r)) {
+			if ((bool)randGen.getExitLocation(r)) { // if north
+				for (int z = 0; z < randGen.getCorridorLength(r); z++) {
+					rows = offsetY + height1 + z;
+					cols = offsetX + randGen.getExitDoor(r);
+					map2D[rows + 50][cols + 50] = 1;
+					a = new PlaneActor(this);
+
+					Vector3 pos = Vector3(rows * size, cols * size, -100.0f);
+					a->SetPosition(pos);
+					a->SetScale(1.f);
+					CreatePointLights(a, pos, z);
+
+				}
+				cout << "corridor placement: " << offsetX + randGen.getExitLocation(r) << endl;
+				cout << " IS True " << endl;
+				offsetY += height1 + randGen.getCorridorLength(r);
+				offsetX += randGen.getExitDoor(r) - randGen.getEntryDoor(r + 1);
+
+
+			}
+			else { //if east
+				for (int z = 0; z < randGen.getCorridorLength(r); z++) {
+					rows = offsetY + randGen.getExitDoor(r);
+					cols = offsetX + width1 + z;
+					map2D[rows + 50][cols + 50] = 1;
+					a = new PlaneActor(this);
+
+					Vector3 pos = Vector3(rows * size, cols * size, -100.0f);
+					a->SetPosition(pos);
+					a->SetScale(1.f);
+					CreatePointLights(a, pos, z);
+
+				}
+				cout << "corridor placement: " << offsetY + randGen.getExitLocation(r) << endl;
+				cout << " IS FALSE " << endl;
+				offsetX += width1 + randGen.getCorridorLength(r);
+				offsetY += randGen.getExitDoor(r) - randGen.getEntryDoor(r + 1);
+			}
+		}
+	}
+	// Setup lights
+	renderer->SetAmbientLight(Vector3(1.f, 1.f, 1.f));
+	DirectionalLight& dir = renderer->GetDirectionalLight();
+	dir.direction = Vector3(.0f, .0f, .0f);
+	dir.diffuseColor = Vector3(0.78f, 0.88f, 1.0f);
+	dir.specColor = Vector3(11.8f, 0.5f, 0.5f);
+
+	// UI elements
+	a = new Actor(this);
+	a->SetPosition(Vector3(-350.0f, -350.0f, 0.0f));
+	SpriteComponent* sc = new SpriteComponent(a);
+	sc->SetTexture(renderer->GetTexture("Assets/cyan.png"));
+
+	cameraTargetActor = new CameraTargetActor(this);
 	}
 }
 
@@ -453,10 +573,6 @@ void Game::UnloadData(){
 	if (renderer){
 		renderer->UnloadData();
 	}
-
-	for (int i = 0; i < 400; i++)
-		delete[] map2D[i];
-	delete[] map2D;
 }
 
 void Game::Shutdown(){
