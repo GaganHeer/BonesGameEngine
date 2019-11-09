@@ -14,7 +14,21 @@ public:
 
 	static const int NUM_ROOMS = 10;
 	void setParams(int x, int y, int variance);
-	void generate();
+	
+	Room* generate();
+	int getNumRooms();
+
+	int getWidth(int i);
+	int getHeight(int i);
+	int getEntryLocation(int i);
+	int getEntryDoor(int i);
+	int getExitLocation(int i);
+	int getExitDoor(int i);
+	int getIsStart(int i);
+	int getIsEnd(int i);
+	int getStairX(int i);
+	int getStairY(int i);
+	int getCorridorLength(int i);
 
 private:
 	int x = 7;

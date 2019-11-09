@@ -19,6 +19,6 @@ void enemy::updateEnemy(int x, int y) {
 }
 
 int* enemy::getPosition() {
-	int size[2] = {_curX, _curY};
+	int size[2] = { _curX, _curY };
 	return size;
 }

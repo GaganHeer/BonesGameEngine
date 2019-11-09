@@ -6,6 +6,7 @@
 
 Room::Room()
 {
+	cout << " PRINTING STUFF ";
 	_isStart = false;
 	_isEnd = false;
 	_entry = NULL;
@@ -14,10 +15,13 @@ Room::Room()
 	_exitDoor = NULL;
 	_diffInc = 0;
 	_nextRoomCorridor = 0;
+	_stairX = 0;
+	_stairY = 0;
 }
 
 Room::Room(int width, int height, int variance, int maxEnemies)
 {
+	Room();
 	_width = width;
 	_height = height;
 	_variance = variance;
@@ -59,16 +63,16 @@ bool Room::generate(bool lastDoor) {
 		_exit = NE;
 
 		//For exit doors. These doors will be placed either on the north or east walls, and are determined by counting from the left (for south) or from the bottom.
-		if (_exit) { 
+		if (_exit) {
 			_exitDoor = rand() % _width + (0);
-			_nextRoomCorridor = _height + rand() % (_height / 2) + (0);
+			_nextRoomCorridor = _height;
 		}
 		else {
 			_exitDoor = rand() % _height + (0);
-			_nextRoomCorridor = _width + rand() & (_width / 2) + (0);
+			_nextRoomCorridor = _width;
 		}
 
-		
+
 	}
 	else {
 		_stairX = rand() % _width + (0);
@@ -92,12 +96,12 @@ bool Room::generate(bool lastDoor) {
 		for (int i = 0; i < enemiesToGenerate; i++) {
 			int enemyX = -1;
 			int enemyY = -1;
-						
+
 			while (lastPlacements[i][0] == enemyX && lastPlacements[i][1] == enemyY) {
 				enemyX = rand() % _width + (0);
 				enemyY = rand() % _height + (0);
 			}
-	
+
 			lastPlacements[i][0] = enemyX;
 			lastPlacements[i][1] = enemyY;
 			_enemies[i].updateEnemy(enemyX, enemyY);
@@ -135,7 +139,7 @@ void Room::updateRoom(int width, int height, int variance, int maxEnemies)
 }
 
 int* Room::getParameters() {
-	int size[10] = { _width, _height, _entry, _entryDoor, _exit, _exitDoor, _isStart, _isEnd, _stairX, _stairY };
+	int size[11] = { _width, _height, _entry, _entryDoor, _exit, _exitDoor, _isStart, _isEnd, _stairX, _stairY, _nextRoomCorridor };
 	return size;
 }
 
@@ -197,7 +201,7 @@ void Room::_debug() {
 	cout << " WIDTH X: " << _width;
 	printf("\n");
 	cout << " HEIGHT Y: " << _height;
-	printf("\n");	
+	printf("\n");
 	cout << " CORRIDOR LENGTH: " << _nextRoomCorridor << " " << fluffThree;
 	printf("\n");
 	printf("\n");
