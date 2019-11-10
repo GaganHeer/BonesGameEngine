@@ -422,7 +422,7 @@ void Game::LoadData(){
 				vector<enemy> useEnemy = randGen.getEnemies(r);
 				for (int e = 0; e < useEnemy.size(); e++) {
 					cubeActor = new CubeActor(this);
-
+					enem.push_back(cubeActor);
 					int tempX = useEnemy.at(e).getPosition()[0];
 					int tempY = useEnemy.at(e).getPosition()[1];
 
@@ -436,10 +436,9 @@ void Game::LoadData(){
 					Vector3 pos = Vector3(enemyY * size, enemyX * size, 0.0f);
 					cubeActor->SetPosition(pos);
 					cubeActor->SetScale(50.f);
-
 					cout << " INSTANTIATING WITH : " << cubeActor;
 					useEnemy.at(e).setup(cubeActor);
-					cout << " SAVED:  " << useEnemy.at(e).getActor();
+					cout << " SAVED:  " << useEnemy.at(e).getActor() << endl;
 				}
 
 				//enemies.insert(enemies.end(), useEnemy.begin(), useEnemy.end());
@@ -485,6 +484,12 @@ void Game::LoadData(){
 						offsetY += randGen.getExitDoor(r) - randGen.getEntryDoor(r + 1);
 					}
 				}
+			}
+
+			for (CubeActor* x : enem) {
+				//cout << "===========================================================" << x << endl;
+				//cout << "===========================================================" << x->GetPosition().x << endl;
+				//cout << "===========================================================" << x->GetPosition().y << endl;
 			}
 			//cout << " LAST ENEMY ACTOR: " << randGen.getEnemies(9).at(0).getActor() << endl;
 
@@ -542,7 +547,22 @@ int Game::IsWalkable(int row, int col) {
 	else if (map2D[row + 50][col + 50] == 2){
 		walkable = 2;
 	}
+	else if (map2D[row + 50][col + 50] == 3) { 
+		walkable = 3;
+	}
 	return walkable;
+}
+
+void Game::SetWalkable(int row, int col) {
+	map2D[row + 50][col + 50] = 1;
+}
+
+void Game::SetEnemyMapPos(int row, int col) {
+	map2D[row + 50][col + 50] = 2;
+}
+
+void Game::SetPlayerMapPos(int row, int col) {
+	map2D[row + 50][col + 50] = 3;
 }
 
 void Game::CreatePointLights(Actor*& a, Vector3& pos, int z)
