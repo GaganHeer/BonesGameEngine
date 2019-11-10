@@ -39,6 +39,9 @@ bool Room::generate(bool lastDoor) {
 	_varX = rand() % tempVar + (-_variance);
 	_varY = rand() % tempVar + (-_variance);
 
+	_width = 7;
+	_height = 7;
+
 	_width += _varX;
 	_height += _varY;
 

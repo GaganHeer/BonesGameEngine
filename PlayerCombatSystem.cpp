@@ -121,4 +121,5 @@ void PlayerCombatSystem::increaseStats() {
 	setBaseAtk(getBaseAtk() + 10);
 	//heal the player after leveling
 	setCurrentHealth(getBaseHealth());
+	setCurrentAtk(getBaseAtk());
 }

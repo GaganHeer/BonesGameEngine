@@ -2,14 +2,18 @@
 #include <stdlib.h>
 #include <stdexcept>
 
-class EnemyCombatSystem 
+class EnemyCombatSystem
 {
 public:
 	EnemyCombatSystem(int newHealth, int newAtk, int newXP);
 
 	//Getters
-	int getHealth() {
-		return health;
+	int getCurrentHealth() {
+		return currentHealth;
+	}
+
+	int getBaseHealth() {
+		return baseHealth;
 	}
 
 	int getAtk() {
@@ -21,8 +25,12 @@ public:
 	}
 
 	//Setters
-	void setHealth(int newHealth) {
-		health = newHealth;
+	void setCurrentHealth(int newHealth) {
+		currentHealth = newHealth;
+	}
+
+	void setBaseHealth(int newHealth) {
+		baseHealth = newHealth;
 	}
 
 	void setAtk(int newAtk) {
@@ -37,9 +45,11 @@ public:
 	int performAtk();
 	void takeDmg(int playerAtk);
 	bool checkIfDead();
+	void resetEnemy();
 
 private:
-	int health;
+	int baseHealth;
+	int currentHealth;
 	int atk;
 	int XP;
 };

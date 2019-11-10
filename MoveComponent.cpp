@@ -25,6 +25,9 @@ void MoveComponent::Update(float deltaTime){
 			cout << "Enemy Encountered " << endl;
 			Vector3 pos = owner->GetPosition() + Vector3(verticalMove, .0f, .0f);
 			owner->SetPosition(pos);
+			cout << "COLLISION: " << game->GetEnemyCollision() << endl;
+			game->SetEnemyCollision(true);
+			cout << "COLLISION: " << game->GetEnemyCollision() << endl;
 			//do something;
 		}
 		else {
@@ -46,6 +49,9 @@ void MoveComponent::Update(float deltaTime){
 			cout << "Enemy Encountered " << endl;
 			Vector3 pos = owner->GetPosition() + Vector3(.0f, -horizontalMove, .0f);
 			owner->SetPosition(pos);
+			cout << "COLLISION: " << game->GetEnemyCollision() << endl;
+			game->SetEnemyCollision(true);
+			cout << "COLLISION: " << game->GetEnemyCollision() << endl;
 			//do something;
 		}
 		else {

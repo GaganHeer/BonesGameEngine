@@ -10,6 +10,7 @@
 #include "CubeActor.h"
 #include "Generator.h"
 #include "enemy.h"
+#include "Texture.h"
 
 Generator randGen;
 Room* rooms;
@@ -19,6 +20,8 @@ Game::Game()
 	isRunning(true),
 	updatingActors(false),
 	isReturning(false),
+	isAttacking(false),
+	enemyCollision(false),
 	scene(0)
 {
 	inputSystem = new InputSystem();
@@ -27,7 +30,7 @@ Game::Game()
 
 	playerCombat = new PlayerCombatSystem();
 	playerLevels = new LevelUpSystem();
-	enemyCombat = new EnemyCombatSystem(25, 10, 100);
+	enemyCombat = new EnemyCombatSystem(50, 10, 100);
 
 }
 
@@ -100,24 +103,8 @@ void Game::ProcessInput() {
 				isRunning = false;
 			}
 
-			if (state.Keyboard.GetKeyState(SDL_SCANCODE_W) == ButtonState::Held){
-				printf("W Button Held \n");
-			}
-
-			if (state.Keyboard.GetKeyState(SDL_SCANCODE_A) == ButtonState::Held){
-				printf("A Button Held \n");
-			}
-
-			if (state.Keyboard.GetKeyState(SDL_SCANCODE_S) == ButtonState::Held){
-				printf("S Button Held \n");
-			}
-
-			if (state.Keyboard.GetKeyState(SDL_SCANCODE_D) == ButtonState::Held){
-				printf("D Button Held \n");
-			}
-
-			if (state.Keyboard.GetKeyState(SDL_SCANCODE_Q) == ButtonState::Pressed){
-				printf("Q Button Held \n");
+			/*if (state.Keyboard.GetKeyState(SDL_SCANCODE_Q) == ButtonState::Pressed){
+				printf("Q Button Pressed \n");
 				savedPlayerPosition = cameraTargetActor->GetPosition();
 				isLoading = true;
 				isReturning = false;
@@ -127,92 +114,25 @@ void Game::ProcessInput() {
 
 
 			if (state.Keyboard.GetKeyState(SDL_SCANCODE_E) == ButtonState::Pressed){
-				printf("E Button Held \n");
+				printf("E Button Pressed \n");
 				isLoading = true;
 				isReturning = true;
 				scene = 0;
 				//AE->sfx("{cecb4df2-fbcf-4d3e-94ef-d261ec18747b}");
-			}
+			}*/
 
 			if (state.Keyboard.GetKeyState(SDL_SCANCODE_H) == ButtonState::Pressed) {
 				printf("H Button Pressed \n");
-
-				printf("\n\n");
-				cout << "------PRE COMBAT ROUND------\n" << endl;
-
-				cout << "***PLAYER STATS***" << endl;
-				cout << "Player Base Health: " << playerCombat->getBaseHealth() << endl;
-				cout << "Player Current Health: " << playerCombat->getCurrentHealth() << endl;
-				cout << "Player Base Atk: " << playerCombat->getBaseAtk() << endl;
-				cout << "Player Current Atk: " << playerCombat->getCurrentAtk() << endl;
-				cout << "Player Debuff Amount: " << playerCombat->getDebuffAmt() << endl;
-				printf("\n\n");
-
-				cout << "***PLAYER LEVELS***" << endl;
-				cout << "Player is Level: " << playerLevels->getCurrentLevel() << endl;
-				cout << "Player has " << playerLevels->getCurrentXP() << " XP right now" << endl;
-				cout << "Player needs " << playerLevels->getRequiredXP() << " XP to level up" << endl;
-				printf("\n\n");
-
-				cout << "***ENEMY STATS***" << endl;
-				cout << "Enemy Health: " << enemyCombat->getHealth() << endl;
-				cout << "Enemy Atk: " << enemyCombat->getAtk() << endl;
-				printf("\n\n");
-
-				//Combat stuff
-				//rand atk just to randomly switch between light and heavy atks, but when it's implemented in game we'll let the player decide what they wanna do
-				int randAtk;
-				srand(time(NULL));
-				randAtk = rand() % 2;
-				int playerAtk = playerCombat->dealDmg(randAtk);
-				cout << "Enemy took " << playerAtk << " damage" << endl;
-				enemyCombat->takeDmg(playerAtk);
-				int enemyAtk = enemyCombat->performAtk();
-				playerCombat->takeDmg(enemyAtk);
-				string playerStatus;
-				string enemyStatus;
-				if (playerCombat->checkIfDead()) {
-					playerStatus = "dead";
+				if (scene == 1) {
+					CombatRound(1);
 				}
-				else {
-					playerStatus = "alive";
+			}
+
+			if (state.Keyboard.GetKeyState(SDL_SCANCODE_L) == ButtonState::Pressed) {
+				printf("L Button Pressed \n");
+				if (scene == 1) {
+					CombatRound(0);
 				}
-
-				if (enemyCombat->checkIfDead()) {
-					enemyStatus = "dead";
-					int XPAmt = enemyCombat->getXP();
-					bool doesLevel = playerLevels->addXP(XPAmt);
-					if (doesLevel) {
-						playerCombat->increaseStats();
-					}
-				}
-				else {
-					enemyStatus = "alive";
-				}
-
-				printf("\n\n");
-				cout << "------POST COMBAT ROUND------\n" << endl;
-
-				cout << "***PLAYER STATS***" << endl;
-				cout << "Player Base Health: " << playerCombat->getBaseHealth() << endl;
-				cout << "Player Current Health: " << playerCombat->getCurrentHealth() << endl;
-				cout << "Player Base Atk: " << playerCombat->getBaseAtk() << endl;
-				cout << "Player Current Atk: " << playerCombat->getCurrentAtk() << endl;
-				cout << "Player Debuff Amount: " << playerCombat->getDebuffAmt() << endl;
-				cout << "Player is " << playerStatus << endl;
-				printf("\n\n");
-
-				cout << "***PLAYER LEVELS***" << endl;
-				cout << "Player is Level: " << playerLevels->getCurrentLevel() << endl;
-				cout << "Player has " << playerLevels->getCurrentXP() << " XP right now" << endl;
-				cout << "Player needs " << playerLevels->getRequiredXP() << " XP to level up" << endl;
-				printf("\n\n");
-
-				cout << "***ENEMY STATS***" << endl;
-				cout << "Enemy Health: " << enemyCombat->getHealth() << endl;
-				cout << "Enemy Atk: " << enemyCombat->getAtk() << endl;
-				cout << "Enemy is " << enemyStatus << endl;
-				printf("\n\n");
 			}
 
 		case SDL_KEYUP:
@@ -223,33 +143,6 @@ void Game::ProcessInput() {
 					useEnemy.at(e).update();
 				}
 			}
-
-			//check keyinput
-			if (state.Keyboard.GetKeyState(SDL_SCANCODE_A) == ButtonState::Released){
-				printf("A Button Released \n");
-			}
-
-			if (state.Keyboard.GetKeyState(SDL_SCANCODE_W) == ButtonState::Released){
-				printf("W Button Released \n");
-			}
-
-			if (state.Keyboard.GetKeyState(SDL_SCANCODE_S) == ButtonState::Released){
-				printf("S Button Released \n");
-			}
-
-			if (state.Keyboard.GetKeyState(SDL_SCANCODE_D) == ButtonState::Released){
-				printf("D Button Released \n");
-			}
-
-			if (state.Keyboard.GetKeyState(SDL_SCANCODE_Q) == ButtonState::Released){
-				printf("Q Button Released \n");
-			}
-
-			if (state.Keyboard.GetKeyState(SDL_SCANCODE_E) == ButtonState::Released){
-				printf("E Button Released \n");
-			}
-
-			//for each enemy in the vector -> run the update function
 		}
 	}
 
@@ -296,6 +189,31 @@ void Game::UpdateGame()
 	}
 
 	AE->update();
+
+	if (scene == 1) {
+		if (enemyCombat->getCurrentHealth() <= 0) {
+			enemyCombat->resetEnemy();
+			isLoading = true;
+			isReturning = true;
+			scene = 0;
+		}
+	}
+
+	if (enemyCollision) {
+		UpdateText(fontEnemyHealth, "Enemy Health: " + std::to_string(enemyCombat->getCurrentHealth()));
+		UpdateText(fontPlayerHealth, "Player Health: " + std::to_string(playerCombat->getCurrentHealth()));
+		savedPlayerPosition = cameraTargetActor->GetPosition();
+		scene = 1;
+		isLoading = true;
+		enemyCollision = false;
+	}
+
+	if (isAttacking) {
+		isAttacking = false;
+
+		/*UpdateText(fontEnemyHealth, "Enemy Health: " + std::to_string(enemyCombat->getCurrentHealth()));
+		UpdateText(fontPlayerHealth, "Player Health: " + std::to_string(playerCombat->getCurrentHealth()));*/
+	}
 }
 
 void Game::GenerateOutput(){
@@ -586,9 +504,33 @@ void Game::LoadData(){
 			cameraTargetActor = new CameraTargetActor(this);
 		}
 
-	}
-	else if (scene == 1) {
+	} else if (scene == 1) {
+		Actor* combatText = new Actor(this);
+		combatText->SetPosition(Vector3(0.0f, -210.0f, 0.0f));
+		SpriteComponent* sc = new SpriteComponent(combatText);
+		sc->SetTexture(renderer->GetTexture("Assets/combatText.png"));
 
+		Actor* skeletonSprite = new Actor(this);
+		skeletonSprite->SetPosition(Vector3(-380.0f, 50.0, 0.0f));
+		skeletonSprite->SetScale(0.5f);
+		SpriteComponent* skelSC = new SpriteComponent(skeletonSprite);
+		skelSC->SetTexture(renderer->GetTexture("Assets/skeleton.png"));
+
+		Actor* enemySprite = new Actor(this);
+		enemySprite->SetPosition(Vector3(350.0f, 50.0, 0.0f));
+		enemySprite->SetScale(0.5f);
+		SpriteComponent* enemySC = new SpriteComponent(enemySprite);
+		enemySC->SetTexture(renderer->GetTexture("Assets/enemy.png"));
+
+		Actor* playerHealthText = new Actor(this);
+		playerHealthText->SetPosition(Vector3(-300.0f, 180.0f, 0.0f));
+		SpriteComponent* playerHealthSC = new SpriteComponent(playerHealthText);
+		if (fontPlayerHealth) playerHealthSC->SetTexture(fontPlayerHealth);
+
+		Actor* enemyHealthText = new Actor(this);
+		enemyHealthText->SetPosition(Vector3(300.0f, 180.0f, 0.0f));
+		SpriteComponent* enemyHealthSC = new SpriteComponent(enemyHealthText);
+		if (fontEnemyHealth) enemyHealthSC->SetTexture(fontEnemyHealth);
 	}
 }
 
@@ -688,17 +630,96 @@ void Game::InitFontRenderer()
 	fontRenderer = new Font();
 	fontRenderer->Load("Assets/Carlito-Regular.ttf");
 
-	UpdateText(fontArea1, "blah blah");
+	//UpdateText(fontArea1, "blah blah");
+	UpdateText(fontEnemyHealth, "Enemy Health: " + std::to_string(enemyCombat->getCurrentHealth()));
+	UpdateText(fontPlayerHealth, "Player Health: " + std::to_string(playerCombat->getCurrentHealth()));
 }
 
 void Game::UpdateText(Texture*& fontArea, const std::string& text)
 {
-	// each separate text will need a separate text area
 	if (fontArea) delete fontArea;
+	// each separate text will need a separate text area
 	fontArea = fontRenderer->RenderText(text.c_str(), Color::LightYellow, Color::LightBlue, Font::LARGE_FONT_3, true);
 }
 
 void Game::CleanupFontAreas()
 {
 	if (fontArea1) delete fontArea1;
+}
+
+//Atk type 0 = Light Atk
+//Atk type 1 = Heavy Atk, 
+void Game::CombatRound(int atkType) {
+	printf("\n\n");
+	cout << "------PRE COMBAT ROUND------\n" << endl;
+
+	cout << "***PLAYER STATS***" << endl;
+	cout << "Player Base Health: " << playerCombat->getBaseHealth() << endl;
+	cout << "Player Current Health: " << playerCombat->getCurrentHealth() << endl;
+	cout << "Player Base Atk: " << playerCombat->getBaseAtk() << endl;
+	cout << "Player Current Atk: " << playerCombat->getCurrentAtk() << endl;
+	cout << "Player Debuff Amount: " << playerCombat->getDebuffAmt() << endl;
+	printf("\n\n");
+
+	cout << "***PLAYER LEVELS***" << endl;
+	cout << "Player is Level: " << playerLevels->getCurrentLevel() << endl;
+	cout << "Player has " << playerLevels->getCurrentXP() << " XP right now" << endl;
+	cout << "Player needs " << playerLevels->getRequiredXP() << " XP to level up" << endl;
+	printf("\n\n");
+
+	cout << "***ENEMY STATS***" << endl;
+	cout << "Enemy Health: " << enemyCombat->getCurrentHealth() << endl;
+	cout << "Enemy Atk: " << enemyCombat->getAtk() << endl;
+	printf("\n\n");
+
+	int playerAtk = playerCombat->dealDmg(atkType);
+	cout << "Enemy took " << playerAtk << " damage" << endl;
+	enemyCombat->takeDmg(playerAtk);
+	int enemyAtk = enemyCombat->performAtk();
+	playerCombat->takeDmg(enemyAtk);
+	string playerStatus;
+	string enemyStatus;
+	if (playerCombat->checkIfDead()) {
+		playerStatus = "dead";
+	}
+	else {
+		playerStatus = "alive";
+	}
+
+	if (enemyCombat->checkIfDead()) {
+		enemyStatus = "dead";
+		int XPAmt = enemyCombat->getXP();
+		bool doesLevel = playerLevels->addXP(XPAmt);
+		if (doesLevel) {
+			playerCombat->increaseStats();
+		}
+	}
+	else {
+		enemyStatus = "alive";
+	}
+
+	printf("\n");
+	cout << "------POST COMBAT ROUND------\n" << endl;
+
+	cout << "***PLAYER STATS***" << endl;
+	cout << "Player Base Health: " << playerCombat->getBaseHealth() << endl;
+	cout << "Player Current Health: " << playerCombat->getCurrentHealth() << endl;
+	cout << "Player Base Atk: " << playerCombat->getBaseAtk() << endl;
+	cout << "Player Current Atk: " << playerCombat->getCurrentAtk() << endl;
+	cout << "Player Debuff Amount: " << playerCombat->getDebuffAmt() << endl;
+	cout << "Player is " << playerStatus << endl;
+	printf("\n\n");
+
+	cout << "***PLAYER LEVELS***" << endl;
+	cout << "Player is Level: " << playerLevels->getCurrentLevel() << endl;
+	cout << "Player has " << playerLevels->getCurrentXP() << " XP right now" << endl;
+	cout << "Player needs " << playerLevels->getRequiredXP() << " XP to level up" << endl;
+	printf("\n\n");
+
+	cout << "***ENEMY STATS***" << endl;
+	cout << "Enemy Health: " << enemyCombat->getCurrentHealth() << endl;
+	cout << "Enemy Atk: " << enemyCombat->getAtk() << endl;
+	cout << "Enemy is " << enemyStatus << endl;
+
+	isAttacking = true;
 }

@@ -1,7 +1,8 @@
 #include "EnemyCombatSystem.h"
 
 EnemyCombatSystem::EnemyCombatSystem(int newHealth, int newAtk, int newXP) {
-	health = newHealth;
+	baseHealth = newHealth;
+	currentHealth = baseHealth;
 	atk = newAtk;
 	XP = newXP;
 }
@@ -13,7 +14,8 @@ bool EnemyCombatSystem::isDebuffing() {
 	randomNum = rand() % 4;
 	if (randomNum == 0) {
 		return true;
-	} else {
+	}
+	else {
 		return false;
 	}
 }
@@ -23,7 +25,8 @@ int EnemyCombatSystem::performAtk() {
 	if (isDebuffing()) {
 		printf("Enemy used Debuff\n");
 		return 0;
-	} else {
+	}
+	else {
 		printf("Enemy used Atk\n");
 		return getAtk();
 	}
@@ -31,14 +34,19 @@ int EnemyCombatSystem::performAtk() {
 
 //reduce enemy health by dmg done
 void EnemyCombatSystem::takeDmg(int playerAtk) {
-	setHealth(getHealth() - playerAtk);
+	setCurrentHealth(getCurrentHealth() - playerAtk);
 }
 
 //return true if dead or false if alive
 bool EnemyCombatSystem::checkIfDead() {
-	if (getHealth() <= 0) {
+	if (getCurrentHealth() <= 0) {
 		return true;
-	} else {
+	}
+	else {
 		return false;
 	}
+}
+
+void EnemyCombatSystem::resetEnemy() {
+	setCurrentHealth(getBaseHealth());
 }
