@@ -55,6 +55,7 @@ public:
 	int IsWalkable(int row, int col);
 	void Game::SetWalkable(int row, int col);
 	void Game::SetEnemyMapPos(int row, int col);
+	void Game::SetPlayerMapPos(int row, int col);
 	void CombatRound(int atkType);
 
 	vector<class CubeActor*> getEnemies() {

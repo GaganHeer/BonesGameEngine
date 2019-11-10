@@ -19,17 +19,20 @@ void MoveComponent::Update(float deltaTime){
 
 		if (game->IsWalkable(row + verticalMove / 100, col) == 1) {
 			cout << "Is Walkable" << endl;
+			game->SetWalkable(row, col);
+			game->SetPlayerMapPos(row + verticalMove / 100, col);
 			Vector3 pos = owner->GetPosition() + Vector3(verticalMove, .0f, .0f);
 			owner->SetPosition(pos);
 			cout << "Current row,col: " << pos.x / 100 << " " << pos.y / 100 << endl;
 		}
 		else if (game->IsWalkable(row + verticalMove / 100, col) == 2) {
 			cout << "Enemy Encountered " << endl;
+			game->SetWalkable(row, col);
+			game->SetPlayerMapPos(row + verticalMove / 100, col);
 			Vector3 pos = owner->GetPosition() + Vector3(verticalMove, .0f, .0f);
 			owner->SetPosition(pos);
-			cout << "COLLISION: " << game->GetEnemyCollision() << endl;
-			game->SetEnemyCollision(true);
-			cout << "COLLISION: " << game->GetEnemyCollision() << endl;
+
+			Collided();
 			//do something;
 		}
 		else {
@@ -44,17 +47,20 @@ void MoveComponent::Update(float deltaTime){
 
 		if (game->IsWalkable(row, col + -horizontalMove / 100) == 1) {
 			cout << "Is Walkable" << endl;
+			game->SetWalkable(row, col);
+			game->SetPlayerMapPos(row, col + -horizontalMove / 100);
 			Vector3 pos = owner->GetPosition() + Vector3(.0f, -horizontalMove, .0f);
 			owner->SetPosition(pos);
 			cout << "Current row,col: " << pos.x / 100 << " " << pos.y / 100 << endl;
 		}
 		else if (game->IsWalkable(row, col + -horizontalMove / 100) == 2) {
 			cout << "Enemy Encountered " << endl;
+			game->SetWalkable(row, col);
+			game->SetPlayerMapPos(row, col + -horizontalMove / 100);
 			Vector3 pos = owner->GetPosition() + Vector3(.0f, -horizontalMove, .0f);
 			owner->SetPosition(pos);
-			cout << "COLLISION: " << game->GetEnemyCollision() << endl;
-			game->SetEnemyCollision(true);
-			cout << "COLLISION: " << game->GetEnemyCollision() << endl;
+
+			Collided();
 			//do something;
 		}
 		else {
@@ -62,6 +68,13 @@ void MoveComponent::Update(float deltaTime){
 		}
 		MoveEnemy();
 	}
+}
+
+void MoveComponent::Collided()
+{
+	cout << "COLLISION: " << game->GetEnemyCollision() << endl;
+	game->SetEnemyCollision(true);
+	cout << "COLLISION: " << game->GetEnemyCollision() << endl;
 }
 
 void MoveComponent::MoveEnemy()
@@ -74,33 +87,39 @@ void MoveComponent::MoveEnemy()
 	int enem_col = 0;
 	int tempX = 0;
 	int tempY = 0;
+	int direction = 0;
 	//Move each cube actor after player moves
 	for (CubeActor* actor : enemies) {
 		cubePos = actor->GetPosition();
 		enem_row = (int)(cubePos.x / 100);
 		enem_col = (int)(cubePos.y / 100);
-		int direction = rand() % 4 + (0);
+		direction = rand() % 4 + (0);
 		x = 0;
 		y = 0;
 		//cout << "DIRECTION : " << direction << endl;
-		if (direction == 1) { // North
+		if (direction == 0) { // North
 			y = 1;
 		}
-		else if (direction == 2) { // eAST
+		else if (direction == 1) { // eAST
 			x = 1;
 		}
-		else if (direction == 3) { // South
+		else if (direction == 2) { // South
 			y = -1;
 		}
-		else if (direction == 4) { // West
+		else if (direction == 3) { // West
 			x = -1;
 		}
 
-		//Vector3 pos = actor->GetPosition() + Vector3(x, .0f, .0f);
 		tempX = enem_row + x;
 		tempY = enem_col + y;
-		if (game->IsWalkable(tempX, tempY) == 1) {
+		if (game->IsWalkable(tempX, tempY) == 1 || game->IsWalkable(tempX, tempY) == 3)
+		{
 			game->SetWalkable(enem_row, enem_col);
+
+			if (game->IsWalkable(tempX, tempY) == 3) {
+				Collided();
+			}
+
 			pos2 = actor->GetPosition() + Vector3(x * 100, y * 100, .0f);
 			actor->SetPosition(pos2);
 			game->SetEnemyMapPos(tempX, tempY);

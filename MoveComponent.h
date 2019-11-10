@@ -10,6 +10,8 @@ public:
 	MoveComponent(class Actor* newOwner, int updateOrder = 10);
 	void Update(float deltaTime) override;
 
+	void Collided();
+
 	void MoveEnemy();
 	
 	float GetHorizontalMove() const {

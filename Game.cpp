@@ -547,6 +547,9 @@ int Game::IsWalkable(int row, int col) {
 	else if (map2D[row + 50][col + 50] == 2){
 		walkable = 2;
 	}
+	else if (map2D[row + 50][col + 50] == 3) { 
+		walkable = 3;
+	}
 	return walkable;
 }
 
@@ -556,6 +559,10 @@ void Game::SetWalkable(int row, int col) {
 
 void Game::SetEnemyMapPos(int row, int col) {
 	map2D[row + 50][col + 50] = 2;
+}
+
+void Game::SetPlayerMapPos(int row, int col) {
+	map2D[row + 50][col + 50] = 3;
 }
 
 void Game::CreatePointLights(Actor*& a, Vector3& pos, int z)
