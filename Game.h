@@ -9,6 +9,7 @@
 #include "PlayerCombatSystem.h"
 #include "EnemyCombatSystem.h"
 #include "LevelUpSystem.h"
+
 class Game
 {
 public:
@@ -42,7 +43,7 @@ public:
 		gameState = state;
 	}
 
-	bool IsWalkable(int row, int col);
+	int IsWalkable(int row, int col);
 
 private:
 	void ProcessInput();
@@ -64,6 +65,7 @@ private:
 	bool isRunning;
 	bool isLoading;
 	bool updatingActors;
+	std::vector<class enemy*> enemies;
 
 	int exit_posX;
 	int exit_posY;

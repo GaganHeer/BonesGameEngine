@@ -9,6 +9,10 @@
 #include "PointLightComponent.h"
 #include "CubeActor.h"
 #include "Generator.h"
+#include "enemy.h"
+
+Generator randGen;
+Room* rooms;
 
 Game::Game()
 	:renderer(nullptr),
@@ -23,6 +27,7 @@ Game::Game()
 	playerCombat = new PlayerCombatSystem();
 	playerLevels = new LevelUpSystem();
 	enemyCombat = new EnemyCombatSystem(25, 10, 100);
+
 }
 
 bool Game::Initialize(){
@@ -198,6 +203,15 @@ void Game::ProcessInput() {
 			}
 
 		case SDL_KEYUP:
+			//update game
+			for (int r = 0; r < randGen.getNumRooms(); r++) {
+				vector<enemy> useEnemy = randGen.getEnemies(r);
+				for (int e = 0; e < useEnemy.size(); e++) {
+					useEnemy.at(e).update();
+				}
+			}
+
+			//check keyinput
 			if (state.Keyboard.GetKeyState(SDL_SCANCODE_A) == ButtonState::Released){
 				printf("A Button Released \n");
 			}
@@ -221,6 +235,8 @@ void Game::ProcessInput() {
 			if (state.Keyboard.GetKeyState(SDL_SCANCODE_E) == ButtonState::Released){
 				printf("E Button Released \n");
 			}
+
+			//for each enemy in the vector -> run the update function
 		}
 	}
 
@@ -289,8 +305,7 @@ void Game::LoadData(){
 		cubeActor->SetPosition(Vector3(0.0f, 75.0f, 0.0f));
 		cubeActor->SetScale(50.f);
 
-		Generator randGen;
-		Room* rooms = randGen.generate();
+		rooms = randGen.generate();
 
 		int offsetX = 0;
 		int offsetY = 0;
@@ -307,6 +322,10 @@ void Game::LoadData(){
 			for (int j = 1; j <= map_cols; j++)
 				map2D[i][j] = NULL;
 		}
+
+		enemy setup;
+		int count = 0;
+		//enemies.assign(0, setup);
 
 		//{ _width, _height, _entry, _entryDoor, _exit, _exitDoor, _isStart, _isEnd, _stairX, _stairY, _nextRoomCorridor };
 		//for each room
@@ -326,6 +345,8 @@ void Game::LoadData(){
 			const float size = 100.0f;
 			int rows = 0;
 			int cols = 0;
+			int enemyX = 0;
+			int enemyY = 0;
 			//generates for each tile
 			for (int i = 0; i < height1; i++) {
 				for (int j = 0; j < width1; j++) {
@@ -337,9 +358,33 @@ void Game::LoadData(){
 					a->SetPosition(pos);
 					a->SetScale(1.f);
 					CreatePointLights(a, pos, i+j);
-
 				}
 			}
+
+			vector<enemy> useEnemy = randGen.getEnemies(r);
+			for (int e = 0; e < useEnemy.size(); e++) {
+				cubeActor = new CubeActor(this);
+
+				int tempX = useEnemy.at(e).getPosition()[0];
+				int tempY = useEnemy.at(e).getPosition()[1];
+
+				enemyX = offsetX + start + tempX;
+				enemyY = offsetY + start + tempY;
+
+				cout << "ROOM:  " << r << " enemy: " << e << " At position: [" << tempX << ", " << tempY << "]" << endl;
+				cout << "Expected out: [" << enemyX << ", " << enemyY << "]" << endl;
+
+				map2D[enemyY + 50][enemyX + 50] = 2;
+				Vector3 pos = Vector3(enemyY * size, enemyX * size, 0.0f);
+				cubeActor->SetPosition(pos);
+				cubeActor->SetScale(50.f);
+
+				cout << " INSTANTIATING WITH : " << cubeActor;
+				useEnemy.at(e).setup(cubeActor);
+				cout << " SAVED:  " << useEnemy.at(e).getActor();
+			}
+			
+			//enemies.insert(enemies.end(), useEnemy.begin(), useEnemy.end());
 
 			//for corridor
 			if (!randGen.getIsEnd(r)) {
@@ -383,6 +428,8 @@ void Game::LoadData(){
 				}
 			}
 		}
+		//cout << " LAST ENEMY ACTOR: " << randGen.getEnemies(9).at(0).getActor() << endl;
+
 		// Setup lights
 		renderer->SetAmbientLight(Vector3(1.f, 1.f, 1.f));
 		DirectionalLight& dir = renderer->GetDirectionalLight();
@@ -390,12 +437,13 @@ void Game::LoadData(){
 		dir.diffuseColor = Vector3(0.78f, 0.88f, 1.0f);
 		dir.specColor = Vector3(11.8f, 0.5f, 0.5f);
 
+		
 		// UI elements
 		a = new Actor(this);
 		a->SetPosition(Vector3(-350.0f, -350.0f, 0.0f));
 		SpriteComponent* sc = new SpriteComponent(a);
 		sc->SetTexture(renderer->GetTexture("Assets/cyan.png"));
-
+		
 		cameraTargetActor = new CameraTargetActor(this);
 	}
 	else if (scene == 1) {
@@ -523,13 +571,13 @@ void Game::LoadData(){
 	}
 }
 
-bool Game::IsWalkable(int row, int col) {
-	bool walkable;
+int Game::IsWalkable(int row, int col) {
+	int walkable = 0;
 	if (map2D[row + 50][col + 50] == 1) {
-		walkable = true;
+		walkable = 1;
 	}
-	else {
-		walkable = false;
+	else if (map2D[row + 50][col + 50] == 2){
+		walkable = 2;
 	}
 	return walkable;
 }
