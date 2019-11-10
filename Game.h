@@ -9,6 +9,7 @@
 #include "PlayerCombatSystem.h"
 #include "EnemyCombatSystem.h"
 #include "LevelUpSystem.h"
+#include "Font.h"
 
 class Game
 {
@@ -52,6 +53,9 @@ private:
 	void LoadData();
 	void CreatePointLights(Actor*& a, Vector3& pos, int z);
 	void UnloadData();
+	void InitFontRenderer();
+	void UpdateText(Texture*& fontArea, const std::string& text);
+	void CleanupFontAreas();
 	
 	std::vector<class Actor*> actors;
 	std::vector<class Actor*> pendingActors;
@@ -80,6 +84,9 @@ private:
 	class PlayerCombatSystem* playerCombat;
 	class LevelUpSystem* playerLevels;
 	class EnemyCombatSystem* enemyCombat;
+
+	Font* fontRenderer;
+	Texture* fontArea1;
 
 	bool isReturning;
 	Vector3 savedPlayerPosition;

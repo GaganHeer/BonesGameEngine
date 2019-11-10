@@ -13,10 +13,4 @@ public:
 
 	GUI(int argc, char** argv);
 	~GUI();
-
-	void createWindow() const;
-
-private:
-	static void displayFunction();
-	void init() const;
 };

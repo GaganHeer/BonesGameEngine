@@ -1,14 +1,18 @@
 ﻿  Game.cpp
-C:\Users\a00952521\Documents\Bones-Engine\Game.cpp(156,15): warning C4244:  'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
-C:\Users\a00952521\Documents\Bones-Engine\Game.cpp(213,23): warning C4018:  '<': signed/unsigned mismatch
-C:\Users\a00952521\Documents\Bones-Engine\Game.cpp(343,30): warning C4244:  '=': conversion from 'float' to 'int', possible loss of data
-C:\Users\a00952521\Documents\Bones-Engine\Game.cpp(344,30): warning C4244:  '=': conversion from 'float' to 'int', possible loss of data
-C:\Users\a00952521\Documents\Bones-Engine\Game.cpp(355,23): warning C4018:  '<': signed/unsigned mismatch
-C:\Users\a00952521\Documents\Bones-Engine\Game.cpp(361,31): warning C4244:  '=': conversion from 'float' to 'int', possible loss of data
-C:\Users\a00952521\Documents\Bones-Engine\Game.cpp(362,31): warning C4244:  '=': conversion from 'float' to 'int', possible loss of data
-C:\Users\a00952521\Documents\Bones-Engine\Game.cpp(485,30): warning C4244:  '=': conversion from 'float' to 'int', possible loss of data
-C:\Users\a00952521\Documents\Bones-Engine\Game.cpp(486,30): warning C4244:  '=': conversion from 'float' to 'int', possible loss of data
-C:\Users\a00952521\Documents\Bones-Engine\Game.cpp(497,23): warning C4018:  '<': signed/unsigned mismatch
-C:\Users\a00952521\Documents\Bones-Engine\Game.cpp(503,31): warning C4244:  '=': conversion from 'float' to 'int', possible loss of data
-C:\Users\a00952521\Documents\Bones-Engine\Game.cpp(504,31): warning C4244:  '=': conversion from 'float' to 'int', possible loss of data
-  Game.vcxproj -> C:\Users\a00952521\Documents\Bones-Engine\Debug\Game.exe
+C:\Users\happi\Documents\BonesEngine\Game.cpp(165,15): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
+C:\Users\happi\Documents\BonesEngine\Game.cpp(222,23): warning C4018: '<': signed/unsigned mismatch
+C:\Users\happi\Documents\BonesEngine\Game.cpp(352,30): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+C:\Users\happi\Documents\BonesEngine\Game.cpp(353,30): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+C:\Users\happi\Documents\BonesEngine\Game.cpp(364,23): warning C4018: '<': signed/unsigned mismatch
+C:\Users\happi\Documents\BonesEngine\Game.cpp(370,31): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+C:\Users\happi\Documents\BonesEngine\Game.cpp(371,31): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+C:\Users\happi\Documents\BonesEngine\Game.cpp(493,30): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+C:\Users\happi\Documents\BonesEngine\Game.cpp(494,30): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+C:\Users\happi\Documents\BonesEngine\Game.cpp(505,23): warning C4018: '<': signed/unsigned mismatch
+C:\Users\happi\Documents\BonesEngine\Game.cpp(511,31): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+C:\Users\happi\Documents\BonesEngine\Game.cpp(512,31): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+C:\Users\happi\Documents\BonesEngine\Game.cpp(697,31): warning C4150: deletion of pointer to incomplete type 'Texture'; no destructor called
+C:\Users\happi\Documents\BonesEngine\Font.h(42): message : see declaration of 'Texture'
+C:\Users\happi\Documents\BonesEngine\Game.cpp(703,33): warning C4150: deletion of pointer to incomplete type 'Texture'; no destructor called
+C:\Users\happi\Documents\BonesEngine\Font.h(42): message : see declaration of 'Texture'
+  Game.vcxproj -> C:\Users\happi\Documents\BonesEngine\Debug\Game.exe

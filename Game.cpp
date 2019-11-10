@@ -51,6 +51,15 @@ bool Game::Initialize(){
 		return false;
 	}
 
+	// Initialize SDL_ttf
+	if (TTF_Init() != 0)
+	{
+		SDL_Log("Failed to initialize SDL_ttf");
+		return false;
+	}
+
+	InitFontRenderer();
+
 	AE->setup();
 	//AE->sfx("{8a6a04bd-f459-4efe-9b9f-5b2bd9969d8c}");
 	LoadData();
@@ -426,13 +435,12 @@ void Game::LoadData(){
 			dir.diffuseColor = Vector3(0.78f, 0.88f, 1.0f);
 			dir.specColor = Vector3(11.8f, 0.5f, 0.5f);
 
-
 			// UI elements
 			a = new Actor(this);
 			a->SetPosition(Vector3(-350.0f, -350.0f, 0.0f));
 			SpriteComponent* sc = new SpriteComponent(a);
-			sc->SetTexture(renderer->GetTexture("Assets/cyan.png"));
 
+			if (fontArea1) sc->SetTexture(fontArea1);
 			cameraTargetActor = new CameraTargetActor(this);
 			cameraTargetActor->SetPosition(savedPlayerPosition);
 			isReturning = false;
@@ -569,15 +577,15 @@ void Game::LoadData(){
 			dir.diffuseColor = Vector3(0.78f, 0.88f, 1.0f);
 			dir.specColor = Vector3(11.8f, 0.5f, 0.5f);
 
-
 			// UI elements
 			a = new Actor(this);
 			a->SetPosition(Vector3(-350.0f, -350.0f, 0.0f));
 			SpriteComponent* sc = new SpriteComponent(a);
-			sc->SetTexture(renderer->GetTexture("Assets/cyan.png"));
 
+			if (fontArea1) sc->SetTexture(fontArea1);
 			cameraTargetActor = new CameraTargetActor(this);
 		}
+
 	}
 	else if (scene == 1) {
 
@@ -634,6 +642,14 @@ void Game::UnloadData(){
 	if (renderer){
 		renderer->UnloadData();
 	}
+	/*
+	if (fontRenderer)
+	{
+		fontRenderer->Unload();
+		CleanupFontAreas();
+		delete fontRenderer;
+	}
+	*/
 }
 
 void Game::Shutdown(){
@@ -664,4 +680,25 @@ void Game::RemoveActor(Actor* actor){
 		std::iter_swap(iter, actors.end() - 1);
 		actors.pop_back();
 	}
+}
+
+void Game::InitFontRenderer()
+{
+	// make sure TTF_Init() is called before initializing fontRenderer
+	fontRenderer = new Font();
+	fontRenderer->Load("Assets/Carlito-Regular.ttf");
+
+	UpdateText(fontArea1, "blah blah");
+}
+
+void Game::UpdateText(Texture*& fontArea, const std::string& text)
+{
+	// each separate text will need a separate text area
+	if (fontArea) delete fontArea;
+	fontArea = fontRenderer->RenderText(text.c_str(), Color::LightYellow, Color::LightBlue, Font::LARGE_FONT_3, true);
+}
+
+void Game::CleanupFontAreas()
+{
+	if (fontArea1) delete fontArea1;
 }
