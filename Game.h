@@ -44,7 +44,7 @@ public:
 		gameState = state;
 	}
 
-	bool IsWalkable(int row, int col);
+	int IsWalkable(int row, int col);
 
 private:
 	void ProcessInput();
@@ -69,6 +69,7 @@ private:
 	bool isRunning;
 	bool isLoading;
 	bool updatingActors;
+	std::vector<class enemy*> enemies;
 
 	int exit_posX;
 	int exit_posY;
@@ -83,6 +84,10 @@ private:
 	class PlayerCombatSystem* playerCombat;
 	class LevelUpSystem* playerLevels;
 	class EnemyCombatSystem* enemyCombat;
+
 	Font* fontRenderer;
 	Texture* fontArea1;
+
+	bool isReturning;
+	Vector3 savedPlayerPosition;
 };

@@ -3,7 +3,7 @@
 #include <list>
 #include <array>
 #include "room.h"
-
+#include "enemy.h"
 
 using namespace std;
 
@@ -29,6 +29,8 @@ public:
 	int getStairX(int i);
 	int getStairY(int i);
 	int getCorridorLength(int i);
+	vector<enemy> getEnemies(int i);
+
 
 private:
 	int x = 7;

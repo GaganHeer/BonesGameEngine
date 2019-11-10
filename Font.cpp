@@ -40,10 +40,10 @@ bool Font::Load(const std::string& fileName)
 
 void Font::Unload()
 {
-	for (auto& font : mFontData)
+	/*for (auto& font : mFontData)
 	{
 		TTF_CloseFont(font.second);
-	}
+	}*/
 }
 
 Texture* Font::RenderText(const std::string& textMessage, const Vector3& color_fg, const Vector3& color_bg, int pointSize, bool blend)

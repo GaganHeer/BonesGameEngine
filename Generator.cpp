@@ -89,4 +89,6 @@ int Generator::getStairY(int i) {
 int Generator::getCorridorLength(int i) {
 	return rooms[i].getParameters()[10];
 }
-
+vector<enemy> Generator::getEnemies(int i) {
+	return rooms[i].getEnemies();
+}
