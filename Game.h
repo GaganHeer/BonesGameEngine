@@ -53,7 +53,13 @@ public:
 	}
 
 	int IsWalkable(int row, int col);
+	void Game::SetWalkable(int row, int col);
+	void Game::SetEnemyMapPos(int row, int col);
 	void CombatRound(int atkType);
+
+	vector<class CubeActor*> getEnemies() {
+		return enem;
+	}
 
 private:
 	void ProcessInput();
@@ -65,6 +71,7 @@ private:
 	void InitFontRenderer();
 	void UpdateText(Texture*& fontArea, const std::string& text);
 	void CleanupFontAreas();
+	
 	
 	std::vector<class Actor*> actors;
 	std::vector<class Actor*> pendingActors;
@@ -79,6 +86,7 @@ private:
 	bool isLoading;
 	bool updatingActors;
 	std::vector<class enemy*> enemies;
+	vector<class CubeActor*> enem;
 
 	int exit_posX;
 	int exit_posY;
