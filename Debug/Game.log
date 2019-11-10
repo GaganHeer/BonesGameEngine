@@ -1,0 +1,7 @@
+﻿  Game.cpp
+C:\Users\a00952521\Desktop\Bones-Engine\Game.cpp(147,15): warning C4244:  'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
+C:\Users\a00952521\Desktop\Bones-Engine\Game.cpp(332,29): warning C4244:  '=': conversion from 'float' to 'int', possible loss of data
+C:\Users\a00952521\Desktop\Bones-Engine\Game.cpp(333,29): warning C4244:  '=': conversion from 'float' to 'int', possible loss of data
+C:\Users\a00952521\Desktop\Bones-Engine\Game.cpp(455,28): warning C4244:  '=': conversion from 'float' to 'int', possible loss of data
+C:\Users\a00952521\Desktop\Bones-Engine\Game.cpp(456,28): warning C4244:  '=': conversion from 'float' to 'int', possible loss of data
+  Game.vcxproj -> C:\Users\a00952521\Desktop\Bones-Engine\Debug\Game.exe
