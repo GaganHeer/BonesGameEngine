@@ -518,7 +518,7 @@ void Game::UpdateText(Texture*& fontArea, const std::string& text)
 {
 	// each separate text will need a separate text area
 	if (fontArea) delete fontArea;
-	fontArea = fontRenderer->RenderText(text.c_str());
+	fontArea = fontRenderer->RenderText(text.c_str(), Color::LightYellow, Color::LightBlue, Font::LARGE_FONT_3, true);
 }
 
 void Game::CleanupFontAreas()

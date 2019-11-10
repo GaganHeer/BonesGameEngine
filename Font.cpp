@@ -15,13 +15,13 @@ Font::~Font()
 
 bool Font::Load(const std::string& fileName)
 {
-	// We support these font sizes
 	std::vector<int> fontSizes = {
-		8, 10, 12, 14,
-		20, 22, 24, 26,
-		30, 32, 34, 36,
-		40, 42, 44, 46,
-		60, 64, 68, 72
+		TINY_FONT_1, TINY_FONT_2, TINY_FONT_3,
+		SMALL_FONT_1, SMALL_FONT_2, SMALL_FONT_3,
+		MEDIUM_FONT_1, MEDIUM_FONT_2, MEDIUM_FONT_3,
+		BIG_FONT_1, BIG_FONT_2, BIG_FONT_3,
+		LARGE_FONT_1, LARGE_FONT_2, LARGE_FONT_3,
+		XL_FONT_1, XL_FONT_2, XL_FONT_3
 	};
 	
 	for (int size = 0; size < fontSizes.size(); size++)
@@ -46,16 +46,23 @@ void Font::Unload()
 	}
 }
 
-Texture* Font::RenderText(const std::string& textMessage, const Vector3& color, int pointSize, bool blend)
+Texture* Font::RenderText(const std::string& textMessage, const Vector3& color_fg, const Vector3& color_bg, int pointSize, bool blend)
 {
 	Texture* texture = nullptr;
 
 	// Convert to SDL_Color
-	SDL_Color sdlColor;
-	sdlColor.r = static_cast<Uint8>(color.x * 255);
-	sdlColor.g = static_cast<Uint8>(color.y * 255);
-	sdlColor.b = static_cast<Uint8>(color.z * 255);
-	sdlColor.a = 255;
+	SDL_Color sdlColor_fg;
+	sdlColor_fg.r = static_cast<Uint8>(color_fg.x * 255);
+	sdlColor_fg.g = static_cast<Uint8>(color_fg.y * 255);
+	sdlColor_fg.b = static_cast<Uint8>(color_fg.z * 255);
+	sdlColor_fg.a = 255;
+
+	// Convert to SDL_Color
+	SDL_Color sdlColor_bg;
+	sdlColor_bg.r = static_cast<Uint8>(color_bg.x * 255);
+	sdlColor_bg.g = static_cast<Uint8>(color_bg.y * 255);
+	sdlColor_bg.b = static_cast<Uint8>(color_bg.z * 255);
+	sdlColor_bg.a = 255;
 
 	// Find the font data for this point size
 	auto iter = mFontData.find(pointSize);
@@ -65,7 +72,17 @@ Texture* Font::RenderText(const std::string& textMessage, const Vector3& color, 
 		TTF_Font* font = iter->second;
 		
 		// Draw this to a surface (blended for alpha
-		SDL_Surface* messageSurf = blend ? TTF_RenderUTF8_Blended(font, textMessage.c_str(), sdlColor) : TTF_RenderText_Solid(font, textMessage.c_str(), sdlColor);
+		SDL_Surface* messageSurf = nullptr;
+		if (blend)
+		{
+			messageSurf = TTF_RenderUTF8_Blended(font, textMessage.c_str(), sdlColor_fg);
+		}
+		else
+		{
+			messageSurf = TTF_RenderUTF8_Shaded(font, textMessage.c_str(), sdlColor_fg, sdlColor_bg);
+		}
+		
+		assert(messageSurf != nullptr);
 
 		if (messageSurf != nullptr)
 		{
