@@ -33,14 +33,14 @@ bool Font::Load(const std::string& fileName)
 			SDL_Log("Failure reason %s", TTF_GetError());
 			return false;
 		}
-		mFontData.emplace(fontSizes[size], font);
+		fontData.emplace(fontSizes[size], font);
 	}
 	return true;
 }
 
 void Font::Unload()
 {
-	/*for (auto& font : mFontData)
+	/*for (auto& font : fontData)
 	{
 		TTF_CloseFont(font.second);
 	}*/
@@ -65,9 +65,9 @@ Texture* Font::RenderText(const std::string& textMessage, const Vector3& color_f
 	sdlColor_bg.a = 255;
 
 	// Find the font data for this point size
-	auto iter = mFontData.find(pointSize);
+	auto iter = fontData.find(pointSize);
 	
-	if (iter != mFontData.end())
+	if (iter != fontData.end())
 	{
 		TTF_Font* font = iter->second;
 		

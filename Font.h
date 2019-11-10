@@ -44,6 +44,6 @@ class Font
 
 	private:
 		// Map of point sizes to font data
-		std::unordered_map<int, TTF_Font*> mFontData;
+		std::unordered_map<int, TTF_Font*> fontData;
 };
 

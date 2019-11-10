@@ -44,7 +44,16 @@ public:
 		gameState = state;
 	}
 
+	void SetEnemyCollision(bool isCollision) {
+		enemyCollision = isCollision;
+	}
+
+	bool GetEnemyCollision() {
+		return enemyCollision;
+	}
+
 	int IsWalkable(int row, int col);
+	void CombatRound(int atkType);
 
 private:
 	void ProcessInput();
@@ -88,6 +97,11 @@ private:
 	Font* fontRenderer;
 	Texture* fontArea1;
 
+	Texture* fontEnemyHealth;
+	Texture* fontPlayerHealth;
+
 	bool isReturning;
+	bool enemyCollision;
+	bool isAttacking;
 	Vector3 savedPlayerPosition;
 };
