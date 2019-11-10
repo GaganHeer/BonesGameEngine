@@ -1,5 +1,28 @@
-﻿  Game.cpp
-C:\Users\renzd\Desktop\Bones\Bones-Engine\Game.cpp(147,15): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
-C:\Users\renzd\Desktop\Bones\Bones-Engine\Game.cpp(332,29): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
-C:\Users\renzd\Desktop\Bones\Bones-Engine\Game.cpp(333,29): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
-  Game.vcxproj -> C:\Users\renzd\Desktop\Bones\Bones-Engine\Debug\Game.exe
+﻿  Actor.cpp
+  CameraComponent.cpp
+  CameraTargetActor.cpp
+  CircleComponent.cpp
+  Component.cpp
+  CubeActor.cpp
+  Font.cpp
+  Game.cpp
+C:\Users\happi\Documents\BonesEngine\Font.cpp(27,26): warning C4018: '<': signed/unsigned mismatch
+C:\Users\happi\Documents\BonesEngine\Game.cpp(156,15): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
+C:\Users\happi\Documents\BonesEngine\Game.cpp(341,29): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+C:\Users\happi\Documents\BonesEngine\Game.cpp(342,29): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+C:\Users\happi\Documents\BonesEngine\Game.cpp(520,31): warning C4150: deletion of pointer to incomplete type 'Texture'; no destructor called
+C:\Users\happi\Documents\BonesEngine\Font.h(22): message : see declaration of 'Texture'
+C:\Users\happi\Documents\BonesEngine\Game.cpp(526,33): warning C4150: deletion of pointer to incomplete type 'Texture'; no destructor called
+  Main.cpp
+  MeshComponent.cpp
+  MoveComponent.cpp
+C:\Users\happi\Documents\BonesEngine\Font.h(22): message : see declaration of 'Texture'
+C:\Users\happi\Documents\BonesEngine\MoveComponent.cpp(18,28): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+  PlaneActor.cpp
+  PointLightComponent.cpp
+  Renderer.cpp
+  SpriteComponent.cpp
+  TopDownCamera.cpp
+  Generating Code...
+C:\Users\happi\Documents\BonesEngine\MoveComponent.cpp(33,33): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+  Game.vcxproj -> C:\Users\happi\Documents\BonesEngine\Debug\Game.exe

@@ -83,6 +83,7 @@ private:
 
 	std::unordered_map<std::string, class Texture*> textures;
 	std::unordered_map<std::string, class Mesh*> meshes;
+	std::unordered_map<std::string, class Font*> fonts;
 	std::vector<class SpriteComponent*> sprites;
 	std::vector<class MeshComponent*> meshComps;
 
