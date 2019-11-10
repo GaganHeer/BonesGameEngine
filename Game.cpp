@@ -18,6 +18,7 @@ Game::Game()
 	:renderer(nullptr),
 	isRunning(true),
 	updatingActors(false),
+	isReturning(false),
 	scene(0)
 {
 	inputSystem = new InputSystem();
@@ -108,7 +109,9 @@ void Game::ProcessInput() {
 
 			if (state.Keyboard.GetKeyState(SDL_SCANCODE_Q) == ButtonState::Pressed){
 				printf("Q Button Held \n");
+				savedPlayerPosition = cameraTargetActor->GetPosition();
 				isLoading = true;
+				isReturning = false;
 				scene = 1;
 				//AE->sfx("{ce969287-97e3-4324-b52b-f2f31edf0143}");
 			}
@@ -117,6 +120,7 @@ void Game::ProcessInput() {
 			if (state.Keyboard.GetKeyState(SDL_SCANCODE_E) == ButtonState::Pressed){
 				printf("E Button Held \n");
 				isLoading = true;
+				isReturning = true;
 				scene = 0;
 				//AE->sfx("{cecb4df2-fbcf-4d3e-94ef-d261ec18747b}");
 			}
@@ -290,284 +294,293 @@ void Game::GenerateOutput(){
 }
 
 void Game::LoadData(){
-	
+	Actor* a = new Actor(this);
 	if (scene == 0) {
-		Actor * a = new Actor(this);
-		a->SetPosition(Vector3(200.0f, 75.0f, 0.0f));
-		a->SetScale(100.0f);
-		Quaternion q(Vector3::UnitY, -Math::PiOver2);
-		q = Quaternion::Concatenate(q, Quaternion(Vector3::UnitZ, Math::Pi + Math::Pi / 4.0f));
-		a->SetRotation(q);
-		MeshComponent* mc = new MeshComponent(a);
-		mc->SetMesh(renderer->GetMesh("Assets/Cube.obj"));
+		if (isReturning) {
+			int offsetX = 0;
+			int offsetY = 0;
 
-		cubeActor = new CubeActor(this);
-		cubeActor->SetPosition(Vector3(0.0f, 75.0f, 0.0f));
-		cubeActor->SetScale(50.f);
+			int map_rows = 400;
+			int map_cols = 400;
 
-		rooms = randGen.generate();
+			map2D = new int* [map_rows];
 
-		int offsetX = 0;
-		int offsetY = 0;
+			for (int i = 0; i < map_rows; i++) {
+				map2D[i] = new int[map_cols + 1];
+				map2D[i][0] = map_cols;
 
-		int map_rows = 400;
-		int map_cols = 400;
-
-		map2D = new int* [map_rows];
-
-		for (int i = 0; i < map_rows; i++) {
-			map2D[i] = new int[map_cols + 1];
-			map2D[i][0] = map_cols;
-
-			for (int j = 1; j <= map_cols; j++)
-				map2D[i][j] = NULL;
-		}
-
-		enemy setup;
-		int count = 0;
-		//enemies.assign(0, setup);
-
-		//{ _width, _height, _entry, _entryDoor, _exit, _exitDoor, _isStart, _isEnd, _stairX, _stairY, _nextRoomCorridor };
-		//for each room
-		for (int r = 0; r < randGen.getNumRooms(); r++) {
-			int* paramsTemp = rooms[r].getParameters();
-
-			int width1 = randGen.getWidth(r);
-			int height1 = randGen.getHeight(r);
-			cout << "WIDTH: " << width1 << endl;
-			cout << "HEIGHT: " << height1 << endl;
-			cout << "OFFSETx: " << offsetX << endl;
-			cout << "OFFSETy: " << offsetY << endl;
-			cout << "CORRIDOR LENGTH: " << randGen.getCorridorLength(r) << endl;
-			cout << "entryDoor: " << randGen.getEntryDoor(r) << endl;
-
-			const float start = 0;
-			const float size = 100.0f;
-			int rows = 0;
-			int cols = 0;
-			int enemyX = 0;
-			int enemyY = 0;
-			//generates for each tile
-			for (int i = 0; i < height1; i++) {
-				for (int j = 0; j < width1; j++) {
-					rows = offsetY + start + i;
-					cols = offsetX + start + j;
-					map2D[rows + 50][cols + 50] = 1;
-					a = new PlaneActor(this);
-					Vector3 pos = Vector3(rows * size, cols * size, -100.0f);
-					a->SetPosition(pos);
-					a->SetScale(1.f);
-					CreatePointLights(a, pos, i+j);
-				}
+				for (int j = 1; j <= map_cols; j++)
+					map2D[i][j] = NULL;
 			}
 
-			vector<enemy> useEnemy = randGen.getEnemies(r);
-			for (int e = 0; e < useEnemy.size(); e++) {
-				cubeActor = new CubeActor(this);
+			enemy setup;
+			int count = 0;
+			//enemies.assign(0, setup);
 
-				int tempX = useEnemy.at(e).getPosition()[0];
-				int tempY = useEnemy.at(e).getPosition()[1];
+			//{ _width, _height, _entry, _entryDoor, _exit, _exitDoor, _isStart, _isEnd, _stairX, _stairY, _nextRoomCorridor };
+			//for each room
+			for (int r = 0; r < randGen.getNumRooms(); r++) {
+				int* paramsTemp = rooms[r].getParameters();
 
-				enemyX = offsetX + start + tempX;
-				enemyY = offsetY + start + tempY;
+				int width1 = randGen.getWidth(r);
+				int height1 = randGen.getHeight(r);
+				cout << "WIDTH: " << width1 << endl;
+				cout << "HEIGHT: " << height1 << endl;
+				cout << "OFFSETx: " << offsetX << endl;
+				cout << "OFFSETy: " << offsetY << endl;
+				cout << "CORRIDOR LENGTH: " << randGen.getCorridorLength(r) << endl;
+				cout << "entryDoor: " << randGen.getEntryDoor(r) << endl;
 
-				cout << "ROOM:  " << r << " enemy: " << e << " At position: [" << tempX << ", " << tempY << "]" << endl;
-				cout << "Expected out: [" << enemyX << ", " << enemyY << "]" << endl;
-
-				map2D[enemyY + 50][enemyX + 50] = 2;
-				Vector3 pos = Vector3(enemyY * size, enemyX * size, 0.0f);
-				cubeActor->SetPosition(pos);
-				cubeActor->SetScale(50.f);
-
-				cout << " INSTANTIATING WITH : " << cubeActor;
-				useEnemy.at(e).setup(cubeActor);
-				cout << " SAVED:  " << useEnemy.at(e).getActor();
-			}
-			
-			//enemies.insert(enemies.end(), useEnemy.begin(), useEnemy.end());
-
-			//for corridor
-			if (!randGen.getIsEnd(r)) {
-				if ((bool)randGen.getExitLocation(r)) { // if north
-					for (int z = 0; z < randGen.getCorridorLength(r); z++) {
-						rows = offsetY + height1 + z;
-						cols = offsetX + randGen.getExitDoor(r);
+				const float start = 0;
+				const float size = 100.0f;
+				int rows = 0;
+				int cols = 0;
+				int enemyX = 0;
+				int enemyY = 0;
+				//generates for each tile
+				for (int i = 0; i < height1; i++) {
+					for (int j = 0; j < width1; j++) {
+						rows = offsetY + start + i;
+						cols = offsetX + start + j;
 						map2D[rows + 50][cols + 50] = 1;
 						a = new PlaneActor(this);
-						
 						Vector3 pos = Vector3(rows * size, cols * size, -100.0f);
 						a->SetPosition(pos);
 						a->SetScale(1.f);
-						CreatePointLights(a, pos, z);
-						
+						CreatePointLights(a, pos, i + j);
 					}
-					cout << "corridor placement: " << offsetX + randGen.getExitLocation(r) << endl;
-					cout << " IS True " << endl;
-					offsetY += height1 + randGen.getCorridorLength(r);
-					offsetX += randGen.getExitDoor(r) - randGen.getEntryDoor(r + 1);
-
-
 				}
-				else { //if east
-					for (int z = 0; z < randGen.getCorridorLength(r); z++) {
-						rows = offsetY + randGen.getExitDoor(r);
-						cols = offsetX + width1 + z;
+
+				vector<enemy> useEnemy = randGen.getEnemies(r);
+				for (int e = 0; e < useEnemy.size(); e++) {
+					cubeActor = new CubeActor(this);
+
+					int tempX = useEnemy.at(e).getPosition()[0];
+					int tempY = useEnemy.at(e).getPosition()[1];
+
+					enemyX = offsetX + start + tempX;
+					enemyY = offsetY + start + tempY;
+
+					cout << "ROOM:  " << r << " enemy: " << e << " At position: [" << tempX << ", " << tempY << "]" << endl;
+					cout << "Expected out: [" << enemyX << ", " << enemyY << "]" << endl;
+
+					map2D[enemyY + 50][enemyX + 50] = 2;
+					Vector3 pos = Vector3(enemyY * size, enemyX * size, 0.0f);
+					cubeActor->SetPosition(pos);
+					cubeActor->SetScale(50.f);
+
+					cout << " INSTANTIATING WITH : " << cubeActor;
+					useEnemy.at(e).setup(cubeActor);
+					cout << " SAVED:  " << useEnemy.at(e).getActor();
+				}
+
+				//enemies.insert(enemies.end(), useEnemy.begin(), useEnemy.end());
+
+				//for corridor
+				if (!randGen.getIsEnd(r)) {
+					if ((bool)randGen.getExitLocation(r)) { // if north
+						for (int z = 0; z < randGen.getCorridorLength(r); z++) {
+							rows = offsetY + height1 + z;
+							cols = offsetX + randGen.getExitDoor(r);
+							map2D[rows + 50][cols + 50] = 1;
+							a = new PlaneActor(this);
+
+							Vector3 pos = Vector3(rows * size, cols * size, -100.0f);
+							a->SetPosition(pos);
+							a->SetScale(1.f);
+							CreatePointLights(a, pos, z);
+
+						}
+						cout << "corridor placement: " << offsetX + randGen.getExitLocation(r) << endl;
+						cout << " IS True " << endl;
+						offsetY += height1 + randGen.getCorridorLength(r);
+						offsetX += randGen.getExitDoor(r) - randGen.getEntryDoor(r + 1);
+
+
+					}
+					else { //if east
+						for (int z = 0; z < randGen.getCorridorLength(r); z++) {
+							rows = offsetY + randGen.getExitDoor(r);
+							cols = offsetX + width1 + z;
+							map2D[rows + 50][cols + 50] = 1;
+							a = new PlaneActor(this);
+
+							Vector3 pos = Vector3(rows * size, cols * size, -100.0f);
+							a->SetPosition(pos);
+							a->SetScale(1.f);
+							CreatePointLights(a, pos, z);
+
+						}
+						cout << "corridor placement: " << offsetY + randGen.getExitLocation(r) << endl;
+						cout << " IS FALSE " << endl;
+						offsetX += width1 + randGen.getCorridorLength(r);
+						offsetY += randGen.getExitDoor(r) - randGen.getEntryDoor(r + 1);
+					}
+				}
+			}
+
+			// Setup lights
+			renderer->SetAmbientLight(Vector3(1.f, 1.f, 1.f));
+			DirectionalLight& dir = renderer->GetDirectionalLight();
+			dir.direction = Vector3(.0f, .0f, .0f);
+			dir.diffuseColor = Vector3(0.78f, 0.88f, 1.0f);
+			dir.specColor = Vector3(11.8f, 0.5f, 0.5f);
+
+
+			// UI elements
+			a = new Actor(this);
+			a->SetPosition(Vector3(-350.0f, -350.0f, 0.0f));
+			SpriteComponent* sc = new SpriteComponent(a);
+			sc->SetTexture(renderer->GetTexture("Assets/cyan.png"));
+
+			cameraTargetActor = new CameraTargetActor(this);
+			cameraTargetActor->SetPosition(savedPlayerPosition);
+			isReturning = false;
+		} else { // ----------------------------------------------------------------------------------------------------------------------
+			rooms = randGen.generate();
+
+			int offsetX = 0;
+			int offsetY = 0;
+
+			int map_rows = 400;
+			int map_cols = 400;
+
+			map2D = new int* [map_rows];
+
+			for (int i = 0; i < map_rows; i++) {
+				map2D[i] = new int[map_cols + 1];
+				map2D[i][0] = map_cols;
+
+				for (int j = 1; j <= map_cols; j++)
+					map2D[i][j] = NULL;
+			}
+
+			enemy setup;
+			int count = 0;
+			//enemies.assign(0, setup);
+
+			//{ _width, _height, _entry, _entryDoor, _exit, _exitDoor, _isStart, _isEnd, _stairX, _stairY, _nextRoomCorridor };
+			//for each room
+			for (int r = 0; r < randGen.getNumRooms(); r++) {
+				int* paramsTemp = rooms[r].getParameters();
+
+				int width1 = randGen.getWidth(r);
+				int height1 = randGen.getHeight(r);
+				cout << "WIDTH: " << width1 << endl;
+				cout << "HEIGHT: " << height1 << endl;
+				cout << "OFFSETx: " << offsetX << endl;
+				cout << "OFFSETy: " << offsetY << endl;
+				cout << "CORRIDOR LENGTH: " << randGen.getCorridorLength(r) << endl;
+				cout << "entryDoor: " << randGen.getEntryDoor(r) << endl;
+
+				const float start = 0;
+				const float size = 100.0f;
+				int rows = 0;
+				int cols = 0;
+				int enemyX = 0;
+				int enemyY = 0;
+				//generates for each tile
+				for (int i = 0; i < height1; i++) {
+					for (int j = 0; j < width1; j++) {
+						rows = offsetY + start + i;
+						cols = offsetX + start + j;
 						map2D[rows + 50][cols + 50] = 1;
 						a = new PlaneActor(this);
-						
 						Vector3 pos = Vector3(rows * size, cols * size, -100.0f);
 						a->SetPosition(pos);
 						a->SetScale(1.f);
-						CreatePointLights(a, pos, z);
+						CreatePointLights(a, pos, i + j);
+					}
+				}
+
+				vector<enemy> useEnemy = randGen.getEnemies(r);
+				for (int e = 0; e < useEnemy.size(); e++) {
+					cubeActor = new CubeActor(this);
+
+					int tempX = useEnemy.at(e).getPosition()[0];
+					int tempY = useEnemy.at(e).getPosition()[1];
+
+					enemyX = offsetX + start + tempX;
+					enemyY = offsetY + start + tempY;
+
+					cout << "ROOM:  " << r << " enemy: " << e << " At position: [" << tempX << ", " << tempY << "]" << endl;
+					cout << "Expected out: [" << enemyX << ", " << enemyY << "]" << endl;
+
+					map2D[enemyY + 50][enemyX + 50] = 2;
+					Vector3 pos = Vector3(enemyY * size, enemyX * size, 0.0f);
+					cubeActor->SetPosition(pos);
+					cubeActor->SetScale(50.f);
+
+					cout << " INSTANTIATING WITH : " << cubeActor;
+					useEnemy.at(e).setup(cubeActor);
+					cout << " SAVED:  " << useEnemy.at(e).getActor();
+				}
+
+				//enemies.insert(enemies.end(), useEnemy.begin(), useEnemy.end());
+
+				//for corridor
+				if (!randGen.getIsEnd(r)) {
+					if ((bool)randGen.getExitLocation(r)) { // if north
+						for (int z = 0; z < randGen.getCorridorLength(r); z++) {
+							rows = offsetY + height1 + z;
+							cols = offsetX + randGen.getExitDoor(r);
+							map2D[rows + 50][cols + 50] = 1;
+							a = new PlaneActor(this);
+
+							Vector3 pos = Vector3(rows * size, cols * size, -100.0f);
+							a->SetPosition(pos);
+							a->SetScale(1.f);
+							CreatePointLights(a, pos, z);
+
+						}
+						cout << "corridor placement: " << offsetX + randGen.getExitLocation(r) << endl;
+						cout << " IS True " << endl;
+						offsetY += height1 + randGen.getCorridorLength(r);
+						offsetX += randGen.getExitDoor(r) - randGen.getEntryDoor(r + 1);
+
 
 					}
-					cout << "corridor placement: " << offsetY + randGen.getExitLocation(r) << endl;
-					cout << " IS FALSE " << endl;
-					offsetX += width1 + randGen.getCorridorLength(r);
-					offsetY += randGen.getExitDoor(r) - randGen.getEntryDoor(r + 1);
+					else { //if east
+						for (int z = 0; z < randGen.getCorridorLength(r); z++) {
+							rows = offsetY + randGen.getExitDoor(r);
+							cols = offsetX + width1 + z;
+							map2D[rows + 50][cols + 50] = 1;
+							a = new PlaneActor(this);
+
+							Vector3 pos = Vector3(rows * size, cols * size, -100.0f);
+							a->SetPosition(pos);
+							a->SetScale(1.f);
+							CreatePointLights(a, pos, z);
+
+						}
+						cout << "corridor placement: " << offsetY + randGen.getExitLocation(r) << endl;
+						cout << " IS FALSE " << endl;
+						offsetX += width1 + randGen.getCorridorLength(r);
+						offsetY += randGen.getExitDoor(r) - randGen.getEntryDoor(r + 1);
+					}
 				}
 			}
+			//cout << " LAST ENEMY ACTOR: " << randGen.getEnemies(9).at(0).getActor() << endl;
+
+			// Setup lights
+			renderer->SetAmbientLight(Vector3(1.f, 1.f, 1.f));
+			DirectionalLight& dir = renderer->GetDirectionalLight();
+			dir.direction = Vector3(.0f, .0f, .0f);
+			dir.diffuseColor = Vector3(0.78f, 0.88f, 1.0f);
+			dir.specColor = Vector3(11.8f, 0.5f, 0.5f);
+
+
+			// UI elements
+			a = new Actor(this);
+			a->SetPosition(Vector3(-350.0f, -350.0f, 0.0f));
+			SpriteComponent* sc = new SpriteComponent(a);
+			sc->SetTexture(renderer->GetTexture("Assets/cyan.png"));
+
+			cameraTargetActor = new CameraTargetActor(this);
 		}
-		//cout << " LAST ENEMY ACTOR: " << randGen.getEnemies(9).at(0).getActor() << endl;
-
-		// Setup lights
-		renderer->SetAmbientLight(Vector3(1.f, 1.f, 1.f));
-		DirectionalLight& dir = renderer->GetDirectionalLight();
-		dir.direction = Vector3(.0f, .0f, .0f);
-		dir.diffuseColor = Vector3(0.78f, 0.88f, 1.0f);
-		dir.specColor = Vector3(11.8f, 0.5f, 0.5f);
-
-		
-		// UI elements
-		a = new Actor(this);
-		a->SetPosition(Vector3(-350.0f, -350.0f, 0.0f));
-		SpriteComponent* sc = new SpriteComponent(a);
-		sc->SetTexture(renderer->GetTexture("Assets/cyan.png"));
-		
-		cameraTargetActor = new CameraTargetActor(this);
 	}
 	else if (scene == 1) {
-	Actor* a = new Actor(this);
-	a->SetPosition(Vector3(200.0f, 75.0f, 0.0f));
-	a->SetScale(100.0f);
-	Quaternion q(Vector3::UnitY, -Math::PiOver2);
-	q = Quaternion::Concatenate(q, Quaternion(Vector3::UnitZ, Math::Pi + Math::Pi / 4.0f));
-	a->SetRotation(q);
-	MeshComponent* mc = new MeshComponent(a);
-	mc->SetMesh(renderer->GetMesh("Assets/Cube.obj"));
 
-	cubeActor = new CubeActor(this);
-	cubeActor->SetPosition(Vector3(0.0f, 75.0f, 0.0f));
-	cubeActor->SetScale(50.f);
-
-	Generator randGen;
-	Room* rooms = randGen.generate();
-
-	int offsetX = 0;
-	int offsetY = 0;
-
-	int map_rows = 400;
-	int map_cols = 400;
-
-	map2D = new int* [map_rows];
-
-	for (int i = 0; i < map_rows; i++) {
-		map2D[i] = new int[map_cols + 1];
-		map2D[i][0] = map_cols;
-
-		for (int j = 1; j <= map_cols; j++)
-			map2D[i][j] = NULL;
-	}
-
-	//{ _width, _height, _entry, _entryDoor, _exit, _exitDoor, _isStart, _isEnd, _stairX, _stairY, _nextRoomCorridor };
-	//for each room
-	for (int r = 0; r < randGen.getNumRooms(); r++) {
-		int* paramsTemp = rooms[r].getParameters();
-
-		int width1 = randGen.getWidth(r);
-		int height1 = randGen.getHeight(r);
-		cout << "WIDTH: " << width1 << endl;
-		cout << "HEIGHT: " << height1 << endl;
-		cout << "OFFSETx: " << offsetX << endl;
-		cout << "OFFSETy: " << offsetY << endl;
-		cout << "CORRIDOR LENGTH: " << randGen.getCorridorLength(r) << endl;
-		cout << "entryDoor: " << randGen.getEntryDoor(r) << endl;
-
-		const float start = 0;
-		const float size = 100.0f;
-		int rows = 0;
-		int cols = 0;
-		//generates for each tile
-		for (int i = 0; i < height1; i++) {
-			for (int j = 0; j < width1; j++) {
-				rows = offsetY + start + i;
-				cols = offsetX + start + j;
-				map2D[rows + 50][cols + 50] = 1;
-				a = new PlaneActor(this);
-				Vector3 pos = Vector3(rows * size, cols * size, -100.0f);
-				a->SetPosition(pos);
-				a->SetScale(1.f);
-				CreatePointLights(a, pos, i + j);
-
-			}
-		}
-
-		//for corridor
-		if (!randGen.getIsEnd(r)) {
-			if ((bool)randGen.getExitLocation(r)) { // if north
-				for (int z = 0; z < randGen.getCorridorLength(r); z++) {
-					rows = offsetY + height1 + z;
-					cols = offsetX + randGen.getExitDoor(r);
-					map2D[rows + 50][cols + 50] = 1;
-					a = new PlaneActor(this);
-
-					Vector3 pos = Vector3(rows * size, cols * size, -100.0f);
-					a->SetPosition(pos);
-					a->SetScale(1.f);
-					CreatePointLights(a, pos, z);
-
-				}
-				cout << "corridor placement: " << offsetX + randGen.getExitLocation(r) << endl;
-				cout << " IS True " << endl;
-				offsetY += height1 + randGen.getCorridorLength(r);
-				offsetX += randGen.getExitDoor(r) - randGen.getEntryDoor(r + 1);
-
-
-			}
-			else { //if east
-				for (int z = 0; z < randGen.getCorridorLength(r); z++) {
-					rows = offsetY + randGen.getExitDoor(r);
-					cols = offsetX + width1 + z;
-					map2D[rows + 50][cols + 50] = 1;
-					a = new PlaneActor(this);
-
-					Vector3 pos = Vector3(rows * size, cols * size, -100.0f);
-					a->SetPosition(pos);
-					a->SetScale(1.f);
-					CreatePointLights(a, pos, z);
-
-				}
-				cout << "corridor placement: " << offsetY + randGen.getExitLocation(r) << endl;
-				cout << " IS FALSE " << endl;
-				offsetX += width1 + randGen.getCorridorLength(r);
-				offsetY += randGen.getExitDoor(r) - randGen.getEntryDoor(r + 1);
-			}
-		}
-	}
-	// Setup lights
-	renderer->SetAmbientLight(Vector3(1.f, 1.f, 1.f));
-	DirectionalLight& dir = renderer->GetDirectionalLight();
-	dir.direction = Vector3(.0f, .0f, .0f);
-	dir.diffuseColor = Vector3(0.78f, 0.88f, 1.0f);
-	dir.specColor = Vector3(11.8f, 0.5f, 0.5f);
-
-	// UI elements
-	a = new Actor(this);
-	a->SetPosition(Vector3(-350.0f, -350.0f, 0.0f));
-	SpriteComponent* sc = new SpriteComponent(a);
-	sc->SetTexture(renderer->GetTexture("Assets/cyan.png"));
-
-	cameraTargetActor = new CameraTargetActor(this);
 	}
 }
 

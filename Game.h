@@ -80,4 +80,7 @@ private:
 	class PlayerCombatSystem* playerCombat;
 	class LevelUpSystem* playerLevels;
 	class EnemyCombatSystem* enemyCombat;
+
+	bool isReturning;
+	Vector3 savedPlayerPosition;
 };
