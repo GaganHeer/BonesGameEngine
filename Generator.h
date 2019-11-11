@@ -2,20 +2,21 @@
 #include <iostream>
 #include <list>
 #include <array>
-#include "room.h"
-#include "enemy.h"
+#include "Game.h"
+#include "Room.h"
+#include "EnemyActor.h"
 
 using namespace std;
 
 class Generator {
 public:
-	Generator();
+	Generator(Game* game);
 	~Generator();
 
 	static const int NUM_ROOMS = 10;
 	void setParams(int x, int y, int variance);
 	
-	Room* generate();
+	vector<Room*> generate();
 	int getNumRooms();
 
 	int getWidth(int i);
@@ -29,7 +30,7 @@ public:
 	int getStairX(int i);
 	int getStairY(int i);
 	int getCorridorLength(int i);
-	vector<enemy> getEnemies(int i);
+	vector<EnemyActor*> getEnemies(int i);
 
 
 private:
@@ -40,5 +41,7 @@ private:
 	int maxEnemies = 2;
 	int diffInc = 1;
 
-	Room rooms[NUM_ROOMS];
+	Game* game;
+
+	vector<Room*> rooms;
 };

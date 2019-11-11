@@ -18,8 +18,9 @@
     <ClCompile Include="CircleComponent.cpp" />
     <ClCompile Include="Component.cpp" />
     <ClCompile Include="CubeActor.cpp" />
-    <ClCompile Include="enemy.cpp" />
+    <ClCompile Include="EnemyActor.cpp" />
     <ClCompile Include="EnemyCombatSystem.cpp" />
+    <ClCompile Include="EnemyMoveComponent.cpp" />
     <ClCompile Include="Font.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="GBuffer.cpp" />
@@ -52,8 +53,9 @@
     <ClInclude Include="CircleComponent.h" />
     <ClInclude Include="Component.h" />
     <ClInclude Include="CubeActor.h" />
-    <ClInclude Include="enemy.h" />
+    <ClInclude Include="EnemyActor.h" />
     <ClInclude Include="EnemyCombatSystem.h" />
+    <ClInclude Include="EnemyMoveComponent.h" />
     <ClInclude Include="Font.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="GBuffer.h" />

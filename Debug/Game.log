@@ -1,14 +1,6 @@
-﻿  CameraTargetActor.cpp
-  MoveComponent.cpp
-C:\Users\renzd\Desktop\Bones\Bones-Engine\MoveComponent.cpp(20,28): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
-C:\Users\renzd\Desktop\Bones\Bones-Engine\MoveComponent.cpp(23,30): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
-C:\Users\renzd\Desktop\Bones\Bones-Engine\MoveComponent.cpp(28,33): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
-C:\Users\renzd\Desktop\Bones\Bones-Engine\MoveComponent.cpp(31,30): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
-C:\Users\renzd\Desktop\Bones\Bones-Engine\MoveComponent.cpp(48,33): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
-C:\Users\renzd\Desktop\Bones\Bones-Engine\MoveComponent.cpp(51,35): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
-C:\Users\renzd\Desktop\Bones\Bones-Engine\MoveComponent.cpp(56,38): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
-C:\Users\renzd\Desktop\Bones\Bones-Engine\MoveComponent.cpp(59,35): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
-C:\Users\renzd\Desktop\Bones\Bones-Engine\MoveComponent.cpp(123,53): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+﻿  EnemyActor.cpp
+  EnemyMoveComponent.cpp
+C:\Users\Jason\Desktop\Bones-Engine\EnemyMoveComponent.cpp(52,52): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
   Generating Code...
-C:\Users\renzd\Desktop\Bones\Bones-Engine\MoveComponent.cpp(123,44): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-  Game.vcxproj -> C:\Users\renzd\Desktop\Bones\Bones-Engine\Debug\Game.exe
+C:\Users\Jason\Desktop\Bones-Engine\EnemyMoveComponent.cpp(52,43): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+  Game.vcxproj -> C:\Users\Jason\Desktop\Bones-Engine\Debug\Game.exe

@@ -97,9 +97,6 @@
     <ClCompile Include="LevelUpSystem.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="enemy.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Generator.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -107,6 +104,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Font.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="EnemyActor.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="EnemyMoveComponent.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -183,9 +186,6 @@
     <ClInclude Include="CubeActor.h">
       <Filter>Headers</Filter>
     </ClInclude>
-    <ClInclude Include="enemy.h">
-      <Filter>Headers</Filter>
-    </ClInclude>
     <ClInclude Include="EnemyCombatSystem.h">
       <Filter>Headers</Filter>
     </ClInclude>
@@ -202,6 +202,12 @@
       <Filter>Headers</Filter>
     </ClInclude>
     <ClInclude Include="Font.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="EnemyActor.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="EnemyMoveComponent.h">
       <Filter>Headers</Filter>
     </ClInclude>
   </ItemGroup>

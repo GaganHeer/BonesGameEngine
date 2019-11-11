@@ -10,6 +10,7 @@
 #include "EnemyCombatSystem.h"
 #include "LevelUpSystem.h"
 #include "Font.h"
+#include "Texture.h"
 
 class Game
 {
@@ -58,7 +59,7 @@ public:
 	void Game::SetPlayerMapPos(int row, int col);
 	void CombatRound(int atkType);
 
-	vector<class CubeActor*> getEnemies() {
+	vector<class EnemyActor*> getEnemies() {
 		return enem;
 	}
 
@@ -80,14 +81,16 @@ private:
 	class InputSystem* inputSystem;
 	class AudioEngine* AE;
 	class Renderer* renderer;
+	class Generator* randGen;
 	Uint32 ticksCount;
 	int scene;
 	GameState gameState;
 	bool isRunning;
 	bool isLoading;
 	bool updatingActors;
-	std::vector<class enemy*> enemies;
-	vector<class CubeActor*> enem;
+	std::vector<class EnemyActor*> enemies;
+	std::vector<class EnemyActor*> enem;
+	std::vector<class Room*> rooms;
 
 	int exit_posX;
 	int exit_posY;
@@ -102,6 +105,7 @@ private:
 	class PlayerCombatSystem* playerCombat;
 	class LevelUpSystem* playerLevels;
 	class EnemyCombatSystem* enemyCombat;
+	class EnemyActor* enemyActor;
 
 	Font* fontRenderer;
 	Texture* fontArea1;

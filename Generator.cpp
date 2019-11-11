@@ -1,4 +1,5 @@
 #include "Generator.h"
+#include "Game.h"
 // ProceduralGeneration.cpp : This file contains the 'main' function. Program execution begins and ends there.
 // x is width
 // y is length
@@ -7,15 +8,19 @@
 // The last room will always have the exit. 
 // Each room will be connected by corridors. 
 
-Generator::Generator()
+Generator::Generator(Game* game) :
+	game(game)
 {
-	rooms[0].setStart();
-	rooms[NUM_ROOMS - 1].setEnd(diffInc);
+	for (int i = 0; i < NUM_ROOMS; i++) {
+		rooms.emplace_back(new Room(game));
+	}
+	rooms.at(0)->setStart();
+	rooms.at(NUM_ROOMS - 1)->setEnd(diffInc);
 
 	//rooms[sizeof(rooms)]
 	for (int i = 0; i < NUM_ROOMS; i++)
 	{
-		rooms[i].updateRoom(x, y, variance, maxEnemies);
+		rooms.at(i)->updateRoom(x, y, variance, maxEnemies);
 	}
 }
 
@@ -31,17 +36,17 @@ void Generator::setParams(int newX, int newY, int newVariance) {
 }
 
 //Generates the Rooms. Stores room objects in an array.
-Room* Generator::generate() {
+vector<Room*> Generator::generate() {
 	srand(time(NULL));
 
 	bool temp = false;
 
 	for (int i = 0; i < NUM_ROOMS; i++) {
-		temp = rooms[i].generate(temp);
+		temp = rooms[i]->generate(temp);
 	}
 	//prints room parameters
 	for (int n = 0; n < NUM_ROOMS; n++) {
-		int* returnedParams = rooms[n].getParameters();
+		int* returnedParams = rooms[n]->getParameters();
 		//cout << "Room: " << n << " -> " << "[" << temp[0] << ", " << temp[1] << "]";
 		//printf("\n");
 		cout << " CORRIDOR LENGTH TWO: " << returnedParams[10] << endl;
@@ -57,38 +62,38 @@ int Generator::getNumRooms() {
 //{ _width, _height, _entry, _entryDoor, _exit, _exitDoor, _isStart, _isEnd, _stairX, _stairY, _nextRoomCorridor };
 
 int Generator::getWidth(int i) {
-	return rooms[i].getParameters()[0];
+	return rooms[i]->getParameters()[0];
 }
 int Generator::getHeight(int i) {
-	return rooms[i].getParameters()[1];
+	return rooms[i]->getParameters()[1];
 }
 int Generator::getEntryLocation(int i) {
-	return rooms[i].getParameters()[2];
+	return rooms[i]->getParameters()[2];
 }
 int Generator::getEntryDoor(int i) {
-	return rooms[i].getParameters()[3];
+	return rooms[i]->getParameters()[3];
 }
 int Generator::getExitLocation(int i) {
-	return rooms[i].getParameters()[4];
+	return rooms[i]->getParameters()[4];
 }
 int Generator::getExitDoor(int i) {
-	return rooms[i].getParameters()[5];
+	return rooms[i]->getParameters()[5];
 }
 int Generator::getIsStart(int i) {
-	return rooms[i].getParameters()[6];
+	return rooms[i]->getParameters()[6];
 }
 int Generator::getIsEnd(int i) {
-	return rooms[i].getParameters()[7];
+	return rooms[i]->getParameters()[7];
 }
 int Generator::getStairX(int i) {
-	return rooms[i].getParameters()[8];
+	return rooms[i]->getParameters()[8];
 }
 int Generator::getStairY(int i) {
-	return rooms[i].getParameters()[9];
+	return rooms[i]->getParameters()[9];
 }
 int Generator::getCorridorLength(int i) {
-	return rooms[i].getParameters()[10];
+	return rooms[i]->getParameters()[10];
 }
-vector<enemy> Generator::getEnemies(int i) {
-	return rooms[i].getEnemies();
+vector<EnemyActor*> Generator::getEnemies(int i) {
+	return rooms[i]->getEnemies();
 }

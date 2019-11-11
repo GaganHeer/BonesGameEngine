@@ -1,7 +1,6 @@
 #pragma once
 #include "Component.h"
-#include "Game.h"
-#include "CubeActor.h"
+#include "EnemyActor.h"
 
 class MoveComponent : public Component
 {
@@ -11,8 +10,6 @@ public:
 	void Update(float deltaTime) override;
 
 	void Collided();
-
-	void MoveEnemy();
 	
 	float GetHorizontalMove() const {
 		return horizontalMove;
@@ -34,5 +31,5 @@ private:
 	float horizontalMove;
 	float verticalMove;
 	Game* game;
-	vector<class CubeActor*> enemies;
+	vector<class EnemyActor*> enemies;
 };

@@ -1,0 +1,32 @@
+#include "EnemyActor.h"
+#include "EnemyMoveComponent.h"
+#include "MeshComponent.h"
+#include "Game.h"
+#include "Renderer.h"
+#include "TopDownCamera.h"
+
+EnemyActor::EnemyActor(Game* game) :
+	Actor(game)
+{
+
+	enemyMoveComponent = new EnemyMoveComponent(this);
+
+	meshComponent = new MeshComponent(this);
+	meshComponent->SetMesh(game->GetRenderer()->GetMesh("Assets/Cube.obj"));
+}
+
+void EnemyActor::ActorInput(InputState keyState) {
+	bool move = false;
+
+	if (keyState.Keyboard.GetKeyState(SDL_SCANCODE_W) == ButtonState::Pressed || keyState.Keyboard.GetKeyState(SDL_SCANCODE_S) == ButtonState::Pressed ||
+		keyState.Keyboard.GetKeyState(SDL_SCANCODE_A) == ButtonState::Pressed || keyState.Keyboard.GetKeyState(SDL_SCANCODE_D) == ButtonState::Pressed)
+	{
+		move = true;
+	}
+
+	enemyMoveComponent->SetMove(move);
+}
+
+void EnemyActor::SetVisible(bool visible) {
+	meshComponent->SetVisible(visible);
+}

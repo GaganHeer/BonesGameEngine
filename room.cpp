@@ -1,10 +1,12 @@
 #include "room.h"
+#include "EnemyActor.h"
 
 //room::room(int width, int height) {
 //	//do somethging
 //}
 
-Room::Room()
+Room::Room(Game* game) :
+	game(game)
 {
 	cout << " PRINTING STUFF ";
 	_isStart = false;
@@ -19,9 +21,9 @@ Room::Room()
 	_stairY = 0;
 }
 
-Room::Room(int width, int height, int variance, int maxEnemies)
+Room::Room(Game* game, int width, int height, int variance, int maxEnemies)
 {
-	Room();
+	Room::Room(game);
 	_width = width;
 	_height = height;
 	_variance = variance;
@@ -87,8 +89,8 @@ bool Room::generate(bool lastDoor) {
 		int enemiesToGenerate = rand() % _maxEnemies + (0);
 		enemiesToGenerate += _diffInc;
 
-		enemy setup;
-		_enemies.assign(enemiesToGenerate, setup);
+		EnemyActor* enemyActor = new EnemyActor(game);
+		_enemies.assign(enemiesToGenerate, enemyActor);
 
 		vector<vector<int>> lastPlacements;
 		vector<int> assign;
@@ -107,14 +109,14 @@ bool Room::generate(bool lastDoor) {
 
 			lastPlacements[i][0] = enemyX;
 			lastPlacements[i][1] = enemyY;
-			_enemies[i].updateEnemy(enemyX, enemyY);
+			_enemies[i]->SetPosition(Vector3(enemyX, enemyY, 0));
 		}
 		if (_isEnd) {
 			if (_entry) { // if is south
-				_enemies.back().updateEnemy(_entryDoor, 0);
+				_enemies.back()->SetPosition(Vector3(_entryDoor, 0, 0));
 			}
 			else {
-				_enemies.back().updateEnemy(0, _entryDoor);
+				_enemies.back()->SetPosition(Vector3(0, _entryDoor, 0));
 			}
 
 		}
@@ -146,7 +148,7 @@ int* Room::getParameters() {
 	return size;
 }
 
-vector<enemy> Room::getEnemies() {
+vector<EnemyActor*> Room::getEnemies() {
 	return _enemies;
 }
 
@@ -213,8 +215,8 @@ void Room::_debug() {
 	cout << "ENEMIES TO GENERATE: " << _enemies.size();
 	printf("\n");
 	for (int i = 0; i < _enemies.size(); i++) {
-		int* posTemp = _enemies[i].getPosition();
-		cout << "ENEMY: " << i << " POSITION: [" << posTemp[0] << ", " << posTemp[1] << "]";
+		Vector3 posTemp = _enemies[i]->GetPosition();
+		cout << "ENEMY: " << i << " POSITION: [" << posTemp.x << ", " << posTemp.y << "]";
 		printf("\n");
 	}
 	printf("\n");
