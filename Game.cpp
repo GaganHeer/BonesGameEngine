@@ -1,19 +1,17 @@
 #include "Game.h"
 #include <algorithm>
 #include "Renderer.h"
+#include "Room.h"
 #include "Actor.h"
+#include "EnemyActor.h"
+#include "Generator.h"
 #include "SpriteComponent.h"
 #include "MeshComponent.h"
 #include "PlaneActor.h"
 #include "CameraTargetActor.h"
 #include "PointLightComponent.h"
 #include "CubeActor.h"
-#include "Generator.h"
-#include "enemy.h"
 #include "Texture.h"
-
-Generator randGen;
-Room* rooms;
 
 Game::Game()
 	:renderer(nullptr),
@@ -28,6 +26,7 @@ Game::Game()
 	AE = new AudioEngine();
 	ticksCount = 0;
 
+	randGen = new Generator(this);
 	playerCombat = new PlayerCombatSystem();
 	playerLevels = new LevelUpSystem();
 	enemyCombat = new EnemyCombatSystem(50, 10, 100);
@@ -134,15 +133,6 @@ void Game::ProcessInput() {
 					CombatRound(0);
 				}
 			}
-
-		case SDL_KEYUP:
-			//update game
-			for (int r = 0; r < randGen.getNumRooms(); r++) {
-				vector<enemy> useEnemy = randGen.getEnemies(r);
-				for (int e = 0; e < useEnemy.size(); e++) {
-					useEnemy.at(e).update();
-				}
-			}
 		}
 	}
 
@@ -240,23 +230,19 @@ void Game::LoadData(){
 					map2D[i][j] = NULL;
 			}
 
-			enemy setup;
-			int count = 0;
-			//enemies.assign(0, setup);
-
 			//{ _width, _height, _entry, _entryDoor, _exit, _exitDoor, _isStart, _isEnd, _stairX, _stairY, _nextRoomCorridor };
 			//for each room
-			for (int r = 0; r < randGen.getNumRooms(); r++) {
-				int* paramsTemp = rooms[r].getParameters();
+			for (int r = 0; r < randGen->getNumRooms(); r++) {
+				int* paramsTemp = rooms[r]->getParameters();
 
-				int width1 = randGen.getWidth(r);
-				int height1 = randGen.getHeight(r);
+				int width1 = randGen->getWidth(r);
+				int height1 = randGen->getHeight(r);
 				cout << "WIDTH: " << width1 << endl;
 				cout << "HEIGHT: " << height1 << endl;
 				cout << "OFFSETx: " << offsetX << endl;
 				cout << "OFFSETy: " << offsetY << endl;
-				cout << "CORRIDOR LENGTH: " << randGen.getCorridorLength(r) << endl;
-				cout << "entryDoor: " << randGen.getEntryDoor(r) << endl;
+				cout << "CORRIDOR LENGTH: " << randGen->getCorridorLength(r) << endl;
+				cout << "entryDoor: " << randGen->getEntryDoor(r) << endl;
 
 				const float start = 0;
 				const float size = 100.0f;
@@ -278,12 +264,12 @@ void Game::LoadData(){
 					}
 				}
 
-				vector<enemy> useEnemy = randGen.getEnemies(r);
+				vector<EnemyActor*> useEnemy = randGen->getEnemies(r);
 				for (int e = 0; e < useEnemy.size(); e++) {
-					cubeActor = new CubeActor(this);
+					enemyActor = new EnemyActor(this);
 
-					int tempX = useEnemy.at(e).getPosition()[0];
-					int tempY = useEnemy.at(e).getPosition()[1];
+					int tempX = useEnemy.at(e)->GetPosition().x;
+					int tempY = useEnemy.at(e)->GetPosition().y;
 
 					enemyX = offsetX + start + tempX;
 					enemyY = offsetY + start + tempY;
@@ -293,22 +279,18 @@ void Game::LoadData(){
 
 					map2D[enemyY + 50][enemyX + 50] = 2;
 					Vector3 pos = Vector3(enemyY * size, enemyX * size, 0.0f);
-					cubeActor->SetPosition(pos);
-					cubeActor->SetScale(50.f);
-
-					cout << " INSTANTIATING WITH : " << cubeActor;
-					useEnemy.at(e).setup(cubeActor);
-					cout << " SAVED:  " << useEnemy.at(e).getActor();
+					enemyActor->SetPosition(pos);
+					enemyActor->SetScale(50.f);
 				}
 
 				//enemies.insert(enemies.end(), useEnemy.begin(), useEnemy.end());
 
 				//for corridor
-				if (!randGen.getIsEnd(r)) {
-					if ((bool)randGen.getExitLocation(r)) { // if north
-						for (int z = 0; z < randGen.getCorridorLength(r); z++) {
+				if (!randGen->getIsEnd(r)) {
+					if ((bool)randGen->getExitLocation(r)) { // if north
+						for (int z = 0; z < randGen->getCorridorLength(r); z++) {
 							rows = offsetY + height1 + z;
-							cols = offsetX + randGen.getExitDoor(r);
+							cols = offsetX + randGen->getExitDoor(r);
 							map2D[rows + 50][cols + 50] = 1;
 							a = new PlaneActor(this);
 
@@ -318,16 +300,16 @@ void Game::LoadData(){
 							CreatePointLights(a, pos, z);
 
 						}
-						cout << "corridor placement: " << offsetX + randGen.getExitLocation(r) << endl;
+						cout << "corridor placement: " << offsetX + randGen->getExitLocation(r) << endl;
 						cout << " IS True " << endl;
-						offsetY += height1 + randGen.getCorridorLength(r);
-						offsetX += randGen.getExitDoor(r) - randGen.getEntryDoor(r + 1);
+						offsetY += height1 + randGen->getCorridorLength(r);
+						offsetX += randGen->getExitDoor(r) - randGen->getEntryDoor(r + 1);
 
 
 					}
 					else { //if east
-						for (int z = 0; z < randGen.getCorridorLength(r); z++) {
-							rows = offsetY + randGen.getExitDoor(r);
+						for (int z = 0; z < randGen->getCorridorLength(r); z++) {
+							rows = offsetY + randGen->getExitDoor(r);
 							cols = offsetX + width1 + z;
 							map2D[rows + 50][cols + 50] = 1;
 							a = new PlaneActor(this);
@@ -338,10 +320,10 @@ void Game::LoadData(){
 							CreatePointLights(a, pos, z);
 
 						}
-						cout << "corridor placement: " << offsetY + randGen.getExitLocation(r) << endl;
+						cout << "corridor placement: " << offsetY + randGen->getExitLocation(r) << endl;
 						cout << " IS FALSE " << endl;
-						offsetX += width1 + randGen.getCorridorLength(r);
-						offsetY += randGen.getExitDoor(r) - randGen.getEntryDoor(r + 1);
+						offsetX += width1 + randGen->getCorridorLength(r);
+						offsetY += randGen->getExitDoor(r) - randGen->getEntryDoor(r + 1);
 					}
 				}
 			}
@@ -363,7 +345,7 @@ void Game::LoadData(){
 			cameraTargetActor->SetPosition(savedPlayerPosition);
 			isReturning = false;
 		} else { // ----------------------------------------------------------------------------------------------------------------------
-			rooms = randGen.generate();
+			rooms = randGen->generate();
 
 			int offsetX = 0;
 			int offsetY = 0;
@@ -381,23 +363,23 @@ void Game::LoadData(){
 					map2D[i][j] = NULL;
 			}
 
-			enemy setup;
+			
 			int count = 0;
 			//enemies.assign(0, setup);
 
 			//{ _width, _height, _entry, _entryDoor, _exit, _exitDoor, _isStart, _isEnd, _stairX, _stairY, _nextRoomCorridor };
 			//for each room
-			for (int r = 0; r < randGen.getNumRooms(); r++) {
-				int* paramsTemp = rooms[r].getParameters();
+			for (int r = 0; r < randGen->getNumRooms(); r++) {
+				int* paramsTemp = rooms[r]->getParameters();
 
-				int width1 = randGen.getWidth(r);
-				int height1 = randGen.getHeight(r);
+				int width1 = randGen->getWidth(r);
+				int height1 = randGen->getHeight(r);
 				cout << "WIDTH: " << width1 << endl;
 				cout << "HEIGHT: " << height1 << endl;
 				cout << "OFFSETx: " << offsetX << endl;
 				cout << "OFFSETy: " << offsetY << endl;
-				cout << "CORRIDOR LENGTH: " << randGen.getCorridorLength(r) << endl;
-				cout << "entryDoor: " << randGen.getEntryDoor(r) << endl;
+				cout << "CORRIDOR LENGTH: " << randGen->getCorridorLength(r) << endl;
+				cout << "entryDoor: " << randGen->getEntryDoor(r) << endl;
 
 				const float start = 0;
 				const float size = 100.0f;
@@ -419,12 +401,12 @@ void Game::LoadData(){
 					}
 				}
 
-				vector<enemy> useEnemy = randGen.getEnemies(r);
+				vector<EnemyActor*> useEnemy = randGen->getEnemies(r);
 				for (int e = 0; e < useEnemy.size(); e++) {
-					cubeActor = new CubeActor(this);
-					enem.push_back(cubeActor);
-					int tempX = useEnemy.at(e).getPosition()[0];
-					int tempY = useEnemy.at(e).getPosition()[1];
+					enemyActor = new EnemyActor(this);
+					//enem.push_back(enemyActor);
+					int tempX = useEnemy.at(e)->GetPosition().x;
+					int tempY = useEnemy.at(e)->GetPosition().y;
 
 					enemyX = offsetX + start + tempX;
 					enemyY = offsetY + start + tempY;
@@ -433,22 +415,19 @@ void Game::LoadData(){
 					cout << "Expected out: [" << enemyX << ", " << enemyY << "]" << endl;
 
 					map2D[enemyY + 50][enemyX + 50] = 2;
-					Vector3 pos = Vector3(enemyY * size, enemyX * size, 0.0f);
-					cubeActor->SetPosition(pos);
-					cubeActor->SetScale(50.f);
-					cout << " INSTANTIATING WITH : " << cubeActor;
-					useEnemy.at(e).setup(cubeActor);
-					cout << " SAVED:  " << useEnemy.at(e).getActor() << endl;
+					Vector3 pos = Vector3(enemyY * size, enemyX * size, -50.0f);
+					enemyActor->SetPosition(pos);
+					enemyActor->SetScale(50.f);
 				}
 
 				//enemies.insert(enemies.end(), useEnemy.begin(), useEnemy.end());
 
 				//for corridor
-				if (!randGen.getIsEnd(r)) {
-					if ((bool)randGen.getExitLocation(r)) { // if north
-						for (int z = 0; z < randGen.getCorridorLength(r); z++) {
+				if (!randGen->getIsEnd(r)) {
+					if ((bool)randGen->getExitLocation(r)) { // if north
+						for (int z = 0; z < randGen->getCorridorLength(r); z++) {
 							rows = offsetY + height1 + z;
-							cols = offsetX + randGen.getExitDoor(r);
+							cols = offsetX + randGen->getExitDoor(r);
 							map2D[rows + 50][cols + 50] = 1;
 							a = new PlaneActor(this);
 
@@ -458,16 +437,16 @@ void Game::LoadData(){
 							CreatePointLights(a, pos, z);
 
 						}
-						cout << "corridor placement: " << offsetX + randGen.getExitLocation(r) << endl;
+						cout << "corridor placement: " << offsetX + randGen->getExitLocation(r) << endl;
 						cout << " IS True " << endl;
-						offsetY += height1 + randGen.getCorridorLength(r);
-						offsetX += randGen.getExitDoor(r) - randGen.getEntryDoor(r + 1);
+						offsetY += height1 + randGen->getCorridorLength(r);
+						offsetX += randGen->getExitDoor(r) - randGen->getEntryDoor(r + 1);
 
 
 					}
 					else { //if east
-						for (int z = 0; z < randGen.getCorridorLength(r); z++) {
-							rows = offsetY + randGen.getExitDoor(r);
+						for (int z = 0; z < randGen->getCorridorLength(r); z++) {
+							rows = offsetY + randGen->getExitDoor(r);
 							cols = offsetX + width1 + z;
 							map2D[rows + 50][cols + 50] = 1;
 							a = new PlaneActor(this);
@@ -478,15 +457,15 @@ void Game::LoadData(){
 							CreatePointLights(a, pos, z);
 
 						}
-						cout << "corridor placement: " << offsetY + randGen.getExitLocation(r) << endl;
+						cout << "corridor placement: " << offsetY + randGen->getExitLocation(r) << endl;
 						cout << " IS FALSE " << endl;
-						offsetX += width1 + randGen.getCorridorLength(r);
-						offsetY += randGen.getExitDoor(r) - randGen.getEntryDoor(r + 1);
+						offsetX += width1 + randGen->getCorridorLength(r);
+						offsetY += randGen->getExitDoor(r) - randGen->getEntryDoor(r + 1);
 					}
 				}
 			}
 
-			for (CubeActor* x : enem) {
+			for (EnemyActor* x : enem) {
 				//cout << "===========================================================" << x << endl;
 				//cout << "===========================================================" << x->GetPosition().x << endl;
 				//cout << "===========================================================" << x->GetPosition().y << endl;

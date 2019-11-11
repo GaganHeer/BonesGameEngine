@@ -6,21 +6,21 @@
 #include <ctime>
 #include <string.h>
 #include <vector>
-#include "enemy.h"
+#include "Game.h"
 
 using namespace std;
 
 class Room
 {
 public:
-	Room();
-	Room(int width, int height, int variance, int maxEnemies);
+	Room(Game* game);
+	Room(Game* game, int width, int height, int variance, int maxEnemies);
 	~Room();
 
 	void updateRoom(int width, int height, int variance, int maxEnemies);
 	bool generate(bool lastDoor);
 	int * getParameters();
-	vector<enemy> getEnemies();
+	vector<EnemyActor*> getEnemies();
 	void setStart();
 	void setEnd(int diffInc);
 
@@ -46,7 +46,8 @@ private:
 	int _maxEnemies;
 	int _diffInc;
 
-	vector<enemy> _enemies;
+	vector<EnemyActor*> _enemies;
+	Game* game;
 
 	void _debug();
 };

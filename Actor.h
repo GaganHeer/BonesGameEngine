@@ -2,9 +2,9 @@
 #include <vector>
 #include "Math.h"
 #include <cstdint>
+#include "Game.h"
 #include "InputSystem.h"
 #include "Component.h"
-#include "Game.h"
 
 class Actor
 {
@@ -32,7 +32,7 @@ public:
 	void RemoveComponent(class Component* component);
 
 	// Getters
-	const Vector3& GetPosition() const { 
+	const Vector3 GetPosition() const { 
 		return position; 
 	}
 
