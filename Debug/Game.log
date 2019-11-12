@@ -1,11 +1,2 @@
-﻿  Game.cpp
-C:\Users\renzd\Desktop\Bones\Erics push\Bones-Engine\Game.cpp(263,30): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
-C:\Users\renzd\Desktop\Bones\Erics push\Bones-Engine\Game.cpp(264,30): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
-C:\Users\renzd\Desktop\Bones\Erics push\Bones-Engine\Game.cpp(398,30): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
-C:\Users\renzd\Desktop\Bones\Erics push\Bones-Engine\Game.cpp(399,30): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
-C:\Users\renzd\Desktop\Bones\Erics push\Bones-Engine\Game.cpp(411,23): warning C4018: '<': signed/unsigned mismatch
-C:\Users\renzd\Desktop\Bones\Erics push\Bones-Engine\Game.cpp(416,16): warning C4244: 'initializing': conversion from 'const float' to 'int', possible loss of data
-C:\Users\renzd\Desktop\Bones\Erics push\Bones-Engine\Game.cpp(417,16): warning C4244: 'initializing': conversion from 'const float' to 'int', possible loss of data
-C:\Users\renzd\Desktop\Bones\Erics push\Bones-Engine\Game.cpp(419,31): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
-C:\Users\renzd\Desktop\Bones\Erics push\Bones-Engine\Game.cpp(420,31): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
-  Game.vcxproj -> C:\Users\renzd\Desktop\Bones\Erics push\Bones-Engine\Debug\Game.exe
+﻿  HudElement.cpp
+  Game.vcxproj -> C:\Users\happi\Documents\BonesEngine\Debug\Game.exe

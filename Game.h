@@ -118,11 +118,9 @@ private:
 	class EnemyCombatSystem* enemyCombat;
 	class EnemyActor* enemyActor;
 
-	Font* fontRenderer;
-	Texture* fontArea1;
-
 	Texture* fontEnemyHealth;
 	Texture* fontPlayerHealth;
+	class HUD* hud;
 
 	bool isReturning;
 	bool enemyCollision;

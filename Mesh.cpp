@@ -162,7 +162,7 @@ bool Mesh::Load(const std::string & fileName, Renderer* renderer){
 		indices.emplace_back(ind[1].GetUint());
 		indices.emplace_back(ind[2].GetUint());
 	}
-
+	delete vertexArray;
 	vertexArray = new VertexArray(vertices.data(), static_cast<unsigned>(vertices.size()) / vertSize,
 		layout, indices.data(), static_cast<unsigned>(indices.size()));
 	return true;

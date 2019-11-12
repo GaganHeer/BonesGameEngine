@@ -109,6 +109,12 @@
     <ClCompile Include="EnemyMoveComponent.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+<<<<<<< HEAD
+    <ClCompile Include="HUD.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="HudElement.cpp">
+=======
     <ClCompile Include="Animation.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -119,6 +125,7 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Skeleton.cpp">
+>>>>>>> a5a6e95db1f7c1e513a519d7ff02106719418d14
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -216,6 +223,12 @@
     <ClInclude Include="EnemyMoveComponent.h">
       <Filter>Headers</Filter>
     </ClInclude>
+<<<<<<< HEAD
+    <ClInclude Include="HUD.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="HudElement.h">
+=======
     <ClInclude Include="Animation.h">
       <Filter>Headers</Filter>
     </ClInclude>
@@ -229,6 +242,7 @@
       <Filter>Headers</Filter>
     </ClInclude>
     <ClInclude Include="Skeleton.h">
+>>>>>>> a5a6e95db1f7c1e513a519d7ff02106719418d14
       <Filter>Headers</Filter>
     </ClInclude>
   </ItemGroup>

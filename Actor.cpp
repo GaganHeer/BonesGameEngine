@@ -16,10 +16,12 @@ Actor::Actor(Game* gameInst)
 Actor::~Actor()
 {
 	game->RemoveActor(this);
-	while (!components.empty())
+	
+	for (int i = 0; i < components.size(); i++)
 	{
-		delete components.back();
+		delete components[i];
 	}
+	components.clear();
 }
 
 void Actor::Update(float deltaTime)
@@ -106,26 +108,28 @@ void Actor::ComputeWorldTransform()
 void Actor::AddComponent(Component* component)
 {
 	int myOrder = component->GetUpdateOrder();
-	auto iter = components.begin();
-	for (;
-		iter != components.end();
-		++iter)
+	vector<Component*>::iterator itr;
+	for (itr = components.begin(); itr < components.end(); itr++)
 	{
-		if (myOrder < (*iter)->GetUpdateOrder())
+		if (myOrder < (*itr)->GetUpdateOrder())
 		{
 			break;
 		}
 	}
 
 	// Inserts element before position of iterator
-	components.insert(iter, component);
+	components.insert(itr, component);
 }
 
 void Actor::RemoveComponent(Component* component)
 {
-	auto iter = std::find(components.begin(), components.end(), component);
-	if (iter != components.end())
+	vector<Component*>::iterator itr;
+	for (itr = components.begin(); itr < components.end(); itr++)
 	{
-		components.erase(iter);
+		if ((*itr) == component)
+		{
+			components.erase(itr);
+			break;
+		}
 	}
 }

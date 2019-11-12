@@ -1,7 +1,5 @@
 #include "Font.h"
 #include "Texture.h"
-#include <vector>
-#include "Game.h"
 
 Font::Font()
 {
@@ -10,7 +8,7 @@ Font::Font()
 
 Font::~Font()
 {
-
+	Unload();
 }
 
 bool Font::Load(const std::string& fileName)
@@ -23,7 +21,7 @@ bool Font::Load(const std::string& fileName)
 		LARGE_FONT_1, LARGE_FONT_2, LARGE_FONT_3,
 		XL_FONT_1, XL_FONT_2, XL_FONT_3
 	};
-	
+
 	for (int size = 0; size < fontSizes.size(); size++)
 	{
 		TTF_Font* font = TTF_OpenFont(fileName.c_str(), fontSizes[size]);
@@ -40,10 +38,10 @@ bool Font::Load(const std::string& fileName)
 
 void Font::Unload()
 {
-	/*for (auto& font : fontData)
+	for (auto& font : fontData)
 	{
 		TTF_CloseFont(font.second);
-	}*/
+	}
 }
 
 Texture* Font::RenderText(const std::string& textMessage, const Vector3& color_fg, const Vector3& color_bg, int pointSize, bool blend)
@@ -66,11 +64,11 @@ Texture* Font::RenderText(const std::string& textMessage, const Vector3& color_f
 
 	// Find the font data for this point size
 	auto iter = fontData.find(pointSize);
-	
+
 	if (iter != fontData.end())
 	{
 		TTF_Font* font = iter->second;
-		
+
 		// Draw this to a surface (blended for alpha
 		SDL_Surface* messageSurf = nullptr;
 		if (blend)
@@ -81,7 +79,7 @@ Texture* Font::RenderText(const std::string& textMessage, const Vector3& color_f
 		{
 			messageSurf = TTF_RenderUTF8_Shaded(font, textMessage.c_str(), sdlColor_fg, sdlColor_bg);
 		}
-		
+
 		assert(messageSurf != nullptr);
 
 		if (messageSurf != nullptr)

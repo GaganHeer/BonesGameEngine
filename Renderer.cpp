@@ -99,15 +99,16 @@ void Renderer::Shutdown(){
 }
 
 void Renderer::UnloadData(){
-	for (auto i : textures){
+	for (auto i : textures)
+	{
 		i.second->Unload();
 		delete i.second;
 	}
 	textures.clear();
 
-	for (auto i : meshes){
+	for (auto i : meshes)
+	{
 		i.second->Unload();
-		delete i.second;
 	}
 	meshes.clear();
 }
@@ -132,9 +133,12 @@ void Renderer::Draw(){
 	spriteShader->SetActive();
 	spriteVerts->SetActive();
 
-	for (auto sprite : sprites){
-		if (sprite->GetVisible()) {
-			sprite->Draw(spriteShader);
+	vector<SpriteComponent*>::iterator itr;
+	for (itr = sprites.begin(); itr < sprites.end(); itr++)
+	{
+		if ((*itr)->GetVisible())
+		{
+			(*itr)->Draw(spriteShader);
 		}
 	}
 
@@ -144,19 +148,26 @@ void Renderer::Draw(){
 void Renderer::AddSprite(SpriteComponent* sprite)
 {
 	int myDrawOrder = sprite->GetDrawOrder();
-	auto iter = sprites.begin();
-
-	for (;iter != sprites.end(); ++iter){
-		if (myDrawOrder < (*iter)->GetDrawOrder()){
+	vector<SpriteComponent*>::iterator itr;
+	for (itr = sprites.begin(); itr < sprites.end(); itr++)
+	{
+		if (myDrawOrder < (*itr)->GetDrawOrder()){
 			break;
 		}
 	}
-	sprites.insert(iter, sprite);
+	sprites.insert(itr, sprite);
 }
 
 void Renderer::RemoveSprite(SpriteComponent* sprite){
-	auto iter = std::find(sprites.begin(), sprites.end(), sprite);
-	sprites.erase(iter);
+	vector<SpriteComponent*>::iterator itr;
+	for (itr = sprites.begin(); itr < sprites.end(); itr++)
+	{
+		if ((*itr) == sprite)
+		{
+			sprites.erase(itr);
+			break;
+		}
+	}
 }
 
 void Renderer::AddMeshComp(MeshComponent* mesh){
@@ -265,9 +276,13 @@ void Renderer::Draw3DScene(unsigned int framebuffer, const Matrix4& view, const 
 	if (lit) {
 		SetLightUniforms(meshShader, view);
 	}
-	for (auto mc : meshComps) {
-		if (mc->GetVisible()) {
-			mc->Draw(meshShader);
+
+	vector<MeshComponent*>::iterator itr;
+	for (itr = meshComps.begin(); itr < meshComps.end(); itr++)
+	{
+		if ((*itr)->GetVisible())
+		{
+			(*itr)->Draw(meshShader);
 		}
 	}
 
@@ -279,11 +294,13 @@ void Renderer::Draw3DScene(unsigned int framebuffer, const Matrix4& view, const 
 	if (lit) {
 		SetLightUniforms(skinnedShader, view);
 	}
-	for (auto sk : skeletalMeshes)
+
+	vector<SkeletalMeshComponent*>::iterator iter;
+	for (iter = skeletalMeshes.begin(); iter < skeletalMeshes.end(); iter++)
 	{
-		if (sk->GetVisible())
+		if ((*iter)->GetVisible())
 		{
-			sk->Draw(skinnedShader);
+			(*iter)->Draw(skinnedShader);
 		}
 	}
 }
@@ -398,8 +415,10 @@ void Renderer::DrawFromGBuffer()
 	glBlendFunc(GL_ONE, GL_ONE);
 
 	// Draw the point lights
-	for (PointLightComponent* p : pointLights) {
-		p->Draw(GPointLightShader, pointLightMesh);
+	vector<PointLightComponent*>::iterator iter;
+	for (iter = pointLights.begin(); iter < pointLights.end(); iter++)
+	{
+		(*iter)->Draw(GPointLightShader, pointLightMesh);
 	}
 }
 

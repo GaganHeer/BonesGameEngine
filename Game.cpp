@@ -13,7 +13,8 @@
 #include "Skeleton.h"
 #include "Animation.h"
 #include "CubeActor.h"
-#include "Texture.h"
+#include "HudElement.h"
+#include "HUD.h"
 
 Game::Game()
 	:renderer(nullptr),
@@ -32,7 +33,7 @@ Game::Game()
 	playerCombat = new PlayerCombatSystem();
 	playerLevels = new LevelUpSystem();
 	enemyCombat = new EnemyCombatSystem(50, 10, 100);
-
+	hud = new HUD();
 }
 
 bool Game::Initialize(){
@@ -62,7 +63,7 @@ bool Game::Initialize(){
 		return false;
 	}
 
-	InitFontRenderer();
+	//InitFontRenderer();
 
 	AE->setup();
 	//AE->sfx("{8a6a04bd-f459-4efe-9b9f-5b2bd9969d8c}");
@@ -192,8 +193,10 @@ void Game::UpdateGame()
 	}
 
 	if (enemyCollision) {
-		UpdateText(fontEnemyHealth, "Enemy Health: " + std::to_string(enemyCombat->getCurrentHealth()));
-		UpdateText(fontPlayerHealth, "Player Health: " + std::to_string(playerCombat->getCurrentHealth()));
+		string* combatMessageStr = new string("entering combat mode");
+		HudElement* combatMessage = new HudElement(new Actor(this), Vector3(300.0f, 180.0f, 0.0f), Vector2(), combatMessageStr);
+		hud->addElement(combatMessage);
+
 		savedPlayerPosition = cameraTargetActor->GetPosition();
 		for (Actor* enemy : enems) {
 			saved_enemies.push_back(enemy->GetPosition());
@@ -205,9 +208,13 @@ void Game::UpdateGame()
 
 	if (isAttacking) {
 		isAttacking = false;
-
-		/*UpdateText(fontEnemyHealth, "Enemy Health: " + std::to_string(enemyCombat->getCurrentHealth()));
-		UpdateText(fontPlayerHealth, "Player Health: " + std::to_string(playerCombat->getCurrentHealth()));*/
+		
+		string* playerHealthStr = new string("player health: " + std::to_string(playerCombat->getCurrentHealth()));
+		string* enemyHealthStr = new string("enemy health: " + std::to_string(enemyCombat->getCurrentHealth()));
+		HudElement* playerHealth = new HudElement(new Actor(this), Vector3(-300.0f, 180.0f, 0.0f), Vector2(), playerHealthStr);
+		hud->addElement(playerHealth);
+		HudElement* enemyHealth = new HudElement(new Actor(this), Vector3(300.0f, 180.0f, 0.0f), Vector2(), enemyHealthStr);
+		hud->addElement(enemyHealth);
 	}
 }
 
@@ -341,11 +348,10 @@ void Game::LoadData(){
 			dir.specColor = Vector3(11.8f, 0.5f, 0.5f);
 
 			// UI elements
-			a = new Actor(this);
-			a->SetPosition(Vector3(-350.0f, -350.0f, 0.0f));
-			SpriteComponent* sc = new SpriteComponent(a);
+			string* textString = new string("Find an exit point");
+			HudElement* fontArea1 = new HudElement(new Actor(this), Vector3(-350.0f, -350.0f, 0.0f), Vector2(), textString);
+			hud->addElement(fontArea1);
 
-			if (fontArea1) sc->SetTexture(fontArea1);
 			cameraTargetActor = new CameraTargetActor(this);
 			cameraTargetActor->SetPosition(savedPlayerPosition);
 			isReturning = false;
@@ -485,19 +491,27 @@ void Game::LoadData(){
 			dir.specColor = Vector3(11.8f, 0.5f, 0.5f);
 
 			// UI elements
-			a = new Actor(this);
-			a->SetPosition(Vector3(-350.0f, -350.0f, 0.0f));
-			SpriteComponent* sc = new SpriteComponent(a);
+			string* textString = new string("Find an exit point");
+			HudElement* fontArea1 = new HudElement(new Actor(this), Vector3(-350.0f, -350.0f, 0.0f), Vector2(), textString);
+			hud->addElement(fontArea1);
 
-			if (fontArea1) sc->SetTexture(fontArea1);
 			cameraTargetActor = new CameraTargetActor(this);
 		}
 
 	} else if (scene == 1) {
+
 		Actor* combatText = new Actor(this);
 		combatText->SetPosition(Vector3(0.0f, -210.0f, 0.0f));
 		SpriteComponent* sc = new SpriteComponent(combatText);
 		sc->SetTexture(renderer->GetTexture("Assets/combatText.png"));
+
+		// we wanna show it here as well
+		string* playerHealthStr = new string("player health: " + std::to_string(playerCombat->getCurrentHealth()));
+		string* enemyHealthStr = new string("enemy health: " + std::to_string(enemyCombat->getCurrentHealth()));
+		HudElement* playerHealth = new HudElement(new Actor(this), Vector3(-300.0f, 180.0f, 0.0f), Vector2(), playerHealthStr);
+		hud->addElement(playerHealth);
+		HudElement* enemyHealth = new HudElement(new Actor(this), Vector3(300.0f, 180.0f, 0.0f), Vector2(), enemyHealthStr);
+		hud->addElement(enemyHealth);
 
 		Actor* skeletonSprite = new Actor(this);
 		skeletonSprite->SetPosition(Vector3(-380.0f, 50.0, 0.0f));
@@ -585,18 +599,14 @@ void Game::UnloadData(){
 		delete actors.back();
 	}
 
+	if (hud)
+	{
+		hud->clearHUD();
+	}
+	
 	if (renderer){
 		renderer->UnloadData();
 	}
-	
-	/*
-	if (fontRenderer)
-	{
-		fontRenderer->Unload();
-		CleanupFontAreas();
-		delete fontRenderer;
-	}
-	*/
 }
 
 void Game::UnloadSkelAnim() {
@@ -615,7 +625,14 @@ void Game::UnloadSkelAnim() {
 
 void Game::Shutdown(){
 	UnloadData();
+
+	if (hud)
+	{
+		delete hud;
+	}
+
 	UnloadSkelAnim();
+
 	if (renderer){
 		renderer->Shutdown();
 	}
@@ -688,29 +705,6 @@ Animation* Game::GetAnimation(const std::string& fileName)
 		}
 		return anim;
 	}
-}
-
-void Game::InitFontRenderer()
-{
-	// make sure TTF_Init() is called before initializing fontRenderer
-	fontRenderer = new Font();
-	fontRenderer->Load("Assets/Carlito-Regular.ttf");
-
-	//UpdateText(fontArea1, "blah blah");
-	UpdateText(fontEnemyHealth, "Enemy Health: " + std::to_string(enemyCombat->getCurrentHealth()));
-	UpdateText(fontPlayerHealth, "Player Health: " + std::to_string(playerCombat->getCurrentHealth()));
-}
-
-void Game::UpdateText(Texture*& fontArea, const std::string& text)
-{
-	if (fontArea) delete fontArea;
-	// each separate text will need a separate text area
-	fontArea = fontRenderer->RenderText(text.c_str(), Color::LightYellow, Color::LightBlue, Font::LARGE_FONT_3, true);
-}
-
-void Game::CleanupFontAreas()
-{
-	if (fontArea1) delete fontArea1;
 }
 
 //Atk type 0 = Light Atk
