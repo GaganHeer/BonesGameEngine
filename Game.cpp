@@ -191,8 +191,13 @@ void Game::UpdateGame()
 	}
 
 	if (enemyCollision) {
-		//UpdateText(fontEnemyHealth, "Enemy Health: " + std::to_string(enemyCombat->getCurrentHealth()));
-		//UpdateText(fontPlayerHealth, "Player Health: " + std::to_string(playerCombat->getCurrentHealth()));
+		string* playerHealthStr = new string("player health: " + std::to_string(playerCombat->getCurrentHealth()));
+		string* enemyHealthStr = new string("enemy health: " + std::to_string(enemyCombat->getCurrentHealth()));
+		HudElement* playerHealth = new HudElement(new Actor(this), Vector3(-300.0f, 180.0f, 0.0f), Vector2(), playerHealthStr);
+		hud->addElement(playerHealth);
+		HudElement* enemyHealth = new HudElement(new Actor(this), Vector3(300.0f, 180.0f, 0.0f), Vector2(), enemyHealthStr);
+		hud->addElement(enemyHealth);
+
 		savedPlayerPosition = cameraTargetActor->GetPosition();
 		scene = 1;
 		isLoading = true;
@@ -202,8 +207,12 @@ void Game::UpdateGame()
 	if (isAttacking) {
 		isAttacking = false;
 
-		/*UpdateText(fontEnemyHealth, "Enemy Health: " + std::to_string(enemyCombat->getCurrentHealth()));
-		UpdateText(fontPlayerHealth, "Player Health: " + std::to_string(playerCombat->getCurrentHealth()));*/
+		string* playerHealthStr = new string(std::to_string(playerCombat->getCurrentHealth()));
+		string* enemyHealthStr = new string(std::to_string(enemyCombat->getCurrentHealth()));
+		HudElement* playerHealth = new HudElement(new Actor(this), Vector3(-300.0f, 180.0f, 0.0f), Vector2(), playerHealthStr);
+		hud->addElement(playerHealth);
+		HudElement* enemyHealth = new HudElement(new Actor(this), Vector3(300.0f, 180.0f, 0.0f), Vector2(), enemyHealthStr);
+		hud->addElement(enemyHealth);
 	}
 }
 
@@ -337,7 +346,7 @@ void Game::LoadData(){
 			dir.specColor = Vector3(11.8f, 0.5f, 0.5f);
 
 			// UI elements
-			string* textString = new string("blah blah");
+			string* textString = new string("blah blah2");
 			HudElement* fontArea1 = new HudElement(new Actor(this), Vector3(-350.0f, -350.0f, 0.0f), Vector2(), textString);
 			hud->addElement(fontArea1);
 
@@ -483,16 +492,15 @@ void Game::LoadData(){
 			string* textString = new string("blah blah");
 			HudElement* fontArea1 = new HudElement(new Actor(this), Vector3(-350.0f, -350.0f, 0.0f), Vector2(), textString);
 			hud->addElement(fontArea1);
-			//fontArea1->UpdateText("blah blah2");
 
 			cameraTargetActor = new CameraTargetActor(this);
 		}
 
 	} else if (scene == 1) {
 		Actor* combatText = new Actor(this);
-		combatText->SetPosition(Vector3(0.0f, -210.0f, 0.0f));
-		SpriteComponent* sc = new SpriteComponent(combatText);
-		sc->SetTexture(renderer->GetTexture("Assets/combatText.png"));
+		//combatText->SetPosition(Vector3(0.0f, -210.0f, 0.0f));
+		//SpriteComponent* sc = new SpriteComponent(combatText);
+		//sc->SetTexture(renderer->GetTexture("Assets/combatText.png"));
 
 		Actor* skeletonSprite = new Actor(this);
 		skeletonSprite->SetPosition(Vector3(-380.0f, 50.0, 0.0f));
@@ -584,7 +592,7 @@ void Game::UnloadData(){
 	{
 		hud->clearHUD();
 	}
-
+	cout << "blah";
 	if (renderer){
 		renderer->UnloadData();
 	}

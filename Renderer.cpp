@@ -154,8 +154,16 @@ void Renderer::AddSprite(SpriteComponent* sprite)
 }
 
 void Renderer::RemoveSprite(SpriteComponent* sprite){
-	auto iter = std::find(sprites.begin(), sprites.end(), sprite);
-	sprites.erase(iter);
+	vector<SpriteComponent*>::iterator itr;
+	for (itr = sprites.begin(); itr < sprites.end(); itr++)
+	{
+		if ((*itr) == sprite)
+		{
+			//delete (*itr);
+			sprites.erase(itr);
+			break;
+		}
+	}
 }
 
 void Renderer::AddMeshComp(MeshComponent* mesh){

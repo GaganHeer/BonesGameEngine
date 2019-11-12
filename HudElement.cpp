@@ -4,11 +4,10 @@ HudElement::HudElement(Actor* anActor, Vector3 pos, Vector2 size, string* data)
 {
 	element = anActor;
 	this->pos = pos;
-	
-	sc = new SpriteComponent(element);
-
 	this->size = size;
 	this->data = data;
+
+	sc = new SpriteComponent(element);
 
 	fontRenderer = new Font();
 	fontRenderer->Load("Assets/Carlito-Regular.ttf");
@@ -30,9 +29,9 @@ void HudElement::UpdateText(const std::string& text)
 
 HudElement::~HudElement()
 {
-	delete element;
-	delete sc;
 	delete data;
-	delete fontRenderer;
-	delete fontTexture;
+	if (fontTexture) delete fontTexture;
+	if (fontRenderer) delete fontRenderer;
+	//if (sc) delete sc;
+	//if (element) delete element;
 }
