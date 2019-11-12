@@ -264,23 +264,11 @@ void Game::LoadData(){
 					}
 				}
 
-				vector<EnemyActor*> useEnemy = randGen->getEnemies(r);
-				for (int e = 0; e < useEnemy.size(); e++) {
+				for (int e = 0; e < numEnemies[r]; e++) {
 					enemyActor = new EnemyActor(this);
-
-					int tempX = useEnemy.at(e)->GetPosition().x;
-					int tempY = useEnemy.at(e)->GetPosition().y;
-
-					enemyX = offsetX + start + tempX;
-					enemyY = offsetY + start + tempY;
-
-					cout << "ROOM:  " << r << " enemy: " << e << " At position: [" << tempX << ", " << tempY << "]" << endl;
-					cout << "Expected out: [" << enemyX << ", " << enemyY << "]" << endl;
-
-					map2D[enemyY + 50][enemyX + 50] = 2;
-					Vector3 pos = Vector3(enemyY * size, enemyX * size, 0.0f);
-					enemyActor->SetPosition(pos);
+					enemyActor->SetPosition(enem[r + e]);
 					enemyActor->SetScale(50.f);
+					enemyActor->SetMoveable(true);
 				}
 
 				//enemies.insert(enemies.end(), useEnemy.begin(), useEnemy.end());
@@ -402,11 +390,13 @@ void Game::LoadData(){
 				}
 
 				vector<EnemyActor*> useEnemy = randGen->getEnemies(r);
+				numEnemies.push_back(useEnemy.size());
 				for (int e = 0; e < useEnemy.size(); e++) {
 					enemyActor = new EnemyActor(this);
-					//enem.push_back(enemyActor);
-					int tempX = useEnemy.at(e)->GetPosition().x;
-					int tempY = useEnemy.at(e)->GetPosition().y;
+					enemyActor->SetMoveable(true);
+
+					int tempX = useEnemy[e]->GetPosition().x;
+					int tempY = useEnemy[e]->GetPosition().y;
 
 					enemyX = offsetX + start + tempX;
 					enemyY = offsetY + start + tempY;
@@ -415,9 +405,12 @@ void Game::LoadData(){
 					cout << "Expected out: [" << enemyX << ", " << enemyY << "]" << endl;
 
 					map2D[enemyY + 50][enemyX + 50] = 2;
-					Vector3 pos = Vector3(enemyY * size, enemyX * size, -50.0f);
+					Vector3 pos = Vector3(enemyY * size, enemyX * size, 0.0f);
 					enemyActor->SetPosition(pos);
+					enemyActor->SetMoveable(true);
 					enemyActor->SetScale(50.f);
+
+					enem.push_back(enemyActor->GetPosition());
 				}
 
 				//enemies.insert(enemies.end(), useEnemy.begin(), useEnemy.end());
@@ -463,12 +456,6 @@ void Game::LoadData(){
 						offsetY += randGen->getExitDoor(r) - randGen->getEntryDoor(r + 1);
 					}
 				}
-			}
-
-			for (EnemyActor* x : enem) {
-				//cout << "===========================================================" << x << endl;
-				//cout << "===========================================================" << x->GetPosition().x << endl;
-				//cout << "===========================================================" << x->GetPosition().y << endl;
 			}
 			//cout << " LAST ENEMY ACTOR: " << randGen.getEnemies(9).at(0).getActor() << endl;
 

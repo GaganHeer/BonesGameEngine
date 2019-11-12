@@ -31,5 +31,4 @@ private:
 	float horizontalMove;
 	float verticalMove;
 	Game* game;
-	vector<class EnemyActor*> enemies;
 };

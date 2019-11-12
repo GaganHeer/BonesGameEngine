@@ -7,7 +7,6 @@ MoveComponent::MoveComponent(class Actor* newOwner, int updateOrder)
 	verticalMove(0.0f)
 {
 	game = newOwner->GetGame();
-	enemies = game->getEnemies();
 
 }
 

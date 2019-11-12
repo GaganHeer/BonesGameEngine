@@ -59,7 +59,7 @@ public:
 	void Game::SetPlayerMapPos(int row, int col);
 	void CombatRound(int atkType);
 
-	vector<class EnemyActor*> getEnemies() {
+	vector<Vector3> getEnemies() {
 		return enem;
 	}
 
@@ -89,7 +89,7 @@ private:
 	bool isLoading;
 	bool updatingActors;
 	std::vector<class EnemyActor*> enemies;
-	std::vector<class EnemyActor*> enem;
+	std::vector<Vector3> enem;
 	std::vector<class Room*> rooms;
 
 	int exit_posX;
@@ -117,4 +117,5 @@ private:
 	bool enemyCollision;
 	bool isAttacking;
 	Vector3 savedPlayerPosition;
+	vector<int> numEnemies;
 };
