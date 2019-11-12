@@ -1,5 +1,6 @@
 #include "EnemyActor.h"
 #include "EnemyMoveComponent.h"
+#include "SkeletalMeshComponent.h"
 #include "MeshComponent.h"
 #include "Game.h"
 #include "Renderer.h"
@@ -9,8 +10,16 @@ EnemyActor::EnemyActor(Game* game) :
 	Actor(game),
 	moveable(false)
 {
+	
 	meshComponent = new MeshComponent(this);
 	meshComponent->SetMesh(game->GetRenderer()->GetMesh("Assets/Cube.obj"));
+	/*
+	skeletalMeshComponent = new SkeletalMeshComponent(this);
+	skeletalMeshComponent->SetMesh(game->GetRenderer()->GetMesh("Assets/knightMesh.json"));
+	skeletalMeshComponent->SetSkeleton(game->GetSkeleton("Assets/knightSkel.json"));
+	
+	SetScale(0.5f);
+	*/
 	enemyMoveComponent = new EnemyMoveComponent(this);
 	Vector3 pos = GetPosition();
 }

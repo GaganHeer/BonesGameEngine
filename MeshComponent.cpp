@@ -8,11 +8,12 @@
 #include "VertexArray.h"
 #include <assert.h>
 
-MeshComponent::MeshComponent(Actor* newOwner)
+MeshComponent::MeshComponent(Actor* newOwner, bool mIsSkeletal)
 	:Component(newOwner),
 	mesh(nullptr),
 	textureIndex(0),
-	visible(true)
+	visible(true),
+	isSkeletal(mIsSkeletal)
 {
 	owner->GetGame()->GetRenderer()->AddMeshComp(this);
 }

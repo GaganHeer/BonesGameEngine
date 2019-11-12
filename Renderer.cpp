@@ -9,6 +9,7 @@
 #include "GBuffer.h"
 #include <GL/glew.h>
 #include "PointLightComponent.h"
+#include "SkeletalMeshComponent.h"
 
 Renderer::Renderer(Game* gameInst)
 	:game(gameInst),
@@ -159,12 +160,29 @@ void Renderer::RemoveSprite(SpriteComponent* sprite){
 }
 
 void Renderer::AddMeshComp(MeshComponent* mesh){
-	meshComps.emplace_back(mesh);
+	if (mesh->GetIsSkeletal())
+	{
+		SkeletalMeshComponent* sk = static_cast<SkeletalMeshComponent*>(mesh);
+		skeletalMeshes.emplace_back(sk);
+	} 
+	else 
+	{
+		meshComps.emplace_back(mesh);
+	}
 }
 
 void Renderer::RemoveMeshComp(MeshComponent* mesh){
-	auto iter = std::find(meshComps.begin(), meshComps.end(), mesh);
-	meshComps.erase(iter);
+	if (mesh->GetIsSkeletal())
+	{
+		SkeletalMeshComponent* sk = static_cast<SkeletalMeshComponent*>(mesh);
+		auto iter = std::find(skeletalMeshes.begin(), skeletalMeshes.end(), sk);
+		skeletalMeshes.erase(iter);
+	}
+	else
+	{
+		auto iter = std::find(meshComps.begin(), meshComps.end(), mesh);
+		meshComps.erase(iter);
+	}
 }
 
 void Renderer::AddPointLight(PointLightComponent* light) {
@@ -260,6 +278,13 @@ void Renderer::Draw3DScene(unsigned int framebuffer, const Matrix4& view, const 
 	// Update lighting uniforms
 	if (lit) {
 		SetLightUniforms(skinnedShader, view);
+	}
+	for (auto sk : skeletalMeshes)
+	{
+		if (sk->GetVisible())
+		{
+			sk->Draw(skinnedShader);
+		}
 	}
 }
 

@@ -15,6 +15,7 @@ public:
 private:
 	class EnemyMoveComponent* enemyMoveComponent;
 	class MeshComponent* meshComponent;
+	class SkeletalMeshComponent* skeletalMeshComponent;
 
 	bool moveable;
 };

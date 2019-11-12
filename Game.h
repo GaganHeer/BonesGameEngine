@@ -33,6 +33,10 @@ public:
 		return renderer; 
 	}
 
+	class Skeleton* GetSkeleton(const std::string& fileName);
+
+	class Animation* GetAnimation(const std::string& fileName);
+
 	class CameraTargetActor* GetPlayer() {
 		return cameraTargetActor;
 	}
@@ -70,6 +74,7 @@ private:
 	void LoadData();
 	void CreatePointLights(Actor*& a, Vector3& pos, int z);
 	void UnloadData();
+	void UnloadSkelAnim();
 	void InitFontRenderer();
 	void UpdateText(Texture*& fontArea, const std::string& text);
 	void CleanupFontAreas();
@@ -77,6 +82,11 @@ private:
 	
 	std::vector<class Actor*> actors;
 	std::vector<class Actor*> pendingActors;
+
+	// Map of loaded skeletons
+	std::unordered_map<std::string, class Skeleton*> skeletons;
+	// Map of loaded animations
+	std::unordered_map<std::string, class Animation*> anims;
 
 	class InputSystem* inputSystem;
 	class AudioEngine* AE;
