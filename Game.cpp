@@ -195,6 +195,9 @@ void Game::UpdateGame()
 		UpdateText(fontEnemyHealth, "Enemy Health: " + std::to_string(enemyCombat->getCurrentHealth()));
 		UpdateText(fontPlayerHealth, "Player Health: " + std::to_string(playerCombat->getCurrentHealth()));
 		savedPlayerPosition = cameraTargetActor->GetPosition();
+		for (Actor* enemy : enems) {
+			saved_enemies.push_back(enemy->GetPosition());
+		}
 		scene = 1;
 		isLoading = true;
 		enemyCollision = false;
@@ -216,6 +219,8 @@ void Game::LoadData(){
 	Actor* a = new Actor(this);
 	if (scene == 0) {
 		if (isReturning) {
+			enems.clear();
+
 			int offsetX = 0;
 			int offsetY = 0;
 
@@ -266,12 +271,22 @@ void Game::LoadData(){
 					}
 				}
 
-				for (int e = 0; e < numEnemies[r]; e++) {
+				for (Vector3 savedEnemy : saved_enemies) {
 					enemyActor = new EnemyActor(this);
-					enemyActor->SetPosition(enem[r + e]);
-					enemyActor->SetScale(50.0f);
+					enems.push_back(enemyActor);
+
+					if (savedEnemy.x == savedPlayerPosition.x && savedEnemy.y == savedPlayerPosition.y) {
+						enemyActor->SetPosition(Vector3(-500.0f, -500.0f, 1.0f));
+					}
+					else {
+						enemyActor->SetPosition(savedEnemy);
+					}
+
+					
+					enemyActor->SetScale(50.f);
 					enemyActor->SetMoveable(true);
 				}
+				saved_enemies.clear();
 
 				//enemies.insert(enemies.end(), useEnemy.begin(), useEnemy.end());
 
@@ -395,6 +410,7 @@ void Game::LoadData(){
 				numEnemies.push_back(useEnemy.size());
 				for (int e = 0; e < useEnemy.size(); e++) {
 					enemyActor = new EnemyActor(this);
+					enems.push_back(enemyActor);
 					enemyActor->SetMoveable(true);
 
 					int tempX = useEnemy[e]->GetPosition().x;

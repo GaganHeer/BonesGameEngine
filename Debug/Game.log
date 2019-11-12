@@ -1,53 +1,11 @@
-﻿  Actor.cpp
-  CameraComponent.cpp
-  CameraTargetActor.cpp
-  CircleComponent.cpp
-  Component.cpp
-  CubeActor.cpp
-  EnemyActor.cpp
-  EnemyMoveComponent.cpp
-C:\Users\Eric Lin\Downloads\Bones-Engine\EnemyMoveComponent.cpp(52,52): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-  Font.cpp
-C:\Users\Eric Lin\Downloads\Bones-Engine\EnemyMoveComponent.cpp(52,43): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-  Game.cpp
-C:\Users\Eric Lin\Downloads\Bones-Engine\Font.cpp(27,26): warning C4018: '<': signed/unsigned mismatch
-C:\Users\Eric Lin\Downloads\Bones-Engine\Game.cpp(258,30): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
-C:\Users\Eric Lin\Downloads\Bones-Engine\Game.cpp(259,30): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
-C:\Users\Eric Lin\Downloads\Bones-Engine\Game.cpp(383,30): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
-C:\Users\Eric Lin\Downloads\Bones-Engine\Game.cpp(384,30): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
-C:\Users\Eric Lin\Downloads\Bones-Engine\Game.cpp(396,23): warning C4018: '<': signed/unsigned mismatch
-C:\Users\Eric Lin\Downloads\Bones-Engine\Game.cpp(400,16): warning C4244: 'initializing': conversion from 'const float' to 'int', possible loss of data
-C:\Users\Eric Lin\Downloads\Bones-Engine\Game.cpp(401,16): warning C4244: 'initializing': conversion from 'const float' to 'int', possible loss of data
-C:\Users\Eric Lin\Downloads\Bones-Engine\Game.cpp(403,31): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
-  Generator.cpp
-C:\Users\Eric Lin\Downloads\Bones-Engine\Game.cpp(404,31): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
-  Main.cpp
-  MeshComponent.cpp
-  MoveComponent.cpp
-C:\Users\Eric Lin\Downloads\Bones-Engine\Generator.cpp(40,12): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
-C:\Users\Eric Lin\Downloads\Bones-Engine\MoveComponent.cpp(19,28): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
-C:\Users\Eric Lin\Downloads\Bones-Engine\MoveComponent.cpp(22,30): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
-C:\Users\Eric Lin\Downloads\Bones-Engine\MoveComponent.cpp(27,33): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
-C:\Users\Eric Lin\Downloads\Bones-Engine\MoveComponent.cpp(30,30): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
-C:\Users\Eric Lin\Downloads\Bones-Engine\MoveComponent.cpp(46,33): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
-C:\Users\Eric Lin\Downloads\Bones-Engine\MoveComponent.cpp(49,35): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
-C:\Users\Eric Lin\Downloads\Bones-Engine\MoveComponent.cpp(54,38): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
-  PlaneActor.cpp
-  PointLightComponent.cpp
-  Renderer.cpp
-  SkeletalMeshComponent.cpp
-  SpriteComponent.cpp
-  TopDownCamera.cpp
-  Generating Code...
-C:\Users\Eric Lin\Downloads\Bones-Engine\MoveComponent.cpp(57,35): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
-  Compiling...
-  room.cpp
-C:\Users\Eric Lin\Downloads\Bones-Engine\CircleComponent.cpp(12): warning C4172: returning address of local variable or temporary
-C:\Users\Eric Lin\Downloads\Bones-Engine\room.cpp(112,45): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-C:\Users\Eric Lin\Downloads\Bones-Engine\room.cpp(112,37): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-C:\Users\Eric Lin\Downloads\Bones-Engine\room.cpp(116,42): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-C:\Users\Eric Lin\Downloads\Bones-Engine\room.cpp(119,45): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-  Generating Code...
-C:\Users\Eric Lin\Downloads\Bones-Engine\room.cpp(217,20): warning C4018: '<': signed/unsigned mismatch
-C:\Users\Eric Lin\Downloads\Bones-Engine\room.cpp(148): warning C4172: returning address of local variable or temporary: size
-  Game.vcxproj -> C:\Users\Eric Lin\Downloads\Bones-Engine\Debug\Game.exe
+﻿  Game.cpp
+C:\Users\renzd\Desktop\Bones\Erics push\Bones-Engine\Game.cpp(263,30): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+C:\Users\renzd\Desktop\Bones\Erics push\Bones-Engine\Game.cpp(264,30): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+C:\Users\renzd\Desktop\Bones\Erics push\Bones-Engine\Game.cpp(398,30): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+C:\Users\renzd\Desktop\Bones\Erics push\Bones-Engine\Game.cpp(399,30): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+C:\Users\renzd\Desktop\Bones\Erics push\Bones-Engine\Game.cpp(411,23): warning C4018: '<': signed/unsigned mismatch
+C:\Users\renzd\Desktop\Bones\Erics push\Bones-Engine\Game.cpp(416,16): warning C4244: 'initializing': conversion from 'const float' to 'int', possible loss of data
+C:\Users\renzd\Desktop\Bones\Erics push\Bones-Engine\Game.cpp(417,16): warning C4244: 'initializing': conversion from 'const float' to 'int', possible loss of data
+C:\Users\renzd\Desktop\Bones\Erics push\Bones-Engine\Game.cpp(419,31): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+C:\Users\renzd\Desktop\Bones\Erics push\Bones-Engine\Game.cpp(420,31): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+  Game.vcxproj -> C:\Users\renzd\Desktop\Bones\Erics push\Bones-Engine\Debug\Game.exe

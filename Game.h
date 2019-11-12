@@ -12,6 +12,7 @@
 #include "Font.h"
 #include "Texture.h"
 
+
 class Game
 {
 public:
@@ -126,6 +127,10 @@ private:
 	bool isReturning;
 	bool enemyCollision;
 	bool isAttacking;
+	
 	Vector3 savedPlayerPosition;
+	vector<Vector3> saved_enemies;
+	vector<Actor*> enems;
+
 	vector<int> numEnemies;
 };
