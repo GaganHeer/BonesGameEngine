@@ -11,7 +11,8 @@
 #include "CameraTargetActor.h"
 #include "PointLightComponent.h"
 #include "CubeActor.h"
-#include "Texture.h"
+#include "HudElement.h"
+#include "HUD.h"
 
 Game::Game()
 	:renderer(nullptr),
@@ -30,7 +31,7 @@ Game::Game()
 	playerCombat = new PlayerCombatSystem();
 	playerLevels = new LevelUpSystem();
 	enemyCombat = new EnemyCombatSystem(50, 10, 100);
-
+	hud = new HUD();
 }
 
 bool Game::Initialize(){
@@ -60,7 +61,7 @@ bool Game::Initialize(){
 		return false;
 	}
 
-	InitFontRenderer();
+	//InitFontRenderer();
 
 	AE->setup();
 	//AE->sfx("{8a6a04bd-f459-4efe-9b9f-5b2bd9969d8c}");
@@ -190,8 +191,8 @@ void Game::UpdateGame()
 	}
 
 	if (enemyCollision) {
-		UpdateText(fontEnemyHealth, "Enemy Health: " + std::to_string(enemyCombat->getCurrentHealth()));
-		UpdateText(fontPlayerHealth, "Player Health: " + std::to_string(playerCombat->getCurrentHealth()));
+		//UpdateText(fontEnemyHealth, "Enemy Health: " + std::to_string(enemyCombat->getCurrentHealth()));
+		//UpdateText(fontPlayerHealth, "Player Health: " + std::to_string(playerCombat->getCurrentHealth()));
 		savedPlayerPosition = cameraTargetActor->GetPosition();
 		scene = 1;
 		isLoading = true;
@@ -336,11 +337,10 @@ void Game::LoadData(){
 			dir.specColor = Vector3(11.8f, 0.5f, 0.5f);
 
 			// UI elements
-			a = new Actor(this);
-			a->SetPosition(Vector3(-350.0f, -350.0f, 0.0f));
-			SpriteComponent* sc = new SpriteComponent(a);
+			string* textString = new string("blah blah");
+			HudElement* fontArea1 = new HudElement(new Actor(this), Vector3(-350.0f, -350.0f, 0.0f), Vector2(), textString);
+			hud->addElement(fontArea1);
 
-			if (fontArea1) sc->SetTexture(fontArea1);
 			cameraTargetActor = new CameraTargetActor(this);
 			cameraTargetActor->SetPosition(savedPlayerPosition);
 			isReturning = false;
@@ -480,11 +480,11 @@ void Game::LoadData(){
 			dir.specColor = Vector3(11.8f, 0.5f, 0.5f);
 
 			// UI elements
-			a = new Actor(this);
-			a->SetPosition(Vector3(-350.0f, -350.0f, 0.0f));
-			SpriteComponent* sc = new SpriteComponent(a);
+			string* textString = new string("blah blah");
+			HudElement* fontArea1 = new HudElement(new Actor(this), Vector3(-350.0f, -350.0f, 0.0f), Vector2(), textString);
+			hud->addElement(fontArea1);
+			//fontArea1->UpdateText("blah blah2");
 
-			if (fontArea1) sc->SetTexture(fontArea1);
 			cameraTargetActor = new CameraTargetActor(this);
 		}
 
@@ -580,21 +580,24 @@ void Game::UnloadData(){
 		delete actors.back();
 	}
 
+	if (hud)
+	{
+		hud->clearHUD();
+	}
+
 	if (renderer){
 		renderer->UnloadData();
 	}
-	/*
-	if (fontRenderer)
-	{
-		fontRenderer->Unload();
-		CleanupFontAreas();
-		delete fontRenderer;
-	}
-	*/
 }
 
 void Game::Shutdown(){
 	UnloadData();
+
+	if (hud)
+	{
+		delete hud;
+	}
+
 	if (renderer){
 		renderer->Shutdown();
 	}
@@ -621,29 +624,6 @@ void Game::RemoveActor(Actor* actor){
 		std::iter_swap(iter, actors.end() - 1);
 		actors.pop_back();
 	}
-}
-
-void Game::InitFontRenderer()
-{
-	// make sure TTF_Init() is called before initializing fontRenderer
-	fontRenderer = new Font();
-	fontRenderer->Load("Assets/Carlito-Regular.ttf");
-
-	//UpdateText(fontArea1, "blah blah");
-	UpdateText(fontEnemyHealth, "Enemy Health: " + std::to_string(enemyCombat->getCurrentHealth()));
-	UpdateText(fontPlayerHealth, "Player Health: " + std::to_string(playerCombat->getCurrentHealth()));
-}
-
-void Game::UpdateText(Texture*& fontArea, const std::string& text)
-{
-	if (fontArea) delete fontArea;
-	// each separate text will need a separate text area
-	fontArea = fontRenderer->RenderText(text.c_str(), Color::LightYellow, Color::LightBlue, Font::LARGE_FONT_3, true);
-}
-
-void Game::CleanupFontAreas()
-{
-	if (fontArea1) delete fontArea1;
 }
 
 //Atk type 0 = Light Atk

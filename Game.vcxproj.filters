@@ -112,6 +112,12 @@
     <ClCompile Include="EnemyMoveComponent.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="HUD.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="HudElement.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Actor.h">
@@ -208,6 +214,12 @@
       <Filter>Headers</Filter>
     </ClInclude>
     <ClInclude Include="EnemyMoveComponent.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="HUD.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="HudElement.h">
       <Filter>Headers</Filter>
     </ClInclude>
   </ItemGroup>
