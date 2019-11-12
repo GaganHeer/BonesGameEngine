@@ -9,6 +9,7 @@
 #include "GBuffer.h"
 #include <GL/glew.h>
 #include "PointLightComponent.h"
+#include "SkeletalMeshComponent.h"
 
 Renderer::Renderer(Game* gameInst)
 	:game(gameInst),
@@ -98,15 +99,16 @@ void Renderer::Shutdown(){
 }
 
 void Renderer::UnloadData(){
-	for (auto i : textures){
+	for (auto i : textures)
+	{
 		i.second->Unload();
 		delete i.second;
 	}
 	textures.clear();
 
-	for (auto i : meshes){
+	for (auto i : meshes)
+	{
 		i.second->Unload();
-		delete i.second;
 	}
 	meshes.clear();
 }
@@ -131,9 +133,12 @@ void Renderer::Draw(){
 	spriteShader->SetActive();
 	spriteVerts->SetActive();
 
-	for (auto sprite : sprites){
-		if (sprite->GetVisible()) {
-			sprite->Draw(spriteShader);
+	vector<SpriteComponent*>::iterator itr;
+	for (itr = sprites.begin(); itr < sprites.end(); itr++)
+	{
+		if ((*itr)->GetVisible())
+		{
+			(*itr)->Draw(spriteShader);
 		}
 	}
 
@@ -143,14 +148,14 @@ void Renderer::Draw(){
 void Renderer::AddSprite(SpriteComponent* sprite)
 {
 	int myDrawOrder = sprite->GetDrawOrder();
-	auto iter = sprites.begin();
-
-	for (;iter != sprites.end(); ++iter){
-		if (myDrawOrder < (*iter)->GetDrawOrder()){
+	vector<SpriteComponent*>::iterator itr;
+	for (itr = sprites.begin(); itr < sprites.end(); itr++)
+	{
+		if (myDrawOrder < (*itr)->GetDrawOrder()){
 			break;
 		}
 	}
-	sprites.insert(iter, sprite);
+	sprites.insert(itr, sprite);
 }
 
 void Renderer::RemoveSprite(SpriteComponent* sprite){
@@ -159,7 +164,6 @@ void Renderer::RemoveSprite(SpriteComponent* sprite){
 	{
 		if ((*itr) == sprite)
 		{
-			//delete (*itr);
 			sprites.erase(itr);
 			break;
 		}
@@ -167,12 +171,29 @@ void Renderer::RemoveSprite(SpriteComponent* sprite){
 }
 
 void Renderer::AddMeshComp(MeshComponent* mesh){
-	meshComps.emplace_back(mesh);
+	if (mesh->GetIsSkeletal())
+	{
+		SkeletalMeshComponent* sk = static_cast<SkeletalMeshComponent*>(mesh);
+		skeletalMeshes.emplace_back(sk);
+	} 
+	else 
+	{
+		meshComps.emplace_back(mesh);
+	}
 }
 
 void Renderer::RemoveMeshComp(MeshComponent* mesh){
-	auto iter = std::find(meshComps.begin(), meshComps.end(), mesh);
-	meshComps.erase(iter);
+	if (mesh->GetIsSkeletal())
+	{
+		SkeletalMeshComponent* sk = static_cast<SkeletalMeshComponent*>(mesh);
+		auto iter = std::find(skeletalMeshes.begin(), skeletalMeshes.end(), sk);
+		skeletalMeshes.erase(iter);
+	}
+	else
+	{
+		auto iter = std::find(meshComps.begin(), meshComps.end(), mesh);
+		meshComps.erase(iter);
+	}
 }
 
 void Renderer::AddPointLight(PointLightComponent* light) {
@@ -255,9 +276,13 @@ void Renderer::Draw3DScene(unsigned int framebuffer, const Matrix4& view, const 
 	if (lit) {
 		SetLightUniforms(meshShader, view);
 	}
-	for (auto mc : meshComps) {
-		if (mc->GetVisible()) {
-			mc->Draw(meshShader);
+
+	vector<MeshComponent*>::iterator itr;
+	for (itr = meshComps.begin(); itr < meshComps.end(); itr++)
+	{
+		if ((*itr)->GetVisible())
+		{
+			(*itr)->Draw(meshShader);
 		}
 	}
 
@@ -268,6 +293,15 @@ void Renderer::Draw3DScene(unsigned int framebuffer, const Matrix4& view, const 
 	// Update lighting uniforms
 	if (lit) {
 		SetLightUniforms(skinnedShader, view);
+	}
+
+	vector<SkeletalMeshComponent*>::iterator iter;
+	for (iter = skeletalMeshes.begin(); iter < skeletalMeshes.end(); iter++)
+	{
+		if ((*iter)->GetVisible())
+		{
+			(*iter)->Draw(skinnedShader);
+		}
 	}
 }
 
@@ -381,8 +415,10 @@ void Renderer::DrawFromGBuffer()
 	glBlendFunc(GL_ONE, GL_ONE);
 
 	// Draw the point lights
-	for (PointLightComponent* p : pointLights) {
-		p->Draw(GPointLightShader, pointLightMesh);
+	vector<PointLightComponent*>::iterator iter;
+	for (iter = pointLights.begin(); iter < pointLights.end(); iter++)
+	{
+		(*iter)->Draw(GPointLightShader, pointLightMesh);
 	}
 }
 

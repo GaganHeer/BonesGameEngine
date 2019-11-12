@@ -8,11 +8,12 @@
 #include "VertexArray.h"
 #include <assert.h>
 
-MeshComponent::MeshComponent(Actor* newOwner)
+MeshComponent::MeshComponent(Actor* newOwner, bool mIsSkeletal)
 	:Component(newOwner),
 	mesh(nullptr),
 	textureIndex(0),
-	visible(true)
+	visible(true),
+	isSkeletal(mIsSkeletal)
 {
 	owner->GetGame()->GetRenderer()->AddMeshComp(this);
 }
@@ -30,7 +31,10 @@ void MeshComponent::Draw(Shader* shader){
 			t->SetActive();
 		}
 		VertexArray* va = mesh->GetVertexArray();
-		va->SetActive();
-		glDrawElements(GL_TRIANGLES, va->GetNumIndices(), GL_UNSIGNED_INT, nullptr);
+		if (va != nullptr)
+		{
+			va->SetActive();
+			glDrawElements(GL_TRIANGLES, va->GetNumIndices(), GL_UNSIGNED_INT, nullptr);
+		}
 	}
 }

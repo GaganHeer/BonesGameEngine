@@ -30,8 +30,8 @@ void HudElement::UpdateText(const std::string& text)
 HudElement::~HudElement()
 {
 	delete data;
-	if (fontTexture) delete fontTexture;
 	if (fontRenderer) delete fontRenderer;
 	//if (sc) delete sc;
+	if (fontTexture) delete fontTexture;
 	//if (element) delete element;
 }

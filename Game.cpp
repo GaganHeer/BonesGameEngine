@@ -10,6 +10,8 @@
 #include "PlaneActor.h"
 #include "CameraTargetActor.h"
 #include "PointLightComponent.h"
+#include "Skeleton.h"
+#include "Animation.h"
 #include "CubeActor.h"
 #include "HudElement.h"
 #include "HUD.h"
@@ -191,14 +193,14 @@ void Game::UpdateGame()
 	}
 
 	if (enemyCollision) {
-		string* playerHealthStr = new string("player health: " + std::to_string(playerCombat->getCurrentHealth()));
-		string* enemyHealthStr = new string("enemy health: " + std::to_string(enemyCombat->getCurrentHealth()));
-		HudElement* playerHealth = new HudElement(new Actor(this), Vector3(-300.0f, 180.0f, 0.0f), Vector2(), playerHealthStr);
-		hud->addElement(playerHealth);
-		HudElement* enemyHealth = new HudElement(new Actor(this), Vector3(300.0f, 180.0f, 0.0f), Vector2(), enemyHealthStr);
-		hud->addElement(enemyHealth);
+		string* combatMessageStr = new string("entering combat mode");
+		HudElement* combatMessage = new HudElement(new Actor(this), Vector3(300.0f, 180.0f, 0.0f), Vector2(), combatMessageStr);
+		hud->addElement(combatMessage);
 
 		savedPlayerPosition = cameraTargetActor->GetPosition();
+		for (Actor* enemy : enems) {
+			saved_enemies.push_back(enemy->GetPosition());
+		}
 		scene = 1;
 		isLoading = true;
 		enemyCollision = false;
@@ -206,9 +208,9 @@ void Game::UpdateGame()
 
 	if (isAttacking) {
 		isAttacking = false;
-
-		string* playerHealthStr = new string(std::to_string(playerCombat->getCurrentHealth()));
-		string* enemyHealthStr = new string(std::to_string(enemyCombat->getCurrentHealth()));
+		
+		string* playerHealthStr = new string("player health: " + std::to_string(playerCombat->getCurrentHealth()));
+		string* enemyHealthStr = new string("enemy health: " + std::to_string(enemyCombat->getCurrentHealth()));
 		HudElement* playerHealth = new HudElement(new Actor(this), Vector3(-300.0f, 180.0f, 0.0f), Vector2(), playerHealthStr);
 		hud->addElement(playerHealth);
 		HudElement* enemyHealth = new HudElement(new Actor(this), Vector3(300.0f, 180.0f, 0.0f), Vector2(), enemyHealthStr);
@@ -224,6 +226,8 @@ void Game::LoadData(){
 	Actor* a = new Actor(this);
 	if (scene == 0) {
 		if (isReturning) {
+			enems.clear();
+
 			int offsetX = 0;
 			int offsetY = 0;
 
@@ -274,24 +278,22 @@ void Game::LoadData(){
 					}
 				}
 
-				vector<EnemyActor*> useEnemy = randGen->getEnemies(r);
-				for (int e = 0; e < useEnemy.size(); e++) {
+				for (Vector3 savedEnemy : saved_enemies) {
 					enemyActor = new EnemyActor(this);
+					enems.push_back(enemyActor);
 
-					int tempX = useEnemy.at(e)->GetPosition().x;
-					int tempY = useEnemy.at(e)->GetPosition().y;
+					if (savedEnemy.x == savedPlayerPosition.x && savedEnemy.y == savedPlayerPosition.y) {
+						enemyActor->SetPosition(Vector3(-500.0f, -500.0f, 1.0f));
+					}
+					else {
+						enemyActor->SetPosition(savedEnemy);
+					}
 
-					enemyX = offsetX + start + tempX;
-					enemyY = offsetY + start + tempY;
-
-					cout << "ROOM:  " << r << " enemy: " << e << " At position: [" << tempX << ", " << tempY << "]" << endl;
-					cout << "Expected out: [" << enemyX << ", " << enemyY << "]" << endl;
-
-					map2D[enemyY + 50][enemyX + 50] = 2;
-					Vector3 pos = Vector3(enemyY * size, enemyX * size, 0.0f);
-					enemyActor->SetPosition(pos);
+					
 					enemyActor->SetScale(50.f);
+					enemyActor->SetMoveable(true);
 				}
+				saved_enemies.clear();
 
 				//enemies.insert(enemies.end(), useEnemy.begin(), useEnemy.end());
 
@@ -346,7 +348,7 @@ void Game::LoadData(){
 			dir.specColor = Vector3(11.8f, 0.5f, 0.5f);
 
 			// UI elements
-			string* textString = new string("blah blah2");
+			string* textString = new string("Find an exit point");
 			HudElement* fontArea1 = new HudElement(new Actor(this), Vector3(-350.0f, -350.0f, 0.0f), Vector2(), textString);
 			hud->addElement(fontArea1);
 
@@ -411,11 +413,14 @@ void Game::LoadData(){
 				}
 
 				vector<EnemyActor*> useEnemy = randGen->getEnemies(r);
+				numEnemies.push_back(useEnemy.size());
 				for (int e = 0; e < useEnemy.size(); e++) {
 					enemyActor = new EnemyActor(this);
-					//enem.push_back(enemyActor);
-					int tempX = useEnemy.at(e)->GetPosition().x;
-					int tempY = useEnemy.at(e)->GetPosition().y;
+					enems.push_back(enemyActor);
+					enemyActor->SetMoveable(true);
+
+					int tempX = useEnemy[e]->GetPosition().x;
+					int tempY = useEnemy[e]->GetPosition().y;
 
 					enemyX = offsetX + start + tempX;
 					enemyY = offsetY + start + tempY;
@@ -424,9 +429,12 @@ void Game::LoadData(){
 					cout << "Expected out: [" << enemyX << ", " << enemyY << "]" << endl;
 
 					map2D[enemyY + 50][enemyX + 50] = 2;
-					Vector3 pos = Vector3(enemyY * size, enemyX * size, -50.0f);
+					Vector3 pos = Vector3(enemyY * size, enemyX * size, 0.0f);
 					enemyActor->SetPosition(pos);
+					enemyActor->SetMoveable(true);
 					enemyActor->SetScale(50.f);
+
+					enem.push_back(enemyActor->GetPosition());
 				}
 
 				//enemies.insert(enemies.end(), useEnemy.begin(), useEnemy.end());
@@ -473,12 +481,6 @@ void Game::LoadData(){
 					}
 				}
 			}
-
-			for (EnemyActor* x : enem) {
-				//cout << "===========================================================" << x << endl;
-				//cout << "===========================================================" << x->GetPosition().x << endl;
-				//cout << "===========================================================" << x->GetPosition().y << endl;
-			}
 			//cout << " LAST ENEMY ACTOR: " << randGen.getEnemies(9).at(0).getActor() << endl;
 
 			// Setup lights
@@ -489,7 +491,7 @@ void Game::LoadData(){
 			dir.specColor = Vector3(11.8f, 0.5f, 0.5f);
 
 			// UI elements
-			string* textString = new string("blah blah");
+			string* textString = new string("Find an exit point");
 			HudElement* fontArea1 = new HudElement(new Actor(this), Vector3(-350.0f, -350.0f, 0.0f), Vector2(), textString);
 			hud->addElement(fontArea1);
 
@@ -497,10 +499,19 @@ void Game::LoadData(){
 		}
 
 	} else if (scene == 1) {
+
 		Actor* combatText = new Actor(this);
-		//combatText->SetPosition(Vector3(0.0f, -210.0f, 0.0f));
-		//SpriteComponent* sc = new SpriteComponent(combatText);
-		//sc->SetTexture(renderer->GetTexture("Assets/combatText.png"));
+		combatText->SetPosition(Vector3(0.0f, -210.0f, 0.0f));
+		SpriteComponent* sc = new SpriteComponent(combatText);
+		sc->SetTexture(renderer->GetTexture("Assets/combatText.png"));
+
+		// we wanna show it here as well
+		string* playerHealthStr = new string("player health: " + std::to_string(playerCombat->getCurrentHealth()));
+		string* enemyHealthStr = new string("enemy health: " + std::to_string(enemyCombat->getCurrentHealth()));
+		HudElement* playerHealth = new HudElement(new Actor(this), Vector3(-300.0f, 180.0f, 0.0f), Vector2(), playerHealthStr);
+		hud->addElement(playerHealth);
+		HudElement* enemyHealth = new HudElement(new Actor(this), Vector3(300.0f, 180.0f, 0.0f), Vector2(), enemyHealthStr);
+		hud->addElement(enemyHealth);
 
 		Actor* skeletonSprite = new Actor(this);
 		skeletonSprite->SetPosition(Vector3(-380.0f, 50.0, 0.0f));
@@ -592,9 +603,23 @@ void Game::UnloadData(){
 	{
 		hud->clearHUD();
 	}
-	cout << "blah";
+	
 	if (renderer){
 		renderer->UnloadData();
+	}
+}
+
+void Game::UnloadSkelAnim() {
+	// Unload skeletons
+	for (auto s : skeletons)
+	{
+		delete s.second;
+	}
+
+	// Unload animations
+	for (auto a : anims)
+	{
+		delete a.second;
 	}
 }
 
@@ -605,6 +630,8 @@ void Game::Shutdown(){
 	{
 		delete hud;
 	}
+
+	UnloadSkelAnim();
 
 	if (renderer){
 		renderer->Shutdown();
@@ -631,6 +658,52 @@ void Game::RemoveActor(Actor* actor){
 	if (iter != actors.end()){
 		std::iter_swap(iter, actors.end() - 1);
 		actors.pop_back();
+	}
+}
+
+Skeleton* Game::GetSkeleton(const std::string& fileName)
+{
+	auto iter = skeletons.find(fileName);
+	if (iter != skeletons.end())
+	{
+		return iter->second;
+	}
+	else
+	{
+		Skeleton* sk = new Skeleton();
+		if (sk->Load(fileName))
+		{
+			skeletons.emplace(fileName, sk);
+		}
+		else
+		{
+			delete sk;
+			sk = nullptr;
+		}
+		return sk;
+	}
+}
+
+Animation* Game::GetAnimation(const std::string& fileName)
+{
+	auto iter = anims.find(fileName);
+	if (iter != anims.end())
+	{
+		return iter->second;
+	}
+	else
+	{
+		Animation* anim = new Animation();
+		if (anim->Load(fileName))
+		{
+			anims.emplace(fileName, anim);
+		}
+		else
+		{
+			delete anim;
+			anim = nullptr;
+		}
+		return anim;
 	}
 }
 

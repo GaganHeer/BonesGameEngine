@@ -1,5 +1,4 @@
 #include "Component.h"
-#include "Actor.h"
 
 Component::Component(Actor* newOwner, int newUpdateOrder)
 	:owner(newOwner)

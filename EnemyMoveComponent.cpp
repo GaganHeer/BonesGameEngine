@@ -8,7 +8,7 @@ EnemyMoveComponent::EnemyMoveComponent(class Actor* newOwner, int updateOrder)
 }
 
 void EnemyMoveComponent::Update(float deltaTime) {
-	if (move) {
+	if (move && moveable) {
 		MoveEnemy();
 	}
 }

@@ -12,6 +12,7 @@
 #include "Font.h"
 #include "Texture.h"
 
+
 class Game
 {
 public:
@@ -32,6 +33,10 @@ public:
 	class Renderer* GetRenderer() { 
 		return renderer; 
 	}
+
+	class Skeleton* GetSkeleton(const std::string& fileName);
+
+	class Animation* GetAnimation(const std::string& fileName);
 
 	class CameraTargetActor* GetPlayer() {
 		return cameraTargetActor;
@@ -59,7 +64,7 @@ public:
 	void Game::SetPlayerMapPos(int row, int col);
 	void CombatRound(int atkType);
 
-	vector<class EnemyActor*> getEnemies() {
+	vector<Vector3> getEnemies() {
 		return enem;
 	}
 
@@ -70,6 +75,7 @@ private:
 	void LoadData();
 	void CreatePointLights(Actor*& a, Vector3& pos, int z);
 	void UnloadData();
+	void UnloadSkelAnim();
 	void InitFontRenderer();
 	void UpdateText(Texture*& fontArea, const std::string& text);
 	void CleanupFontAreas();
@@ -77,6 +83,11 @@ private:
 	
 	std::vector<class Actor*> actors;
 	std::vector<class Actor*> pendingActors;
+
+	// Map of loaded skeletons
+	std::unordered_map<std::string, class Skeleton*> skeletons;
+	// Map of loaded animations
+	std::unordered_map<std::string, class Animation*> anims;
 
 	class InputSystem* inputSystem;
 	class AudioEngine* AE;
@@ -89,7 +100,7 @@ private:
 	bool isLoading;
 	bool updatingActors;
 	std::vector<class EnemyActor*> enemies;
-	std::vector<class EnemyActor*> enem;
+	std::vector<Vector3> enem;
 	std::vector<class Room*> rooms;
 
 	int exit_posX;
@@ -114,5 +125,10 @@ private:
 	bool isReturning;
 	bool enemyCollision;
 	bool isAttacking;
+	
 	Vector3 savedPlayerPosition;
+	vector<Vector3> saved_enemies;
+	vector<Actor*> enems;
+
+	vector<int> numEnemies;
 };

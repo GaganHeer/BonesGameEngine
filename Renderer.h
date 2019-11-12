@@ -86,6 +86,8 @@ private:
 	std::unordered_map<std::string, class Font*> fonts;
 	std::vector<class SpriteComponent*> sprites;
 	std::vector<class MeshComponent*> meshComps;
+	std::vector<class SkeletalMeshComponent*> skeletalMeshes;
+
 
 	class Game* game;
 	class Shader* spriteShader;
