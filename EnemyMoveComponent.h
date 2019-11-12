@@ -17,8 +17,17 @@ public:
 		move = value;
 	}
 
+	float GetMoveable() const {
+		return moveable;
+	}
+
+	void SetMoveable(bool value) {
+		moveable = value;
+	}
+
 private:
 	class Game* game;
 	bool move;
+	bool moveable;
 };
 

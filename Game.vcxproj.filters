@@ -82,9 +82,6 @@
     <ClCompile Include="PointLightComponent.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="ShadowInfo.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="CubeActor.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -178,9 +175,6 @@
       <Filter>Headers</Filter>
     </ClInclude>
     <ClInclude Include="PointLightComponent.h">
-      <Filter>Headers</Filter>
-    </ClInclude>
-    <ClInclude Include="ShadowInfo.h">
       <Filter>Headers</Filter>
     </ClInclude>
     <ClInclude Include="CubeActor.h">

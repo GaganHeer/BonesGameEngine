@@ -89,7 +89,7 @@ bool Room::generate(bool lastDoor) {
 		int enemiesToGenerate = rand() % _maxEnemies + (0);
 		enemiesToGenerate += _diffInc;
 
-		EnemyActor* enemyActor = new EnemyActor(game);
+		class EnemyActor* enemyActor = new EnemyActor(game);
 		_enemies.assign(enemiesToGenerate, enemyActor);
 
 		vector<vector<int>> lastPlacements;

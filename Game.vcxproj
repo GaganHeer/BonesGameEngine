@@ -39,7 +39,6 @@
     <ClCompile Include="Renderer.cpp" />
     <ClCompile Include="room.cpp" />
     <ClCompile Include="Shader.cpp" />
-    <ClCompile Include="ShadowInfo.cpp" />
     <ClCompile Include="SpriteComponent.cpp" />
     <ClCompile Include="Texture.cpp" />
     <ClCompile Include="TopDownCamera.cpp" />
@@ -73,7 +72,6 @@
     <ClInclude Include="Renderer.h" />
     <ClInclude Include="room.h" />
     <ClInclude Include="Shader.h" />
-    <ClInclude Include="ShadowInfo.h" />
     <ClInclude Include="SpriteComponent.h" />
     <ClInclude Include="Texture.h" />
     <ClInclude Include="TopDownCamera.h" />
