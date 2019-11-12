@@ -5,7 +5,7 @@
 class MeshComponent : public Component
 {
 public:
-	MeshComponent(class Actor* owner);
+	MeshComponent(class Actor* owner, bool mIsSkeletal = false);
 	~MeshComponent();
 	virtual void Draw(class Shader* shader);
 
@@ -19,8 +19,11 @@ public:
 
 	void SetVisible(bool _visible) { visible = _visible; }
 	bool GetVisible() const { return visible; }
+
+	bool GetIsSkeletal() const { return isSkeletal; }
 protected:
 	class Mesh* mesh;
 	size_t textureIndex;
 	bool visible;
+	bool isSkeletal;
 };

@@ -10,6 +10,8 @@
 #include "PlaneActor.h"
 #include "CameraTargetActor.h"
 #include "PointLightComponent.h"
+#include "Skeleton.h"
+#include "Animation.h"
 #include "CubeActor.h"
 #include "Texture.h"
 
@@ -267,7 +269,7 @@ void Game::LoadData(){
 				for (int e = 0; e < numEnemies[r]; e++) {
 					enemyActor = new EnemyActor(this);
 					enemyActor->SetPosition(enem[r + e]);
-					enemyActor->SetScale(50.f);
+					enemyActor->SetScale(50.0f);
 					enemyActor->SetMoveable(true);
 				}
 
@@ -570,6 +572,7 @@ void Game::UnloadData(){
 	if (renderer){
 		renderer->UnloadData();
 	}
+	
 	/*
 	if (fontRenderer)
 	{
@@ -580,8 +583,23 @@ void Game::UnloadData(){
 	*/
 }
 
+void Game::UnloadSkelAnim() {
+	// Unload skeletons
+	for (auto s : skeletons)
+	{
+		delete s.second;
+	}
+
+	// Unload animations
+	for (auto a : anims)
+	{
+		delete a.second;
+	}
+}
+
 void Game::Shutdown(){
 	UnloadData();
+	UnloadSkelAnim();
 	if (renderer){
 		renderer->Shutdown();
 	}
@@ -607,6 +625,52 @@ void Game::RemoveActor(Actor* actor){
 	if (iter != actors.end()){
 		std::iter_swap(iter, actors.end() - 1);
 		actors.pop_back();
+	}
+}
+
+Skeleton* Game::GetSkeleton(const std::string& fileName)
+{
+	auto iter = skeletons.find(fileName);
+	if (iter != skeletons.end())
+	{
+		return iter->second;
+	}
+	else
+	{
+		Skeleton* sk = new Skeleton();
+		if (sk->Load(fileName))
+		{
+			skeletons.emplace(fileName, sk);
+		}
+		else
+		{
+			delete sk;
+			sk = nullptr;
+		}
+		return sk;
+	}
+}
+
+Animation* Game::GetAnimation(const std::string& fileName)
+{
+	auto iter = anims.find(fileName);
+	if (iter != anims.end())
+	{
+		return iter->second;
+	}
+	else
+	{
+		Animation* anim = new Animation();
+		if (anim->Load(fileName))
+		{
+			anims.emplace(fileName, anim);
+		}
+		else
+		{
+			delete anim;
+			anim = nullptr;
+		}
+		return anim;
 	}
 }
 

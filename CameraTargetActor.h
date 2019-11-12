@@ -14,5 +14,7 @@ private:
 	class MoveComponent* moveComponent;
 	class MeshComponent* meshComponent;
 	class TopDownCamera* cameraComponent;
+	class SkeletalMeshComponent* skeletalMeshComponent;
+//	bool moving;
 };
 
