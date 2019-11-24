@@ -76,6 +76,7 @@ void Game::RunLoop(){
 	while (isRunning){
 		if (isLoading) {
 			UnloadData();
+			UnloadSkelAnim();
 			LoadData();
 			isLoading = false;
 		}
