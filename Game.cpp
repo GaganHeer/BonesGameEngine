@@ -291,7 +291,7 @@ void Game::LoadData(){
 					}
 
 					
-					enemyActor->SetScale(50.f);
+					enemyActor->SetScale(1.0f);
 					enemyActor->SetMoveable(true);
 				}
 				saved_enemies.clear();
@@ -433,7 +433,7 @@ void Game::LoadData(){
 					Vector3 pos = Vector3(enemyY * size, enemyX * size, 0.0f);
 					enemyActor->SetPosition(pos);
 					enemyActor->SetMoveable(true);
-					enemyActor->SetScale(50.f);
+					enemyActor->SetScale(1.0f);
 
 					enem.push_back(enemyActor->GetPosition());
 				}
@@ -520,6 +520,7 @@ void Game::LoadData(){
 		Actor* skeletonSprite = new Actor(this);
 		skeletonSprite->SetPosition(Vector3(-380.0f, 50.0, 0.0f));
 		skeletonSprite->SetScale(0.5f);
+		
 		SpriteComponent* skelSC = new SpriteComponent(skeletonSprite);
 		skelSC->SetTexture(renderer->GetTexture("Assets/skeleton.png"));
 
@@ -615,27 +616,30 @@ void Game::UnloadData(){
 
 void Game::UnloadSkelAnim() {
 	// Unload skeletons
-	for (auto s : skeletons)
-	{
-		delete s.second;
+	if (!skeletons.empty()) {
+		for (auto s : skeletons)
+		{
+			delete s.second;
+		}
 	}
 
 	// Unload animations
-	for (auto a : anims)
-	{
-		delete a.second;
+	if (!anims.empty()) {
+		for (auto a : anims)
+		{
+			delete a.second;
+		}
 	}
 }
 
 void Game::Shutdown(){
 	UnloadData();
+	UnloadSkelAnim();
 
 	if (hud)
 	{
 		delete hud;
 	}
-
-	UnloadSkelAnim();
 
 	if (renderer){
 		renderer->Shutdown();

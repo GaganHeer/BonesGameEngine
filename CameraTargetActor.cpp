@@ -16,6 +16,7 @@ CameraTargetActor::CameraTargetActor(Game* game) :
 	skeletalMeshComponent = new SkeletalMeshComponent(this);
 	skeletalMeshComponent->SetMesh(game->GetRenderer()->GetMesh("Assets/skellyMesh.json"));
 	skeletalMeshComponent->SetSkeleton(game->GetSkeleton("Assets/skellySkel.json"));
+	
 	SetPosition(Vector3(0.0f, 0.0f, -50.0f));
 	SetScale(0.5f);
 

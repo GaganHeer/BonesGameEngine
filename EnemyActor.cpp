@@ -11,15 +11,14 @@ EnemyActor::EnemyActor(Game* game) :
 	moveable(false)
 {
 	
-	meshComponent = new MeshComponent(this);
-	meshComponent->SetMesh(game->GetRenderer()->GetMesh("Assets/Cube.obj"));
-	/*
+	//meshComponent = new MeshComponent(this);
+	//meshComponent->SetMesh(game->GetRenderer()->GetMesh("Assets/skellyMesh.json"));
+	
 	skeletalMeshComponent = new SkeletalMeshComponent(this);
 	skeletalMeshComponent->SetMesh(game->GetRenderer()->GetMesh("Assets/knightMesh.json"));
 	skeletalMeshComponent->SetSkeleton(game->GetSkeleton("Assets/knightSkel.json"));
 	
-	SetScale(0.5f);
-	*/
+	
 	enemyMoveComponent = new EnemyMoveComponent(this);
 	Vector3 pos = GetPosition();
 }
