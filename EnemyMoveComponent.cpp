@@ -45,13 +45,31 @@ void EnemyMoveComponent::MoveEnemy()
 
 	tempX = enem_row + x;
 	tempY = enem_col + y;
-	if (game->IsWalkable(tempX, tempY) == 1 || game->IsWalkable(tempX, tempY) == 3)
+	if (game->IsWalkable(tempX, tempY) == 1)
 	{
 		game->SetWalkable(enem_row, enem_col);
 
 		pos2 = owner->GetPosition() + Vector3(x * 100, y * 100, .0f);
 		owner->SetPosition(pos2);
 		game->SetEnemyMapPos(tempX, tempY);
+		
+	}
+	else if (game->IsWalkable(tempX, tempY) == 3)
+	{
+		game->SetWalkable(enem_row, enem_col);
+
+		pos2 = owner->GetPosition() + Vector3(x * 100, y * 100, .0f);
+		owner->SetPosition(pos2);
+		game->SetEnemyMapPos(tempX, tempY);
+		Collided();
 	}
 	SetMove(false);
+}
+
+
+void EnemyMoveComponent::Collided()
+{
+	cout << "COLLISION: " << game->GetEnemyCollision() << endl;
+	game->SetEnemyCollision(true);
+	cout << "COLLISION: " << game->GetEnemyCollision() << endl;
 }

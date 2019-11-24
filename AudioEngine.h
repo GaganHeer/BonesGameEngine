@@ -16,8 +16,18 @@ using namespace FMOD;
 class AudioEngine {
 public:
 	void setup();
-	void sfx(const char* GUID);
 	void update();
+
+	void testLooping();
+	void stopAudio(Studio::EventInstance* inst);
+	Studio::EventInstance* startDungeonBGM();
+	Studio::EventInstance* startFightBGM();
+	void playerAtk();
+	void enemyAtk();
+	void enemyDeath();
+
+
+
 private:
 
 };

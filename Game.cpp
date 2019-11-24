@@ -28,7 +28,7 @@ Game::Game()
 	inputSystem = new InputSystem();
 	AE = new AudioEngine();
 	ticksCount = 0;
-
+	currentAudioInstance = nullptr;
 	randGen = new Generator(this);
 	playerCombat = new PlayerCombatSystem();
 	playerLevels = new LevelUpSystem();
@@ -66,7 +66,6 @@ bool Game::Initialize(){
 	//InitFontRenderer();
 
 	AE->setup();
-	//AE->sfx("{8a6a04bd-f459-4efe-9b9f-5b2bd9969d8c}");
 	LoadData();
 	ticksCount = SDL_GetTicks();
 	printf("%s%lu\n", "Number of Ticks Initialized: ", ticksCount);
@@ -111,7 +110,6 @@ void Game::ProcessInput() {
 				isLoading = true;
 				isReturning = false;
 				scene = 1;
-				//AE->sfx("{ce969287-97e3-4324-b52b-f2f31edf0143}");
 			}
 
 
@@ -120,7 +118,6 @@ void Game::ProcessInput() {
 				isLoading = true;
 				isReturning = true;
 				scene = 0;
-				//AE->sfx("{cecb4df2-fbcf-4d3e-94ef-d261ec18747b}");
 			}*/
 
 			if (state.Keyboard.GetKeyState(SDL_SCANCODE_H) == ButtonState::Pressed) {
@@ -225,6 +222,10 @@ void Game::GenerateOutput(){
 void Game::LoadData(){
 	Actor* a = new Actor(this);
 	if (scene == 0) {
+		if (currentAudioInstance) {
+			AE->stopAudio(currentAudioInstance);
+		}
+		currentAudioInstance = AE->startDungeonBGM();
 		if (isReturning) {
 			enems.clear();
 
@@ -243,6 +244,9 @@ void Game::LoadData(){
 				for (int j = 1; j <= map_cols; j++)
 					map2D[i][j] = NULL;
 			}
+
+			cameraTargetActor = new CameraTargetActor(this);
+			cameraTargetActor->SetPosition(savedPlayerPosition);
 
 			//{ _width, _height, _entry, _entryDoor, _exit, _exitDoor, _isStart, _isEnd, _stairX, _stairY, _nextRoomCorridor };
 			//for each room
@@ -352,8 +356,6 @@ void Game::LoadData(){
 			HudElement* fontArea1 = new HudElement(new Actor(this), Vector3(-350.0f, -350.0f, 0.0f), Vector2(), textString);
 			hud->addElement(fontArea1);
 
-			cameraTargetActor = new CameraTargetActor(this);
-			cameraTargetActor->SetPosition(savedPlayerPosition);
 			isReturning = false;
 		} else { // ----------------------------------------------------------------------------------------------------------------------
 			rooms = randGen->generate();
@@ -500,6 +502,9 @@ void Game::LoadData(){
 		}
 
 	} else if (scene == 1) {
+
+		AE->stopAudio(currentAudioInstance);
+		currentAudioInstance = AE->startFightBGM();
 
 		Actor* combatText = new Actor(this);
 		combatText->SetPosition(Vector3(0.0f, -210.0f, 0.0f));

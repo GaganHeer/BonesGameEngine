@@ -91,6 +91,7 @@ private:
 
 	class InputSystem* inputSystem;
 	class AudioEngine* AE;
+	Studio::EventInstance* currentAudioInstance;
 	class Renderer* renderer;
 	class Generator* randGen;
 	Uint32 ticksCount;

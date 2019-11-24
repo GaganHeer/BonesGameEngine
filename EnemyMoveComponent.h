@@ -25,6 +25,8 @@ public:
 		moveable = value;
 	}
 
+	void Collided();
+
 private:
 	class Game* game;
 	bool move;
