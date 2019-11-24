@@ -11,6 +11,7 @@
 #include "LevelUpSystem.h"
 #include "Font.h"
 #include "Texture.h"
+#include <thread>
 
 
 class Game
@@ -132,4 +133,5 @@ private:
 	vector<Actor*> enems;
 
 	vector<int> numEnemies;
+
 };

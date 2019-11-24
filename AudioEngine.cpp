@@ -77,7 +77,7 @@ void AudioEngine::enemyAtk() {
 	play("{fec55164-3b98-462e-9377-2196815b9da1}");
 }
 void AudioEngine::enemyDeath() {
-	play("{21448bf9-0ba1-407b-93a7-5b2080f629c8}");
+	play("{afdb6b8e-6f22-4209-a949-1e85da29cfc2}");
 }
 
 void AudioEngine::update() {

@@ -85,11 +85,11 @@ int Generator::getIsStart(int i) {
 int Generator::getIsEnd(int i) {
 	return rooms[i]->getParameters()[7];
 }
-int Generator::getStairX(int i) {
-	return rooms[i]->getParameters()[8];
+int Generator::getStairX() {
+	return rooms[NUM_ROOMS - 1]->getParameters()[8];
 }
-int Generator::getStairY(int i) {
-	return rooms[i]->getParameters()[9];
+int Generator::getStairY() {
+	return rooms[NUM_ROOMS - 1]->getParameters()[9];
 }
 int Generator::getCorridorLength(int i) {
 	return rooms[i]->getParameters()[10];
