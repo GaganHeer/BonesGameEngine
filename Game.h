@@ -11,6 +11,7 @@
 #include "LevelUpSystem.h"
 #include "Font.h"
 #include "Texture.h"
+#include <thread>
 
 
 class Game
@@ -63,10 +64,6 @@ public:
 	void Game::SetEnemyMapPos(int row, int col);
 	void Game::SetPlayerMapPos(int row, int col);
 	void CombatRound(int atkType);
-
-	vector<Vector3> getEnemies() {
-		return enem;
-	}
 
 private:
 	void ProcessInput();
@@ -132,4 +129,5 @@ private:
 	vector<Actor*> enems;
 
 	vector<int> numEnemies;
+
 };

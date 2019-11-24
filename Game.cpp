@@ -76,7 +76,6 @@ void Game::RunLoop(){
 	while (isRunning){
 		if (isLoading) {
 			UnloadData();
-			UnloadSkelAnim();
 			LoadData();
 			isLoading = false;
 		}
@@ -196,8 +195,8 @@ void Game::UpdateGame()
 		hud->addElement(combatMessage);
 
 		savedPlayerPosition = cameraTargetActor->GetPosition();
-		for (Actor* enemy : enems) {
-			saved_enemies.push_back(enemy->GetPosition());
+		for (Actor* enemyPos : enems) {
+			saved_enemies.push_back(enemyPos->GetPosition());
 		}
 		scene = 1;
 		isLoading = true;
@@ -284,19 +283,14 @@ void Game::LoadData(){
 				}
 
 				for (Vector3 savedEnemy : saved_enemies) {
-					enemyActor = new EnemyActor(this);
-					enems.push_back(enemyActor);
-
-					if (savedEnemy.x == savedPlayerPosition.x && savedEnemy.y == savedPlayerPosition.y) {
-						enemyActor->SetPosition(Vector3(-500.0f, -500.0f, 1.0f));
-					}
-					else {
+					if (!(savedEnemy.x == savedPlayerPosition.x && savedEnemy.y == savedPlayerPosition.y)) {
+						enemyActor = new EnemyActor(this);
+						enems.push_back(enemyActor);
 						enemyActor->SetPosition(savedEnemy);
+						enemyActor->SetSkeletalMesh();
+						enemyActor->SetScale(0.5f);
+						enemyActor->SetMoveable(true);
 					}
-
-					enemyActor->SetSkeletalMesh();
-					enemyActor->SetScale(0.5f);
-					enemyActor->SetMoveable(true);
 				}
 				saved_enemies.clear();
 
@@ -432,16 +426,12 @@ void Game::LoadData(){
 					cout << "Expected out: [" << enemyX << ", " << enemyY << "]" << endl;
 
 					map2D[enemyY + 50][enemyX + 50] = 2;
-					Vector3 pos = Vector3(enemyY * size, enemyX * size, 0.0f);
+					Vector3 pos = Vector3(enemyY * size, enemyX * size, -100.0f);
 					enemyActor->SetPosition(pos);
 					enemyActor->SetMoveable(true);
 					enemyActor->SetSkeletalMesh();
 					enemyActor->SetScale(0.5f);
-
-					enem.push_back(enemyActor->GetPosition());
 				}
-
-				//enemies.insert(enemies.end(), useEnemy.begin(), useEnemy.end());
 
 				//for corridor
 				if (!randGen->getIsEnd(r)) {
@@ -531,7 +521,7 @@ void Game::LoadData(){
 		enemySprite->SetScale(0.5f);
 		SpriteComponent* enemySC = new SpriteComponent(enemySprite);
 		enemySC->SetTexture(renderer->GetTexture("Assets/enemy.png"));
-
+		
 		Actor* playerHealthText = new Actor(this);
 		playerHealthText->SetPosition(Vector3(-300.0f, 180.0f, 0.0f));
 		SpriteComponent* playerHealthSC = new SpriteComponent(playerHealthText);
@@ -541,6 +531,7 @@ void Game::LoadData(){
 		enemyHealthText->SetPosition(Vector3(300.0f, 180.0f, 0.0f));
 		SpriteComponent* enemyHealthSC = new SpriteComponent(enemyHealthText);
 		if (fontEnemyHealth) enemyHealthSC->SetTexture(fontEnemyHealth);
+		
 	}
 }
 

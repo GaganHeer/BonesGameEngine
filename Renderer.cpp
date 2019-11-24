@@ -114,10 +114,6 @@ void Renderer::UnloadData(){
 }
 
 void Renderer::Draw(){
-	// Draw to the mirror texture first
-	Draw3DScene(mirrorBuffer, mirrorView, projection, 0.25f);
-	//Draw the shadow map texture
-	DrawDepthMap(depthMapFBO, view, projection, 1.0f);
 	// Draw the 3D scene to the G-buffer
 	Draw3DScene(_GBuffer->GetBufferID(), view, projection, 1.0f, false);
 	// Set the frame buffer back to zero (screen's frame buffer)
@@ -433,22 +429,6 @@ bool Renderer::LoadShaders() {
 	spriteShader->SetActive();
 	Matrix4 spriteViewProj = Matrix4::CreateSimpleViewProj(screenWidth, screenHeight);
 	spriteShader->SetMatrixUniform("uViewProj", spriteViewProj);
-	
-	//Depth Shader
-	depthShader = new Shader();
-	if (!depthShader->Load("Shaders/Shadows.vert", "Shaders/Shadows.frag")) {
-		return false;
-	}
-	depthShader->SetActive();
-	float near_plane = 1.0f, far_plane = 7.5f;
-	Matrix4 lightProjection = Matrix4::CreateOrtho(10.0f, 10.0f, near_plane, far_plane);
-
-	Matrix4 lightView = Matrix4::CreateLookAt(Vector3(-2.0f, 4.0f, -1.0f),
-		Vector3(0.0f, 0.0f, 0.0f),
-		Vector3(0.0f, 1.0f, 0.0f));
-
-	Matrix4 lightSpaceMatrix = lightProjection * lightView;
-	depthShader->SetMatrixUniform("lightSpaceMatrix", lightSpaceMatrix);
 
 	//Mesh Shader
 	meshShader = new Shader();

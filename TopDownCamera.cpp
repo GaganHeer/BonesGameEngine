@@ -3,11 +3,10 @@
 
 TopDownCamera::TopDownCamera(Actor* owner) :
 	CameraComponent(owner),
-	horzDist(50.f),
+	horzDist(250.f),
 	vertDist(500.0f),
-	targetDist(100.0f),
+	targetDist(150.0f),
 	springConstant(64.0f) {
-
 }
 
 void TopDownCamera::Update(float deltaTime) {
