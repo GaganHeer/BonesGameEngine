@@ -289,8 +289,8 @@ void Game::LoadData(){
 						enemyActor->SetPosition(savedEnemy);
 					}
 
-					
-					enemyActor->SetScale(50.f);
+					enemyActor->SetSkeletalMesh();
+					enemyActor->SetScale(0.5f);
 					enemyActor->SetMoveable(true);
 				}
 				saved_enemies.clear();
@@ -432,7 +432,8 @@ void Game::LoadData(){
 					Vector3 pos = Vector3(enemyY * size, enemyX * size, 0.0f);
 					enemyActor->SetPosition(pos);
 					enemyActor->SetMoveable(true);
-					enemyActor->SetScale(50.f);
+					enemyActor->SetSkeletalMesh();
+					enemyActor->SetScale(0.5f);
 
 					enem.push_back(enemyActor->GetPosition());
 				}

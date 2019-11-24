@@ -1,2 +1,8 @@
-﻿  HudElement.cpp
-  Game.vcxproj -> C:\Users\happi\Documents\BonesEngine\Debug\Game.exe
+﻿  room.cpp
+C:\Users\Jason\Desktop\Bones-Engine\room.cpp(112,45): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\Jason\Desktop\Bones-Engine\room.cpp(112,37): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\Jason\Desktop\Bones-Engine\room.cpp(116,42): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\Jason\Desktop\Bones-Engine\room.cpp(119,45): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\Jason\Desktop\Bones-Engine\room.cpp(217,20): warning C4018: '<': signed/unsigned mismatch
+C:\Users\Jason\Desktop\Bones-Engine\room.cpp(148): warning C4172: returning address of local variable or temporary: size
+  Game.vcxproj -> C:\Users\Jason\Desktop\Bones-Engine\Debug\Game.exe

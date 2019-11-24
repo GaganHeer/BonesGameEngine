@@ -12,10 +12,13 @@ public:
 	void SetMoveable(bool value) {
 		moveable = value;
 	}
+
+	void SetSkeletalMesh();
 private:
 	class EnemyMoveComponent* enemyMoveComponent;
 	class MeshComponent* meshComponent;
 	class SkeletalMeshComponent* skeletalMeshComponent;
+	class Game* game;
 
 	bool moveable;
 };
