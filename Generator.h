@@ -27,8 +27,8 @@ public:
 	int getExitDoor(int i);
 	int getIsStart(int i);
 	int getIsEnd(int i);
-	int getStairX(int i);
-	int getStairY(int i);
+	int getStairX();
+	int getStairY();
 	int getCorridorLength(int i);
 	vector<EnemyActor*> getEnemies(int i);
 

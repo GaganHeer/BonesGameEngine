@@ -16,7 +16,7 @@ void MoveComponent::Update(float deltaTime){
 		int row = (int)(position.x / 100);
 		int col = (int)(position.y / 100);
 
-		if (game->IsWalkable(row + verticalMove / 100, col) == 1) {
+		if (game->IsWalkable(row + verticalMove / 100, col) == 1) { //for tiles
 			cout << "Is Walkable" << endl;
 			game->SetWalkable(row, col);
 			game->SetPlayerMapPos(row + verticalMove / 100, col);
@@ -24,7 +24,7 @@ void MoveComponent::Update(float deltaTime){
 			owner->SetPosition(pos);
 			cout << "Current row,col: " << pos.x / 100 << " " << pos.y / 100 << endl;
 		}
-		else if (game->IsWalkable(row + verticalMove / 100, col) == 2) {
+		else if (game->IsWalkable(row + verticalMove / 100, col) == 2) { //for enemies
 			cout << "Enemy Encountered " << endl;
 			game->SetWalkable(row, col);
 			game->SetPlayerMapPos(row + verticalMove / 100, col);

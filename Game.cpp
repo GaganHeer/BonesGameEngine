@@ -104,25 +104,11 @@ void Game::ProcessInput() {
 				isRunning = false;
 			}
 
-			/*if (state.Keyboard.GetKeyState(SDL_SCANCODE_Q) == ButtonState::Pressed){
-				printf("Q Button Pressed \n");
-				savedPlayerPosition = cameraTargetActor->GetPosition();
-				isLoading = true;
-				isReturning = false;
-				scene = 1;
-			}
-
-
-			if (state.Keyboard.GetKeyState(SDL_SCANCODE_E) == ButtonState::Pressed){
-				printf("E Button Pressed \n");
-				isLoading = true;
-				isReturning = true;
-				scene = 0;
-			}*/
-
 			if (state.Keyboard.GetKeyState(SDL_SCANCODE_H) == ButtonState::Pressed) {
 				printf("H Button Pressed \n");
 				if (scene == 1) {
+					thread th1(&AudioEngine::enemyAtk, AE);
+					th1.join();
 					CombatRound(1);
 				}
 			}
@@ -130,6 +116,8 @@ void Game::ProcessInput() {
 			if (state.Keyboard.GetKeyState(SDL_SCANCODE_L) == ButtonState::Pressed) {
 				printf("L Button Pressed \n");
 				if (scene == 1) {
+					thread th2(&AudioEngine::playerAtk, AE);
+					th2.join();
 					CombatRound(0);
 				}
 			}
@@ -182,10 +170,32 @@ void Game::UpdateGame()
 
 	if (scene == 1) {
 		if (enemyCombat->getCurrentHealth() <= 0) {
-			enemyCombat->resetEnemy();
+			thread th3(&AudioEngine::enemyDeath, AE);
+			th3.join();
+			playerCombat->setDebuffAmt(0);
+			/*enemyCombat->resetEnemy();
 			isLoading = true;
 			isReturning = true;
-			scene = 0;
+			scene = 0;*/
+			_asm{
+				//enemyCombat->resetEnemy();
+				//resets the enemy health back after killing an enemy
+				mov         eax, dword ptr[this]
+				mov         ecx, dword ptr[eax + 0E8h]
+				call        EnemyCombatSystem::resetEnemy
+				//isLoading = true;
+				//sets isLoading bool to true
+				mov         eax, dword ptr[this]
+				mov         byte ptr[eax + 91h], 1
+				//isReturning = true;
+				//sets isReturning bool to true
+				mov         eax, dword ptr[this]
+				mov         byte ptr[eax + 0FCh], 1
+				//scene = 0;
+				//sets scene value to 0
+				mov         eax, dword ptr[this]
+				mov         dword ptr[eax + 88h], 0
+			}
 		}
 	}
 
@@ -237,6 +247,8 @@ void Game::LoadData(){
 
 			map2D = new int* [map_rows];
 
+			const float size = 100.0f;
+
 			for (int i = 0; i < map_rows; i++) {
 				map2D[i] = new int[map_cols + 1];
 				map2D[i][0] = map_cols;
@@ -260,7 +272,6 @@ void Game::LoadData(){
 				cout << "entryDoor: " << randGen->getEntryDoor(r) << endl;
 
 				const float start = 0;
-				const float size = 100.0f;
 				int rows = 0;
 				int cols = 0;
 				int enemyX = 0;
@@ -284,12 +295,33 @@ void Game::LoadData(){
 					enems.push_back(enemyActor);
 
 					if (savedEnemy.x == savedPlayerPosition.x && savedEnemy.y == savedPlayerPosition.y) {
-						enemyActor->SetPosition(Vector3(-500.0f, -500.0f, 1.0f));
+						//enemyActor->SetPosition(Vector3(-500.0f, -500.0f, 1.0f));
+						//Changes position of enemy the player was fighting
+						_asm {
+							mov         eax, dword ptr[this]
+							movss       xmm0, dword ptr[ebp - 148h]
+							ucomiss     xmm0, dword ptr[eax + 100h]
+							lahf
+							test        ah, 44h
+							jp          Game::LoadData + 7C8h
+							mov         eax, dword ptr[this]
+							movss       xmm0, dword ptr[ebp - 144h]
+							ucomiss     xmm0, dword ptr[eax + 104h]
+							lahf
+							test        ah, 44h
+						}
 					}
 					else {
-						enemyActor->SetPosition(savedEnemy);
+						//enemyActor->SetPosition(savedEnemy);
+						//Respawns the enemies after returning from combat
+						_asm {
+							lea         eax, [ebp - 148h]
+							push        eax
+							mov         ecx, dword ptr[this]
+							mov         ecx, dword ptr[ecx + 0ECh]
+							call        Actor::SetPosition
+						}
 					}
-
 					
 					enemyActor->SetScale(50.f);
 					enemyActor->SetMoveable(true);
@@ -341,6 +373,16 @@ void Game::LoadData(){
 				}
 			}
 
+			a = new CubeActor(this);
+			int tempX = offsetX + randGen->getStairX();
+			int tempY = offsetY + randGen->getStairY();
+
+			cout << tempX << " :TEMPX" << endl;
+			cout << tempY << " :TEMPY" << endl;
+
+			a->SetPosition(Vector3(tempY * size, tempX * size, -10.0f));
+			a->SetScale(100.f);
+
 			// Setup lights
 			renderer->SetAmbientLight(Vector3(1.f, 1.f, 1.f));
 			DirectionalLight& dir = renderer->GetDirectionalLight();
@@ -375,7 +417,7 @@ void Game::LoadData(){
 					map2D[i][j] = NULL;
 			}
 
-			
+			const float size = 100.0f;
 			int count = 0;
 			//enemies.assign(0, setup);
 
@@ -394,7 +436,6 @@ void Game::LoadData(){
 				cout << "entryDoor: " << randGen->getEntryDoor(r) << endl;
 
 				const float start = 0;
-				const float size = 100.0f;
 				int rows = 0;
 				int cols = 0;
 				int enemyX = 0;
@@ -430,7 +471,7 @@ void Game::LoadData(){
 					cout << "Expected out: [" << enemyX << ", " << enemyY << "]" << endl;
 
 					map2D[enemyY + 50][enemyX + 50] = 2;
-					Vector3 pos = Vector3(enemyY * size, enemyX * size, 0.0f);
+					Vector3 pos = Vector3(enemyY * size, enemyX * size, -70.0f);
 					enemyActor->SetPosition(pos);
 					enemyActor->SetMoveable(true);
 					enemyActor->SetScale(50.f);
@@ -482,6 +523,17 @@ void Game::LoadData(){
 					}
 				}
 			}
+
+			a = new CubeActor(this);
+			int tempX = offsetX + randGen->getStairX();
+			int tempY = offsetY + randGen->getStairY();
+
+			cout << tempX << " :TEMPX" << endl;
+			cout << tempY << " :TEMPY" << endl;
+
+			a->SetPosition(Vector3(tempY * size, tempX * size, -10.0f));
+			a->SetScale(100.f);
+
 			//cout << " LAST ENEMY ACTOR: " << randGen.getEnemies(9).at(0).getActor() << endl;
 
 			// Setup lights

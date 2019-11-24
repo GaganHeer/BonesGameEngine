@@ -97,7 +97,10 @@ int PlayerCombatSystem::dealDmg(int atkType) {
 void PlayerCombatSystem::takeDmg(int enemyAtk) {
 	if (enemyAtk == 0) {
 		printf("Player is debuffed\n");
-		setDebuffAmt(getDebuffAmt() + 10);
+		if (!(getCurrentAtk() - getDebuffAmt() <= 5)) {
+			setDebuffAmt(getDebuffAmt() + 5);
+		}
+
 	}
 	else {
 		printf("%s%d%s", "Player took ", enemyAtk, " damage\n");
