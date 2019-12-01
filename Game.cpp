@@ -106,11 +106,25 @@ void Game::ProcessInput() {
 				isRunning = false;
 			}
 
+			/*if (state.Keyboard.GetKeyState(SDL_SCANCODE_Q) == ButtonState::Pressed){
+				printf("Q Button Pressed \n");
+				savedPlayerPosition = cameraTargetActor->GetPosition();
+				isLoading = true;
+				isReturning = false;
+				scene = 1;
+			}
+
+
+			if (state.Keyboard.GetKeyState(SDL_SCANCODE_E) == ButtonState::Pressed){
+				printf("E Button Pressed \n");
+				isLoading = true;
+				isReturning = true;
+				scene = 0;
+			}*/
+
 			if (state.Keyboard.GetKeyState(SDL_SCANCODE_H) == ButtonState::Pressed) {
 				printf("H Button Pressed \n");
 				if (scene == 1) {
-					thread th1(&AudioEngine::enemyAtk, AE);
-					th1.join();
 					CombatRound(1);
 				}
 			}
@@ -118,8 +132,6 @@ void Game::ProcessInput() {
 			if (state.Keyboard.GetKeyState(SDL_SCANCODE_L) == ButtonState::Pressed) {
 				printf("L Button Pressed \n");
 				if (scene == 1) {
-					thread th2(&AudioEngine::playerAtk, AE);
-					th2.join();
 					CombatRound(0);
 				}
 			}
@@ -172,6 +184,11 @@ void Game::UpdateGame()
 
 	if (scene == 1) {
 		if (enemyCombat->getCurrentHealth() <= 0) {
+			enemyCombat->resetEnemy();
+			isLoading = true;
+			isReturning = true;
+			scene = 0;
+			//enemyCombat->resetEnemy();
 			thread th3(&AudioEngine::enemyDeath, AE);
 			th3.join();
 			playerCombat->setDebuffAmt(0);
@@ -202,8 +219,8 @@ void Game::UpdateGame()
 		hud->addElement(combatMessage);
 
 		savedPlayerPosition = cameraTargetActor->GetPosition();
-		for (Actor* enemy : enems) {
-			saved_enemies.push_back(enemy->GetPosition());
+		for (Actor* enemyPos : enems) {
+			saved_enemies.push_back(enemyPos->GetPosition());
 		}
 		scene = 1;
 		isLoading = true;
@@ -259,6 +276,9 @@ void Game::LoadData(){
 				for (int j = 1; j <= map_cols; j++)
 					map2D[i][j] = NULL;
 			}
+
+			cameraTargetActor = new CameraTargetActor(this);
+			cameraTargetActor->SetPosition(savedPlayerPosition);
 
 			//{ _width, _height, _entry, _entryDoor, _exit, _exitDoor, _isStart, _isEnd, _stairX, _stairY, _nextRoomCorridor };
 			//for each room
@@ -378,8 +398,6 @@ void Game::LoadData(){
 			HudElement* fontArea1 = new HudElement(new Actor(this), Vector3(-350.0f, -350.0f, 0.0f), Vector2(), textString);
 			hud->addElement(fontArea1);
 
-			cameraTargetActor = new CameraTargetActor(this);
-			cameraTargetActor->SetPosition(savedPlayerPosition);
 			isReturning = false;
 		} else { // ----------------------------------------------------------------------------------------------------------------------
 			rooms = randGen->generate();
@@ -400,8 +418,9 @@ void Game::LoadData(){
 					map2D[i][j] = NULL;
 			}
 
-			const float size = 100.0f;
+			
 			int count = 0;
+			const float size = 100.0f;
 			//enemies.assign(0, setup);
 
 			//{ _width, _height, _entry, _entryDoor, _exit, _exitDoor, _isStart, _isEnd, _stairX, _stairY, _nextRoomCorridor };
@@ -451,7 +470,7 @@ void Game::LoadData(){
 					enemyY = offsetY + start + tempY;
 
 					map2D[enemyY + 50][enemyX + 50] = 2;
-					Vector3 pos = Vector3(enemyY * size, enemyX * size, -70.0f);
+					Vector3 pos = Vector3(enemyY * size, enemyX * size, -100.0f);
 					enemyActor->SetPosition(pos);
 					enemyActor->SetMoveable(true);
 					enemyActor->SetSkeletalMesh();
@@ -507,7 +526,6 @@ void Game::LoadData(){
 			int tempY = offsetY + randGen->getStairY();
 
 			map2D[tempY + 50][tempX + 50] = 4;
-			
 
 			cout << tempX + 50 << " :TEMPX" << endl;
 			cout << tempY + 50 << " :TEMPY" << endl;
@@ -561,7 +579,7 @@ void Game::LoadData(){
 		enemySprite->SetScale(0.5f);
 		SpriteComponent* enemySC = new SpriteComponent(enemySprite);
 		enemySC->SetTexture(renderer->GetTexture("Assets/enemy.png"));
-
+		
 		Actor* playerHealthText = new Actor(this);
 		playerHealthText->SetPosition(Vector3(-300.0f, 180.0f, 0.0f));
 		SpriteComponent* playerHealthSC = new SpriteComponent(playerHealthText);
@@ -571,6 +589,7 @@ void Game::LoadData(){
 		enemyHealthText->SetPosition(Vector3(300.0f, 180.0f, 0.0f));
 		SpriteComponent* enemyHealthSC = new SpriteComponent(enemyHealthText);
 		if (fontEnemyHealth) enemyHealthSC->SetTexture(fontEnemyHealth);
+		
 	}
 }
 

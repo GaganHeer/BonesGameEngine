@@ -70,10 +70,6 @@ public:
 	void Game::SetStairMapPos(int row, int col);
 	void CombatRound(int atkType);
 
-	vector<Vector3> getEnemies() {
-		return enem;
-	}
-
 private:
 	void ProcessInput();
 	void UpdateGame();

@@ -109,7 +109,7 @@ bool Room::generate(bool lastDoor) {
 
 			lastPlacements[i][0] = enemyX;
 			lastPlacements[i][1] = enemyY;
-			_enemies[i]->SetPosition(Vector3(enemyX, enemyY, -100));
+			_enemies[i]->SetPosition(Vector3(enemyX, enemyY, 0));
 		}
 		if (_isEnd) {
 			if (_entry) { // if is south
