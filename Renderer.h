@@ -75,7 +75,6 @@ private:
 	void DrawDepthMap(unsigned int franebuffer, const Matrix4& view, const Matrix4& proj,
 		float viewPortScale = 1.0f, bool lit = true);
 	bool CreateMirrorTarget();
-	bool CreateShadowMapTarget();
 	void DrawFromGBuffer();
 	bool LoadShaders();
 	void CreateSpriteVerts();

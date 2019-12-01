@@ -34,6 +34,10 @@ void MoveComponent::Update(float deltaTime){
 			Collided();
 			//do something;
 		}
+		else if (game->IsWalkable(row + verticalMove / 100, col) == 4) {
+			cout << "Stairs Found" << endl;
+			StairsFound();
+		}
 		else {
 			cout << "Not Walkable" << endl;
 		}
@@ -61,6 +65,10 @@ void MoveComponent::Update(float deltaTime){
 			Collided();
 			//do something;
 		}
+		else if (game->IsWalkable(row, col + -horizontalMove / 100) == 4) {
+			cout << "Stairs Found" << endl;
+			StairsFound();
+		}
 		else {
 			cout << "Is Not Walkable" << endl;
 		}
@@ -72,4 +80,8 @@ void MoveComponent::Collided()
 	cout << "COLLISION: " << game->GetEnemyCollision() << endl;
 	game->SetEnemyCollision(true);
 	cout << "COLLISION: " << game->GetEnemyCollision() << endl;
+}
+
+void MoveComponent::StairsFound() {
+	game->SetStairCollision(true);
 }
