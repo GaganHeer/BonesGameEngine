@@ -18,7 +18,7 @@ private:
 	class EnemyMoveComponent* enemyMoveComponent;
 	class MeshComponent* meshComponent;
 	class SkeletalMeshComponent* skeletalMeshComponent;
+	class Game* game;
 
 	bool moveable;
-	Game* game;
 };
