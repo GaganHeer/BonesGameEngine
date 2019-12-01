@@ -263,6 +263,8 @@ void Game::LoadData(){
 
 			map2D = new int* [map_rows];
 
+			const float size = 100.0f;
+
 			for (int i = 0; i < map_rows; i++) {
 				map2D[i] = new int[map_cols + 1];
 				map2D[i][0] = map_cols;
@@ -289,7 +291,6 @@ void Game::LoadData(){
 				cout << "entryDoor: " << randGen->getEntryDoor(r) << endl;
 
 				const float start = 0;
-				const float size = 100.0f;
 				int rows = 0;
 				int cols = 0;
 				int enemyX = 0;
@@ -436,6 +437,7 @@ void Game::LoadData(){
 
 			
 			int count = 0;
+			const float size = 100.0f;
 			//enemies.assign(0, setup);
 
 			//{ _width, _height, _entry, _entryDoor, _exit, _exitDoor, _isStart, _isEnd, _stairX, _stairY, _nextRoomCorridor };
@@ -453,7 +455,6 @@ void Game::LoadData(){
 				cout << "entryDoor: " << randGen->getEntryDoor(r) << endl;
 
 				const float start = 0;
-				const float size = 100.0f;
 				int rows = 0;
 				int cols = 0;
 				int enemyX = 0;
@@ -542,7 +543,6 @@ void Game::LoadData(){
 			int tempY = offsetY + randGen->getStairY();
 
 			map2D[tempY + 50][tempX + 50] = 4;
-			
 
 			cout << tempX + 50 << " :TEMPX" << endl;
 			cout << tempY + 50 << " :TEMPY" << endl;
