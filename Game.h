@@ -55,6 +55,10 @@ public:
 		enemyCollision = isCollision;
 	}
 
+	void SetStairCollision(bool isCollision) {
+		stairCollision = isCollision;
+	}
+
 	bool GetEnemyCollision() {
 		return enemyCollision;
 	}
@@ -63,6 +67,7 @@ public:
 	void Game::SetWalkable(int row, int col);
 	void Game::SetEnemyMapPos(int row, int col);
 	void Game::SetPlayerMapPos(int row, int col);
+	void Game::SetStairMapPos(int row, int col);
 	void CombatRound(int atkType);
 
 private:
@@ -122,6 +127,7 @@ private:
 
 	bool isReturning;
 	bool enemyCollision;
+	bool stairCollision;
 	bool isAttacking;
 	
 	Vector3 savedPlayerPosition;

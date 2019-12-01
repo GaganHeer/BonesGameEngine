@@ -10,8 +10,14 @@ EnemyActor::EnemyActor(Game* game) :
 	Actor(game),
 	moveable(false),
 	game(game)
-{	
+{
+	/*
+	skeletalMeshComponent = new SkeletalMeshComponent(this);
+	skeletalMeshComponent->SetMesh(game->GetRenderer()->GetMesh("Assets/knightMesh.json"));
+	skeletalMeshComponent->SetSkeleton(game->GetSkeleton("Assets/knightSkel.json"));
 	
+	SetScale(0.5f);
+	*/
 	enemyMoveComponent = new EnemyMoveComponent(this);
 	Vector3 pos = GetPosition();
 }
@@ -34,7 +40,11 @@ void EnemyActor::SetVisible(bool visible) {
 }
 
 void EnemyActor::SetSkeletalMesh() {
-	skeletalMeshComponent = new SkeletalMeshComponent(this);
-	skeletalMeshComponent->SetMesh(game->GetRenderer()->GetMesh("Assets/knightMesh.json"));
-	skeletalMeshComponent->SetSkeleton(game->GetSkeleton("Assets/knightSkel.json"));
+	//skeletalMeshComponent = new SkeletalMeshComponent(this);
+	//skeletalMeshComponent->SetMesh(game->GetRenderer()->GetMesh("Assets/knightMesh.json"));
+	//skeletalMeshComponent->SetSkeleton(game->GetSkeleton("Assets/knightSkel.json"));
+	//SetScale(0.5f);
+	meshComponent = new MeshComponent(this);
+	meshComponent->SetMesh(game->GetRenderer()->GetMesh("Assets/Cube.obj"));
+	SetScale(50.f);
 }

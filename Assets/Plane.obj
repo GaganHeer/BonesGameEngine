@@ -3,7 +3,7 @@
 	"vertexformat":"PosNormTex",
 	"shader":"BasicMesh",
 	"textures":[
-		"Assets/floorTile.png"
+		"Assets/floor.jpg"
 	],
 	"specularPower":100.0,
 	"vertices":[

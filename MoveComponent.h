@@ -11,6 +11,8 @@ public:
 
 	void Collided();
 	
+	void StairsFound();
+
 	float GetHorizontalMove() const {
 		return horizontalMove;
 	}

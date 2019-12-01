@@ -23,6 +23,7 @@ Game::Game()
 	isReturning(false),
 	isAttacking(false),
 	enemyCollision(false),
+	stairCollision(false),
 	scene(0)
 {
 	inputSystem = new InputSystem();
@@ -186,6 +187,25 @@ void Game::UpdateGame()
 			isLoading = true;
 			isReturning = true;
 			scene = 0;
+			_asm{
+				//enemyCombat->resetEnemy();
+				//resets the enemy health back after killing an enemy
+				mov         eax, dword ptr[this]
+				mov         ecx, dword ptr[eax + 0E8h]
+				call        EnemyCombatSystem::resetEnemy
+				//isLoading = true;
+				//sets isLoading bool to true
+				mov         eax, dword ptr[this]
+				mov         byte ptr[eax + 91h], 1
+				//isReturning = true;
+				//sets isReturning bool to true
+				mov         eax, dword ptr[this]
+				mov         byte ptr[eax + 0FCh], 1
+				//scene = 0;
+				//sets scene value to 0
+				mov         eax, dword ptr[this]
+				mov         dword ptr[eax + 88h], 0
+			}
 		}
 	}
 
@@ -201,9 +221,15 @@ void Game::UpdateGame()
 		scene = 1;
 		isLoading = true;
 		enemyCollision = false;
-	}
+	} else if (stairCollision) {
+		string* stairsMessageStr = new string("Stairs found!");
+		HudElement* stairsMessage = new HudElement(new Actor(this), Vector3(300.0f, 180.0f, 0.0f), Vector2(), stairsMessageStr);
+		hud->addElement(stairsMessage);
 
-	if (isAttacking) {
+		scene = 0;
+		isLoading = true;
+		stairCollision = false;
+	} else if (isAttacking) {
 		isAttacking = false;
 		
 		string* playerHealthStr = new string("player health: " + std::to_string(playerCombat->getCurrentHealth()));
@@ -283,14 +309,39 @@ void Game::LoadData(){
 				}
 
 				for (Vector3 savedEnemy : saved_enemies) {
-					if (!(savedEnemy.x == savedPlayerPosition.x && savedEnemy.y == savedPlayerPosition.y)) {
-						enemyActor = new EnemyActor(this);
-						enems.push_back(enemyActor);
-						enemyActor->SetPosition(savedEnemy);
-						enemyActor->SetSkeletalMesh();
-						enemyActor->SetScale(0.5f);
-						enemyActor->SetMoveable(true);
+					enemyActor = new EnemyActor(this);
+					enems.push_back(enemyActor);
+
+					if (savedEnemy.x == savedPlayerPosition.x && savedEnemy.y == savedPlayerPosition.y) {
+						//enemyActor->SetPosition(Vector3(-500.0f, -500.0f, 1.0f));
+						//Changes position of enemy the player was fighting
+						_asm {
+							mov         eax, dword ptr[this]
+							movss       xmm0, dword ptr[ebp - 148h]
+							ucomiss     xmm0, dword ptr[eax + 100h]
+							lahf
+							test        ah, 44h
+							jp          Game::LoadData + 7C8h
+							mov         eax, dword ptr[this]
+							movss       xmm0, dword ptr[ebp - 144h]
+							ucomiss     xmm0, dword ptr[eax + 104h]
+							lahf
+							test        ah, 44h
+						}
 					}
+					else {
+						//enemyActor->SetPosition(savedEnemy);
+						//Respawns the enemies after returning from combat
+						_asm {
+							lea         eax, [ebp - 148h]
+							push        eax
+							mov         ecx, dword ptr[this]
+							mov         ecx, dword ptr[ecx + 0ECh]
+							call        Actor::SetPosition
+						}
+					}
+					enemyActor->SetSkeletalMesh();
+					enemyActor->SetMoveable(true);
 				}
 				saved_enemies.clear();
 
@@ -338,6 +389,18 @@ void Game::LoadData(){
 					}
 				}
 			}
+
+			a = new CubeActor(this);
+			int tempX = offsetX + randGen->getStairX();
+			int tempY = offsetY + randGen->getStairY();
+
+			map2D[tempY + 50][tempX + 50] = 4;
+
+			cout << tempX << " :TEMPX" << endl;
+			cout << tempY << " :TEMPY" << endl;
+
+			a->SetPosition(Vector3(tempY * size, tempX * size, -10.0f));
+			a->SetScale(100.f);
 
 			// Setup lights
 			renderer->SetAmbientLight(Vector3(1.f, 1.f, 1.f));
@@ -422,15 +485,13 @@ void Game::LoadData(){
 					enemyX = offsetX + start + tempX;
 					enemyY = offsetY + start + tempY;
 
-					cout << "ROOM:  " << r << " enemy: " << e << " At position: [" << tempX << ", " << tempY << "]" << endl;
-					cout << "Expected out: [" << enemyX << ", " << enemyY << "]" << endl;
-
 					map2D[enemyY + 50][enemyX + 50] = 2;
 					Vector3 pos = Vector3(enemyY * size, enemyX * size, -100.0f);
 					enemyActor->SetPosition(pos);
 					enemyActor->SetMoveable(true);
 					enemyActor->SetSkeletalMesh();
-					enemyActor->SetScale(0.5f);
+
+					enem.push_back(enemyActor->GetPosition());
 				}
 
 				//for corridor
@@ -475,6 +536,20 @@ void Game::LoadData(){
 					}
 				}
 			}
+
+			a = new CubeActor(this);
+			int tempX = offsetX + randGen->getStairX();
+			int tempY = offsetY + randGen->getStairY();
+
+			map2D[tempY + 50][tempX + 50] = 4;
+			
+
+			cout << tempX + 50 << " :TEMPX" << endl;
+			cout << tempY + 50 << " :TEMPY" << endl;
+
+			a->SetPosition(Vector3(tempY * size, tempX * size, -10.0f));
+			a->SetScale(100.f);
+
 			//cout << " LAST ENEMY ACTOR: " << randGen.getEnemies(9).at(0).getActor() << endl;
 
 			// Setup lights
@@ -546,6 +621,9 @@ int Game::IsWalkable(int row, int col) {
 	else if (map2D[row + 50][col + 50] == 3) { 
 		walkable = 3;
 	}
+	else if (map2D[row + 50][col + 50] == 4) {
+		walkable = 4;
+	}
 	return walkable;
 }
 
@@ -561,6 +639,10 @@ void Game::SetPlayerMapPos(int row, int col) {
 	map2D[row + 50][col + 50] = 3;
 }
 
+void Game::SetStairMapPos(int row, int col) {
+	map2D[row + 50][col + 50] = 4;
+}
+
 void Game::CreatePointLights(Actor*& a, Vector3& pos, int z)
 {
 	// Create some point lights
@@ -569,26 +651,23 @@ void Game::CreatePointLights(Actor*& a, Vector3& pos, int z)
 	a->SetPosition(pos);
 	PointLightComponent* p = new PointLightComponent(a);
 	Vector3 color;
-	switch (z % 5)
+	switch (rand() % 4)
 	{
 	case 0:
-		color = Color::Green;
+		color = Vector3(.4f, .2f, 0.f);
 		break;
 	case 1:
-		color = Color::Blue;
+		color = Vector3(.3f, .1f, 0.f);
 		break;
 	case 2:
-		color = Color::Red;
+		color = Vector3(.5f, .2f, .1f);
 		break;
 	case 3:
-		color = Color::Yellow;
-		break;
-	case 4:
-		color = Color::LightPink;
+		color = Vector3(.75f, .5f, .4f);
 		break;
 	}
 	p->diffuseColor = color;
-	p->innerRadius = 50.0f;
+	p->innerRadius = 25.0f;
 	p->outerRadius = 100.0f;
 }
 

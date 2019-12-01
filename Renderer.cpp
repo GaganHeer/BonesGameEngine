@@ -67,16 +67,6 @@ bool Renderer::Initialize(float newScreenWidth, float newScreenHeight){
 	}
 	CreateSpriteVerts();
 
-	if (!CreateMirrorTarget()) {
-		SDL_Log("Failed to create render target for mirror.");
-		return false;
-	}
-
-	if (!CreateShadowMapTarget()) {
-		SDL_Log("Failed to create render target for shadow map.");
-		return false;
-	}
-
 	_GBuffer = new GBuffer();
 	int width = static_cast<int>(screenWidth);
 	int height = static_cast<int>(screenHeight);
@@ -237,13 +227,6 @@ Mesh* Renderer::GetMesh(const std::string & fileName){
 	return m;
 }
 
-void Renderer::DrawDepthMap(unsigned int framebuffer, const Matrix4& view, const Matrix4& proj, float viewPortScale, bool lit) {
-	glViewport(0, 0, static_cast<int>(screenWidth * viewPortScale), static_cast<int>(screenHeight * viewPortScale));
-	glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
-	glClear(GL_DEPTH_BUFFER_BIT);
-
-}
-
 void Renderer::Draw3DScene(unsigned int framebuffer, const Matrix4& view, const Matrix4& proj,
 	float viewPortScale, bool lit) {
 	// Set the current frame buffer
@@ -299,70 +282,6 @@ void Renderer::Draw3DScene(unsigned int framebuffer, const Matrix4& view, const 
 			(*iter)->Draw(skinnedShader);
 		}
 	}
-}
-
-bool Renderer::CreateMirrorTarget() {
-	int width = static_cast<int>(screenWidth) / 4;
-	int height = static_cast<int>(screenHeight) / 4;
-
-	// Generate a frame buffer for the mirror texture
-	glGenFramebuffers(1, &mirrorBuffer);
-	glBindFramebuffer(GL_FRAMEBUFFER, mirrorBuffer);
-
-	// Create the texture we'll use for rendering
-	mirrorTexture = new Texture();
-	mirrorTexture->CreateForRendering(width, height, GL_RGB);
-
-	// Add a depth buffer to this target
-	GLuint depthBuffer;
-	glGenRenderbuffers(1, &depthBuffer);
-	glBindRenderbuffer(GL_RENDERBUFFER, depthBuffer);
-	glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, width, height);
-	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, depthBuffer);
-
-	// Attach mirror texture as the output target for the frame buffer
-	glFramebufferTexture(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, mirrorTexture->GetTextureID(), 0);
-
-	// Set the list of buffers to draw to for this frame buffer
-	GLenum drawBuffers[] = { GL_COLOR_ATTACHMENT0 };
-	glDrawBuffers(1, drawBuffers);
-
-	// Make sure everything worked
-	if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
-		// If it didn't work, delete the framebuffer,
-		// unload/delete the texture and return false
-		glDeleteFramebuffers(1, &mirrorBuffer);
-		mirrorTexture->Unload();
-		delete mirrorTexture;
-		mirrorTexture = nullptr;
-		return false;
-	}
-	return true;
-}
-
-bool Renderer::CreateShadowMapTarget() {
-	glGenFramebuffers(1, &depthMapFBO);
-
-	depthMapTexture = new Texture();
-	depthMapTexture->CreateForRenderingShadowMap(1024, 1024, GL_DEPTH_COMPONENT);
-
-	glBindFramebuffer(GL_FRAMEBUFFER, depthMapFBO);
-	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, depthMapTexture->GetTextureID(), 0);
-
-	glDrawBuffer(GL_NONE); // No color buffer is drawn to.
-	glReadBuffer(GL_NONE);
-
-	glBindFramebuffer(GL_FRAMEBUFFER, 0);
-
-	// Always check that our framebuffer is ok
-	if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
-		glDeleteFramebuffers(1, &depthMapFBO);
-		depthMapTexture->Unload();
-		delete depthMapTexture;
-		depthMapTexture = nullptr;
-		return false;
-	}
-	return true;
 }
 
 void Renderer::DrawFromGBuffer()
