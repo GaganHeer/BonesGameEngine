@@ -46,6 +46,7 @@
     <ClCompile Include="SkeletalMeshComponent.cpp" />
     <ClCompile Include="Skeleton.cpp" />
     <ClCompile Include="SpriteComponent.cpp" />
+    <ClCompile Include="StairActor.cpp" />
     <ClCompile Include="Texture.cpp" />
     <ClCompile Include="TopDownCamera.cpp" />
     <ClCompile Include="VertexArray.cpp" />
@@ -86,6 +87,7 @@
     <ClInclude Include="SkeletalMeshComponent.h" />
     <ClInclude Include="Skeleton.h" />
     <ClInclude Include="SpriteComponent.h" />
+    <ClInclude Include="StairActor.h" />
     <ClInclude Include="Texture.h" />
     <ClInclude Include="TopDownCamera.h" />
     <ClInclude Include="VertexArray.h" />
