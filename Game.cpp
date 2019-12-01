@@ -23,6 +23,7 @@ Game::Game()
 	isReturning(false),
 	isAttacking(false),
 	enemyCollision(false),
+	stairCollision(false),
 	scene(0)
 {
 	inputSystem = new InputSystem();
@@ -211,9 +212,15 @@ void Game::UpdateGame()
 		scene = 1;
 		isLoading = true;
 		enemyCollision = false;
-	}
+	} else if (stairCollision) {
+		string* stairsMessageStr = new string("Stairs found!");
+		HudElement* stairsMessage = new HudElement(new Actor(this), Vector3(300.0f, 180.0f, 0.0f), Vector2(), stairsMessageStr);
+		hud->addElement(stairsMessage);
 
-	if (isAttacking) {
+		scene = 0;
+		isLoading = true;
+		stairCollision = false;
+	} else if (isAttacking) {
 		isAttacking = false;
 		
 		string* playerHealthStr = new string("player health: " + std::to_string(playerCombat->getCurrentHealth()));
@@ -322,8 +329,7 @@ void Game::LoadData(){
 							call        Actor::SetPosition
 						}
 					}
-					
-					enemyActor->SetScale(50.f);
+					enemyActor->SetSkeletalMesh();
 					enemyActor->SetMoveable(true);
 				}
 				saved_enemies.clear();
@@ -376,6 +382,8 @@ void Game::LoadData(){
 			a = new CubeActor(this);
 			int tempX = offsetX + randGen->getStairX();
 			int tempY = offsetY + randGen->getStairY();
+
+			map2D[tempY + 50][tempX + 50] = 4;
 
 			cout << tempX << " :TEMPX" << endl;
 			cout << tempY << " :TEMPY" << endl;
@@ -467,19 +475,14 @@ void Game::LoadData(){
 					enemyX = offsetX + start + tempX;
 					enemyY = offsetY + start + tempY;
 
-					cout << "ROOM:  " << r << " enemy: " << e << " At position: [" << tempX << ", " << tempY << "]" << endl;
-					cout << "Expected out: [" << enemyX << ", " << enemyY << "]" << endl;
-
 					map2D[enemyY + 50][enemyX + 50] = 2;
 					Vector3 pos = Vector3(enemyY * size, enemyX * size, -70.0f);
 					enemyActor->SetPosition(pos);
 					enemyActor->SetMoveable(true);
-					enemyActor->SetScale(50.f);
+					enemyActor->SetSkeletalMesh();
 
 					enem.push_back(enemyActor->GetPosition());
 				}
-
-				//enemies.insert(enemies.end(), useEnemy.begin(), useEnemy.end());
 
 				//for corridor
 				if (!randGen->getIsEnd(r)) {
@@ -528,8 +531,11 @@ void Game::LoadData(){
 			int tempX = offsetX + randGen->getStairX();
 			int tempY = offsetY + randGen->getStairY();
 
-			cout << tempX << " :TEMPX" << endl;
-			cout << tempY << " :TEMPY" << endl;
+			map2D[tempY + 50][tempX + 50] = 4;
+			
+
+			cout << tempX + 50 << " :TEMPX" << endl;
+			cout << tempY + 50 << " :TEMPY" << endl;
 
 			a->SetPosition(Vector3(tempY * size, tempX * size, -10.0f));
 			a->SetScale(100.f);
@@ -604,6 +610,9 @@ int Game::IsWalkable(int row, int col) {
 	else if (map2D[row + 50][col + 50] == 3) { 
 		walkable = 3;
 	}
+	else if (map2D[row + 50][col + 50] == 4) {
+		walkable = 4;
+	}
 	return walkable;
 }
 
@@ -619,6 +628,10 @@ void Game::SetPlayerMapPos(int row, int col) {
 	map2D[row + 50][col + 50] = 3;
 }
 
+void Game::SetStairMapPos(int row, int col) {
+	map2D[row + 50][col + 50] = 4;
+}
+
 void Game::CreatePointLights(Actor*& a, Vector3& pos, int z)
 {
 	// Create some point lights
@@ -627,26 +640,23 @@ void Game::CreatePointLights(Actor*& a, Vector3& pos, int z)
 	a->SetPosition(pos);
 	PointLightComponent* p = new PointLightComponent(a);
 	Vector3 color;
-	switch (z % 5)
+	switch (rand() % 4)
 	{
 	case 0:
-		color = Color::Green;
+		color = Vector3(.4f, .2f, 0.f);
 		break;
 	case 1:
-		color = Color::Blue;
+		color = Vector3(.3f, .1f, 0.f);
 		break;
 	case 2:
-		color = Color::Red;
+		color = Vector3(.5f, .2f, .1f);
 		break;
 	case 3:
-		color = Color::Yellow;
-		break;
-	case 4:
-		color = Color::LightPink;
+		color = Vector3(.75f, .5f, .4f);
 		break;
 	}
 	p->diffuseColor = color;
-	p->innerRadius = 50.0f;
+	p->innerRadius = 25.0f;
 	p->outerRadius = 100.0f;
 }
 
