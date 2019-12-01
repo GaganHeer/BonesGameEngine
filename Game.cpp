@@ -13,6 +13,7 @@
 #include "Skeleton.h"
 #include "Animation.h"
 #include "CubeActor.h"
+#include "StairActor.h"
 #include "HudElement.h"
 #include "HUD.h"
 
@@ -174,28 +175,23 @@ void Game::UpdateGame()
 			thread th3(&AudioEngine::enemyDeath, AE);
 			th3.join();
 			playerCombat->setDebuffAmt(0);
-			/*enemyCombat->resetEnemy();
-			isLoading = true;
-			isReturning = true;
-			scene = 0;*/
-			_asm{
-				//enemyCombat->resetEnemy();
+			_asm {
 				//resets the enemy health back after killing an enemy
-				mov         eax, dword ptr[this]
-				mov         ecx, dword ptr[eax + 0E8h]
-				call        EnemyCombatSystem::resetEnemy
-				//isLoading = true;
+				mov		eax, dword ptr[this] //copy all variables into eax register
+				mov		ecx, dword ptr[eax]Game.enemyCombat //from eax register copy only enemyCombat address into ecx register
+				call	EnemyCombatSystem::resetEnemy //call the reset enemy function for enemy combat
+
 				//sets isLoading bool to true
-				mov         eax, dword ptr[this]
-				mov         byte ptr[eax + 91h], 1
-				//isReturning = true;
+				mov		eax, dword ptr[this] //copy all variables into eax register
+				mov		[eax]Game.isLoading, 1 //from eax register access and change isLoading boolean to true
+
 				//sets isReturning bool to true
-				mov         eax, dword ptr[this]
-				mov         byte ptr[eax + 0FCh], 1
-				//scene = 0;
+				mov		eax, dword ptr[this] //copy all variables into eax register
+				mov		[eax]Game.isReturning, 1 //from eax register access and change isReturning boolean to true
+
 				//sets scene value to 0
-				mov         eax, dword ptr[this]
-				mov         dword ptr[eax + 88h], 0
+				mov		eax, dword ptr[this] //copy all variables into eax register
+				mov		[eax]Game.scene, 0 //from eax register access and change scene int to 0
 			}
 		}
 	}
@@ -302,32 +298,11 @@ void Game::LoadData(){
 					enems.push_back(enemyActor);
 
 					if (savedEnemy.x == savedPlayerPosition.x && savedEnemy.y == savedPlayerPosition.y) {
-						//enemyActor->SetPosition(Vector3(-500.0f, -500.0f, 1.0f));
-						//Changes position of enemy the player was fighting
-						_asm {
-							mov         eax, dword ptr[this]
-							movss       xmm0, dword ptr[ebp - 148h]
-							ucomiss     xmm0, dword ptr[eax + 100h]
-							lahf
-							test        ah, 44h
-							jp          Game::LoadData + 7C8h
-							mov         eax, dword ptr[this]
-							movss       xmm0, dword ptr[ebp - 144h]
-							ucomiss     xmm0, dword ptr[eax + 104h]
-							lahf
-							test        ah, 44h
-						}
+						enemyActor->SetPosition(Vector3(-500.0f, -500.0f, 1.0f));
 					}
 					else {
-						//enemyActor->SetPosition(savedEnemy);
-						//Respawns the enemies after returning from combat
-						_asm {
-							lea         eax, [ebp - 148h]
-							push        eax
-							mov         ecx, dword ptr[this]
-							mov         ecx, dword ptr[ecx + 0ECh]
-							call        Actor::SetPosition
-						}
+						enemyActor->SetPosition(savedEnemy);
+						enemyActor->SetPosition(savedEnemy);
 					}
 					enemyActor->SetSkeletalMesh();
 					enemyActor->SetMoveable(true);
@@ -379,7 +354,7 @@ void Game::LoadData(){
 				}
 			}
 
-			a = new CubeActor(this);
+			a = new StairActor(this);
 			int tempX = offsetX + randGen->getStairX();
 			int tempY = offsetY + randGen->getStairY();
 
@@ -527,7 +502,7 @@ void Game::LoadData(){
 				}
 			}
 
-			a = new CubeActor(this);
+			a = new StairActor(this);
 			int tempX = offsetX + randGen->getStairX();
 			int tempY = offsetY + randGen->getStairY();
 
