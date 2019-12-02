@@ -125,6 +125,8 @@ void Game::ProcessInput() {
 			if (state.Keyboard.GetKeyState(SDL_SCANCODE_H) == ButtonState::Pressed) {
 				printf("H Button Pressed \n");
 				if (scene == 1) {
+					thread th1(&AudioEngine::enemyAtk, AE);
+					th1.join();
 					CombatRound(1);
 				}
 			}
@@ -132,6 +134,8 @@ void Game::ProcessInput() {
 			if (state.Keyboard.GetKeyState(SDL_SCANCODE_L) == ButtonState::Pressed) {
 				printf("L Button Pressed \n");
 				if (scene == 1) {
+					thread th2(&AudioEngine::playerAtk, AE);
+					th2.join();
 					CombatRound(0);
 				}
 			}
@@ -184,14 +188,9 @@ void Game::UpdateGame()
 
 	if (scene == 1) {
 		if (enemyCombat->getCurrentHealth() <= 0) {
-			enemyCombat->resetEnemy();
-			isLoading = true;
-			isReturning = true;
-			scene = 0;
-			//enemyCombat->resetEnemy();
+			playerCombat->setDebuffAmt(0);
 			thread th3(&AudioEngine::enemyDeath, AE);
 			th3.join();
-			playerCombat->setDebuffAmt(0);
 			_asm {
 				//resets the enemy health back after killing an enemy
 				mov		eax, dword ptr[this] //copy all variables into eax register
