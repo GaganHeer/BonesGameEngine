@@ -29,7 +29,6 @@ void HudElement::UpdateText(const std::string& text)
 
 HudElement::~HudElement()
 {
-	printf("removing the hud element");
 	delete data;
 	fontTexture->Unload();
 	delete fontRenderer;
