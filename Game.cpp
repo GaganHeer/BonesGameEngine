@@ -668,6 +668,7 @@ void Game::UnloadData(){
 	while (!actors.empty()) {
 		delete actors.back();
 	}
+	actors.clear();
 }
 
 void Game::UnloadSkelAnim() {
