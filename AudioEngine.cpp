@@ -19,7 +19,7 @@ void ErrorHandler(FMOD_RESULT result, const char* errorMsg, const char* successM
 }
 
 FMOD_RESULT result;
-Studio::System* sys = NULL;
+Studio::System* sys = nullptr;
 Studio::Bank* bank;
 
 void AudioEngine::setup() {

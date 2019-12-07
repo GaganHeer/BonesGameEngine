@@ -28,7 +28,7 @@ void SpriteComponent::Draw(Shader* shader){
 			static_cast<float>(texHeight), 1.0f);
 		
 		Matrix4 world = scaleMat * owner->GetWorldTransform();
-		
+
 		// Set world transform
 		shader->SetMatrixUniform("uWorldTransform", world);
 		// Set current texture

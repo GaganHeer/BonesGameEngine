@@ -34,11 +34,9 @@ void SkeletalMeshComponent::Draw(Shader* shader)
 		}
 		// Set the mesh's vertex array as active
 		VertexArray* va = mesh->GetVertexArray();
-		if (va != nullptr)
-		{
-			va->SetActive();
-			glDrawElements(GL_TRIANGLES, va->GetNumIndices(), GL_UNSIGNED_INT, nullptr);
-		}
+		va->SetActive();
+		// Draw
+		glDrawElements(GL_TRIANGLES, va->GetNumIndices(), GL_UNSIGNED_INT, nullptr);
 	}
 }
 		

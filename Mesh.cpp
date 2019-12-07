@@ -143,6 +143,7 @@ bool Mesh::Load(const std::string & fileName, Renderer* renderer){
 	}
 
 	radius = Math::Sqrt(radius);
+
 	const rapidjson::Value& indJson = doc["indices"];
 	if (!indJson.IsArray() || indJson.Size() < 1) {
 		SDL_Log("Mesh %s has no indices", fileName.c_str());
@@ -162,8 +163,8 @@ bool Mesh::Load(const std::string & fileName, Renderer* renderer){
 		indices.emplace_back(ind[1].GetUint());
 		indices.emplace_back(ind[2].GetUint());
 	}
-	delete vertexArray;
-	vertexArray = new VertexArray(vertices.data(), static_cast<unsigned>(vertices.size()) / vertSize,
+	unsigned int numVerts = static_cast<unsigned>(vertices.size()) / vertSize;
+	vertexArray = new VertexArray(vertices.data(), numVerts,
 		layout, indices.data(), static_cast<unsigned>(indices.size()));
 	return true;
 }
