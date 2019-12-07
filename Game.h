@@ -98,12 +98,12 @@ private:
 	class Generator* randGen;
 	Uint32 ticksCount;
 	int scene;
+	int level;
 	GameState gameState;
 	bool isRunning;
 	bool isLoading;
 	bool updatingActors;
 	std::vector<class EnemyActor*> enemies;
-	std::vector<Vector3> enem;
 	std::vector<class Room*> rooms;
 
 	int exit_posX;

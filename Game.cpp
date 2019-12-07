@@ -25,6 +25,7 @@ Game::Game()
 	isAttacking(false),
 	enemyCollision(false),
 	stairCollision(false),
+	level(0),
 	scene(0)
 {
 	inputSystem = new InputSystem();
@@ -186,32 +187,6 @@ void Game::UpdateGame()
 
 	AE->update();
 
-	if (scene == 1) {
-		if (enemyCombat->getCurrentHealth() <= 0) {
-			playerCombat->setDebuffAmt(0);
-			thread th3(&AudioEngine::enemyDeath, AE);
-			th3.join();
-			_asm {
-				//resets the enemy health back after killing an enemy
-				mov		eax, dword ptr[this] //copy all variables into eax register
-				mov		ecx, dword ptr[eax]Game.enemyCombat //from eax register copy only enemyCombat address into ecx register
-				call	EnemyCombatSystem::resetEnemy //call the reset enemy function for enemy combat
-
-				//sets isLoading bool to true
-				mov		eax, dword ptr[this] //copy all variables into eax register
-				mov		[eax]Game.isLoading, 1 //from eax register access and change isLoading boolean to true
-
-				//sets isReturning bool to true
-				mov		eax, dword ptr[this] //copy all variables into eax register
-				mov		[eax]Game.isReturning, 1 //from eax register access and change isReturning boolean to true
-
-				//sets scene value to 0
-				mov		eax, dword ptr[this] //copy all variables into eax register
-				mov		[eax]Game.scene, 0 //from eax register access and change scene int to 0
-			}
-		}
-	}
-
 	if (enemyCollision) {
 		string* combatMessageStr = new string("entering combat mode");
 		HudElement* combatMessage = new HudElement(new Actor(this), Vector3(300.0f, 180.0f, 0.0f), Vector2(), combatMessageStr);
@@ -228,8 +203,10 @@ void Game::UpdateGame()
 		string* stairsMessageStr = new string("Stairs found!");
 		HudElement* stairsMessage = new HudElement(new Actor(this), Vector3(300.0f, 180.0f, 0.0f), Vector2(), stairsMessageStr);
 		hud->addElement(stairsMessage);
-
-		scene = 0;
+		if (level == 5)
+			scene = 2;
+		else
+			scene = 0;
 		isLoading = true;
 		stairCollision = false;
 	} else if (isAttacking) {
@@ -241,6 +218,32 @@ void Game::UpdateGame()
 		hud->addElement(playerHealth);
 		HudElement* enemyHealth = new HudElement(new Actor(this), Vector3(300.0f, 180.0f, 0.0f), Vector2(), enemyHealthStr);
 		hud->addElement(enemyHealth);
+	}
+
+	if (scene == 1) {
+		if (enemyCombat->getCurrentHealth() <= 0) {
+			playerCombat->setDebuffAmt(0);
+			thread th3(&AudioEngine::enemyDeath, AE);
+			th3.join();
+			_asm {
+				//resets the enemy health back after killing an enemy
+				mov		eax, dword ptr[this] //copy all variables into eax register
+				mov		ecx, dword ptr[eax]Game.enemyCombat //from eax register copy only enemyCombat address into ecx register
+				call	EnemyCombatSystem::resetEnemy //call the reset enemy function for enemy combat
+
+				//sets isLoading bool to true
+				mov		eax, dword ptr[this] //copy all variables into eax register
+				mov[eax]Game.isLoading, 1 //from eax register access and change isLoading boolean to true
+
+				//sets isReturning bool to true
+				mov		eax, dword ptr[this] //copy all variables into eax register
+				mov[eax]Game.isReturning, 1 //from eax register access and change isReturning boolean to true
+
+				//sets scene value to 0
+				mov		eax, dword ptr[this] //copy all variables into eax register
+				mov[eax]Game.scene, 0 //from eax register access and change scene int to 0
+			}
+		}
 	}
 }
 
@@ -313,18 +316,13 @@ void Game::LoadData(){
 				}
 
 				for (Vector3 savedEnemy : saved_enemies) {
-					enemyActor = new EnemyActor(this);
-					enems.push_back(enemyActor);
-
-					if (savedEnemy.x == savedPlayerPosition.x && savedEnemy.y == savedPlayerPosition.y) {
-						enemyActor->SetPosition(Vector3(-500.0f, -500.0f, 1.0f));
-					}
-					else {
+					if (!(savedEnemy.x == savedPlayerPosition.x && savedEnemy.y == savedPlayerPosition.y)) {
+						enemyActor = new EnemyActor(this);
+						enems.push_back(enemyActor);
 						enemyActor->SetPosition(savedEnemy);
-						enemyActor->SetPosition(savedEnemy);
+						enemyActor->SetSkeletalMesh();
+						enemyActor->SetMoveable(true);
 					}
-					enemyActor->SetSkeletalMesh();
-					enemyActor->SetMoveable(true);
 				}
 				saved_enemies.clear();
 
@@ -473,8 +471,6 @@ void Game::LoadData(){
 					enemyActor->SetPosition(pos);
 					enemyActor->SetMoveable(true);
 					enemyActor->SetSkeletalMesh();
-
-					enem.push_back(enemyActor->GetPosition());
 				}
 
 				//for corridor
@@ -547,13 +543,14 @@ void Game::LoadData(){
 			hud->addElement(fontArea1);
 
 			cameraTargetActor = new CameraTargetActor(this);
+			level++;
 		}
 
 	} else if (scene == 1) {
 
 		AE->stopAudio(currentAudioInstance);
 		currentAudioInstance = AE->startFightBGM();
-
+		
 		Actor* combatText = new Actor(this);
 		combatText->SetPosition(Vector3(0.0f, -210.0f, 0.0f));
 		SpriteComponent* sc = new SpriteComponent(combatText);
@@ -588,7 +585,45 @@ void Game::LoadData(){
 		enemyHealthText->SetPosition(Vector3(300.0f, 180.0f, 0.0f));
 		SpriteComponent* enemyHealthSC = new SpriteComponent(enemyHealthText);
 		if (fontEnemyHealth) enemyHealthSC->SetTexture(fontEnemyHealth);
-		
+	}
+	else if (scene == 2) {
+		AE->stopAudio(currentAudioInstance);
+		currentAudioInstance = AE->startFightBGM();
+
+		Actor* combatText = new Actor(this);
+		combatText->SetPosition(Vector3(0.0f, -210.0f, 0.0f));
+		SpriteComponent* sc = new SpriteComponent(combatText);
+		sc->SetTexture(renderer->GetTexture("Assets/combatText.png"));
+
+		// we wanna show it here as well
+		string* playerHealthStr = new string("player health: " + std::to_string(playerCombat->getCurrentHealth()));
+		string* enemyHealthStr = new string("enemy health: " + std::to_string(enemyCombat->getCurrentHealth()));
+		HudElement* playerHealth = new HudElement(new Actor(this), Vector3(-300.0f, 180.0f, 0.0f), Vector2(), playerHealthStr);
+		hud->addElement(playerHealth);
+		HudElement* enemyHealth = new HudElement(new Actor(this), Vector3(300.0f, 180.0f, 0.0f), Vector2(), enemyHealthStr);
+		hud->addElement(enemyHealth);
+
+		Actor* skeletonSprite = new Actor(this);
+		skeletonSprite->SetPosition(Vector3(-380.0f, 50.0, 0.0f));
+		skeletonSprite->SetScale(0.5f);
+		SpriteComponent* skelSC = new SpriteComponent(skeletonSprite);
+		skelSC->SetTexture(renderer->GetTexture("Assets/skeleton.png"));
+
+		Actor* enemySprite = new Actor(this);
+		enemySprite->SetPosition(Vector3(350.0f, 50.0, 0.0f));
+		enemySprite->SetScale(0.5f);
+		SpriteComponent* enemySC = new SpriteComponent(enemySprite);
+		enemySC->SetTexture(renderer->GetTexture("Assets/enemy.png"));
+
+		Actor* playerHealthText = new Actor(this);
+		playerHealthText->SetPosition(Vector3(-300.0f, 180.0f, 0.0f));
+		SpriteComponent* playerHealthSC = new SpriteComponent(playerHealthText);
+		if (fontPlayerHealth) playerHealthSC->SetTexture(fontPlayerHealth);
+
+		Actor* enemyHealthText = new Actor(this);
+		enemyHealthText->SetPosition(Vector3(300.0f, 180.0f, 0.0f));
+		SpriteComponent* enemyHealthSC = new SpriteComponent(enemyHealthText);
+		if (fontEnemyHealth) enemyHealthSC->SetTexture(fontEnemyHealth);
 	}
 }
 

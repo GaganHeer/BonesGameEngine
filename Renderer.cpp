@@ -101,6 +101,7 @@ void Renderer::UnloadData(){
 		i.second->Unload();
 	}
 	meshes.clear();
+	skeletalMeshes.clear();
 }
 
 void Renderer::Draw(){
@@ -256,12 +257,11 @@ void Renderer::Draw3DScene(unsigned int framebuffer, const Matrix4& view, const 
 		SetLightUniforms(meshShader, view);
 	}
 
-	vector<MeshComponent*>::iterator itr;
-	for (itr = meshComps.begin(); itr < meshComps.end(); itr++)
+	for (auto mc : meshComps)
 	{
-		if ((*itr)->GetVisible())
+		if (mc->GetVisible())
 		{
-			(*itr)->Draw(meshShader);
+			mc->Draw(meshShader);
 		}
 	}
 
@@ -274,12 +274,11 @@ void Renderer::Draw3DScene(unsigned int framebuffer, const Matrix4& view, const 
 		SetLightUniforms(skinnedShader, view);
 	}
 
-	vector<SkeletalMeshComponent*>::iterator iter;
-	for (iter = skeletalMeshes.begin(); iter < skeletalMeshes.end(); iter++)
+	for (auto sk : skeletalMeshes)
 	{
-		if ((*iter)->GetVisible())
+		if (sk->GetVisible())
 		{
-			(*iter)->Draw(skinnedShader);
+			sk->Draw(skinnedShader);
 		}
 	}
 }
