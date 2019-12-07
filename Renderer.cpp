@@ -101,6 +101,7 @@ void Renderer::UnloadData(){
 		i.second->Unload();
 	}
 	meshes.clear();
+	skeletalMeshes.clear();
 }
 
 void Renderer::Draw(){
@@ -173,12 +174,18 @@ void Renderer::RemoveMeshComp(MeshComponent* mesh){
 	{
 		SkeletalMeshComponent* sk = static_cast<SkeletalMeshComponent*>(mesh);
 		auto iter = std::find(skeletalMeshes.begin(), skeletalMeshes.end(), sk);
-		skeletalMeshes.erase(iter);
+		if (iter != skeletalMeshes.end())
+		{
+			skeletalMeshes.erase(iter);
+		}
 	}
 	else
 	{
 		auto iter = std::find(meshComps.begin(), meshComps.end(), mesh);
-		meshComps.erase(iter);
+		if (iter != meshComps.end())
+		{
+			meshComps.erase(iter);
+		}
 	}
 }
 
@@ -188,7 +195,10 @@ void Renderer::AddPointLight(PointLightComponent* light) {
 
 void Renderer::RemovePointLight(PointLightComponent* light) {
 	auto iter = std::find(pointLights.begin(), pointLights.end(), light);
-	pointLights.erase(iter);
+	if (iter != pointLights.end())
+	{
+		pointLights.erase(iter);
+	}
 }
 
 Texture* Renderer::GetTexture(const std::string& fileName){
@@ -256,12 +266,11 @@ void Renderer::Draw3DScene(unsigned int framebuffer, const Matrix4& view, const 
 		SetLightUniforms(meshShader, view);
 	}
 
-	vector<MeshComponent*>::iterator itr;
-	for (itr = meshComps.begin(); itr < meshComps.end(); itr++)
+	for (auto mc : meshComps)
 	{
-		if ((*itr)->GetVisible())
+		if (mc->GetVisible())
 		{
-			(*itr)->Draw(meshShader);
+			mc->Draw(meshShader);
 		}
 	}
 
@@ -274,12 +283,11 @@ void Renderer::Draw3DScene(unsigned int framebuffer, const Matrix4& view, const 
 		SetLightUniforms(skinnedShader, view);
 	}
 
-	vector<SkeletalMeshComponent*>::iterator iter;
-	for (iter = skeletalMeshes.begin(); iter < skeletalMeshes.end(); iter++)
+	for (auto sk : skeletalMeshes)
 	{
-		if ((*iter)->GetVisible())
+		if (sk->GetVisible())
 		{
-			(*iter)->Draw(skinnedShader);
+			sk->Draw(skinnedShader);
 		}
 	}
 }

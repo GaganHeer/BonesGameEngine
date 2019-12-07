@@ -31,10 +31,7 @@ void MeshComponent::Draw(Shader* shader){
 			t->SetActive();
 		}
 		VertexArray* va = mesh->GetVertexArray();
-		if (va != nullptr)
-		{
-			va->SetActive();
-			glDrawElements(GL_TRIANGLES, va->GetNumIndices(), GL_UNSIGNED_INT, nullptr);
-		}
+		va->SetActive();
+		glDrawElements(GL_TRIANGLES, va->GetNumIndices(), GL_UNSIGNED_INT, nullptr);
 	}
 }

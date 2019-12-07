@@ -31,7 +31,7 @@ public:
 private:
 	float specPower;
 	std::vector<class Texture*> _textures;
-	class VertexArray* vertexArray;
+	VertexArray* vertexArray;
 	std::string shaderName;
 	float radius;
 };

@@ -40,11 +40,8 @@ void EnemyActor::SetVisible(bool visible) {
 }
 
 void EnemyActor::SetSkeletalMesh() {
-	//skeletalMeshComponent = new SkeletalMeshComponent(this);
-	//skeletalMeshComponent->SetMesh(game->GetRenderer()->GetMesh("Assets/knightMesh.json"));
-	//skeletalMeshComponent->SetSkeleton(game->GetSkeleton("Assets/knightSkel.json"));
-	//SetScale(0.5f);
-	meshComponent = new MeshComponent(this);
-	meshComponent->SetMesh(game->GetRenderer()->GetMesh("Assets/Cube.obj"));
-	SetScale(50.f);
+	skeletalMeshComponent = new SkeletalMeshComponent(this);
+	skeletalMeshComponent->SetMesh(game->GetRenderer()->GetMesh("Assets/knightMesh.json"));
+	skeletalMeshComponent->SetSkeleton(game->GetSkeleton("Assets/knightSkel.json"));
+	SetScale(0.5f);
 }
