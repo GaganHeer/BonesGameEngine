@@ -164,7 +164,8 @@ void Game::UpdateGame()
 	// Update all actors
 	updatingActors = true;
 	for (auto actor : actors){
-		actor->Update(deltaTime);
+		if(!enemyCollision)
+			actor->Update(deltaTime);
 	}
 	updatingActors = false;
 
@@ -315,13 +316,18 @@ void Game::LoadData(){
 					}
 				}
 
-				for (Vector3 savedEnemy : saved_enemies) {
+				for (Vector3 savedEnemy : saved_enemies) { // *************************************************************************************
 					if (!(savedEnemy.x == savedPlayerPosition.x && savedEnemy.y == savedPlayerPosition.y)) {
 						enemyActor = new EnemyActor(this);
 						enems.push_back(enemyActor);
 						enemyActor->SetPosition(savedEnemy);
 						enemyActor->SetSkeletalMesh();
 						enemyActor->SetMoveable(true);
+						
+						//*************************************************************
+						rows = (int)(savedEnemy.x / 100);
+						cols = (int)(savedEnemy.y / 100);
+						SetEnemyMapPos(rows, cols);
 					}
 				}
 				saved_enemies.clear();
@@ -397,6 +403,8 @@ void Game::LoadData(){
 
 			isReturning = false;
 		} else { // ----------------------------------------------------------------------------------------------------------------------
+			
+			cameraTargetActor = new CameraTargetActor(this);
 			rooms = randGen->generate();
 
 			int offsetX = 0;
@@ -453,7 +461,7 @@ void Game::LoadData(){
 					}
 				}
 
-				vector<EnemyActor*> useEnemy = randGen->getEnemies(r);
+				vector<EnemyActor*> useEnemy = randGen->getEnemies(r); // **************************************************************************
 				numEnemies.push_back(useEnemy.size());
 				for (int e = 0; e < useEnemy.size(); e++) {
 					enemyActor = new EnemyActor(this);
@@ -542,7 +550,7 @@ void Game::LoadData(){
 			HudElement* fontArea1 = new HudElement(new Actor(this), Vector3(-350.0f, -350.0f, 0.0f), Vector2(), textString);
 			hud->addElement(fontArea1);
 
-			cameraTargetActor = new CameraTargetActor(this);
+			
 			level++;
 		}
 
