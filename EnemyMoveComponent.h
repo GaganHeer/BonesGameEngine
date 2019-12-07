@@ -31,5 +31,14 @@ private:
 	class Game* game;
 	bool move;
 	bool moveable;
+
+	bool movingUp;
+	bool movingDown;
+	bool movingLeft;
+	bool movingRight;
+
+	float dest;
+	float speed;
+	Vector3 dest_pos;
 };
 
