@@ -21,7 +21,7 @@ void HudElement::UpdateText(const std::string& text)
 {
 	if (data == nullptr || data->compare(text) != 0)
 	{
-		delete fontTexture;
+		fontTexture->Unload();
 		fontTexture = fontRenderer->RenderText(text.c_str(), Color::LightYellow, Color::LightBlue, Font::LARGE_FONT_3, true);
 		sc->SetTexture(fontTexture);
 	}
@@ -29,9 +29,10 @@ void HudElement::UpdateText(const std::string& text)
 
 HudElement::~HudElement()
 {
+	printf("removing the hud element");
 	delete data;
-	if (fontRenderer) delete fontRenderer;
-	//if (sc) delete sc;
-	if (fontTexture) delete fontTexture;
-	//if (element) delete element;
+	fontTexture->Unload();
+	delete fontRenderer;
+	delete sc;
+	delete element;
 }
