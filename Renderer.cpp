@@ -174,12 +174,18 @@ void Renderer::RemoveMeshComp(MeshComponent* mesh){
 	{
 		SkeletalMeshComponent* sk = static_cast<SkeletalMeshComponent*>(mesh);
 		auto iter = std::find(skeletalMeshes.begin(), skeletalMeshes.end(), sk);
-		skeletalMeshes.erase(iter);
+		if (iter != skeletalMeshes.end())
+		{
+			skeletalMeshes.erase(iter);
+		}
 	}
 	else
 	{
 		auto iter = std::find(meshComps.begin(), meshComps.end(), mesh);
-		meshComps.erase(iter);
+		if (iter != meshComps.end())
+		{
+			meshComps.erase(iter);
+		}
 	}
 }
 
@@ -189,7 +195,10 @@ void Renderer::AddPointLight(PointLightComponent* light) {
 
 void Renderer::RemovePointLight(PointLightComponent* light) {
 	auto iter = std::find(pointLights.begin(), pointLights.end(), light);
-	pointLights.erase(iter);
+	if (iter != pointLights.end())
+	{
+		pointLights.erase(iter);
+	}
 }
 
 Texture* Renderer::GetTexture(const std::string& fileName){

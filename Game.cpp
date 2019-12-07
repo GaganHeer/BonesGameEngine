@@ -697,9 +697,7 @@ void Game::CreatePointLights(Actor*& a, Vector3& pos, int z)
 }
 
 void Game::UnloadData(){
-	while (!actors.empty()){
-		delete actors.back();
-	}
+	
 
 	if (hud)
 	{
@@ -709,6 +707,11 @@ void Game::UnloadData(){
 	if (renderer){
 		renderer->UnloadData();
 	}
+
+	while (!actors.empty()) {
+		delete actors.back();
+	}
+	actors.clear();
 }
 
 void Game::UnloadSkelAnim() {

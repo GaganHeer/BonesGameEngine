@@ -38,7 +38,7 @@ private:
 	int y = 7;
 	int variance = 3;
 
-	int maxEnemies = 200;
+	int maxEnemies = 10;
 	int diffInc = 1;
 
 	Game* game;

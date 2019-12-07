@@ -23,6 +23,7 @@ void HUD::removeElement(HudElement* hudElement)
 		if ((*itr) == hudElement)
 		{
 			hud_elements.erase(itr);
+			delete hudElement;
 			break;
 		}
 	}
