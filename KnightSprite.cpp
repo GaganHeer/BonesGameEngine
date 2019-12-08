@@ -68,7 +68,7 @@ void KnightSprite::UpdateActor(float deltaTime)
 		}
 		time = 0;
 	}
-	if (ready && state != Idle)
+	if (ready && (state == Attacking || state == Dodging))
 		SwitchState(Idle);
 }
 

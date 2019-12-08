@@ -28,6 +28,8 @@ Game::Game()
 	isReturning(false),
 	isAttacking(false),
 	waitForEnemyAttack(false),
+	waitForEnemyDeath(false),
+	waitForPlayerDeath(false),
 	enemyCollision(false),
 	stairCollision(false),
 	level(0),
@@ -146,8 +148,8 @@ void Game::ProcessInput() {
 			if (state.Keyboard.GetKeyState(SDL_SCANCODE_L) == ButtonState::Pressed) {
 				printf("L Button Pressed \n");
 				if ((scene == ENEMY_FIGHT_SCENE || scene == BOSS_FIGHT_SCENE) && !isAttacking) {
-					thread th2(&AudioEngine::playerAtk, AE);
-					th2.join();
+					thread th1(&AudioEngine::playerAtk, AE);
+					th1.join();
 					CombatRound(0);
 				}
 			}
@@ -172,6 +174,9 @@ void Game::ProcessInput() {
 					doesWin = true;
 					isReturning = false;
 					isLoading = true;
+					waitForEnemyAttack = false;
+					waitForEnemyDeath = false;
+					waitForPlayerDeath = false;
 				}
 			}
 		}
@@ -253,6 +258,10 @@ void Game::UpdateGame()
 		if (scene == ENEMY_FIGHT_SCENE && knightSprite->ready) {
 			if (waitForEnemyAttack) {
 				knightSprite->SwitchState(KnightSprite::Attacking);
+				thread th1(&AudioEngine::enemyAtk, AE);
+				thread th2(&AudioEngine::playerHurt, AE);
+				th1.join();
+				th2.join();
 				waitForEnemyAttack = false;
 			}
 			else {
@@ -265,6 +274,10 @@ void Game::UpdateGame()
 		else if (scene == BOSS_FIGHT_SCENE && bossSprite->ready) {
 			if (waitForEnemyAttack) {
 				bossSprite->SwitchState(BossSprite::Attacking);
+				thread th1(&AudioEngine::enemyAtk, AE);
+				thread th2(&AudioEngine::playerHurt, AE);
+				th1.join();
+				th2.join();
 				waitForEnemyAttack = false;
 			}
 			else {
@@ -277,46 +290,72 @@ void Game::UpdateGame()
 	}
 
 	if (scene == ENEMY_FIGHT_SCENE) {
-		if (enemyCombat->getCurrentHealth() <= 0) {
-			playerCombat->setDebuffAmt(0);
-			thread th3(&AudioEngine::enemyDeath, AE);
-			th3.join();
-			_asm {
-				//resets the enemy health back after killing an enemy
-				mov		eax, dword ptr[this] //copy all variables into eax register
-				mov		ecx, dword ptr[eax]Game.enemyCombat //from eax register copy only enemyCombat address into ecx register
-				call	EnemyCombatSystem::resetEnemy //call the reset enemy function for enemy combat
+		if (enemyCombat->getCurrentHealth() <= 0 && skeletonSprite->ready && knightSprite->ready) {
+			if (waitForEnemyDeath) {
+				knightSprite->SwitchState(KnightSprite::Dying);
+				thread th1(&AudioEngine::enemyDeath, AE);
+				th1.join();
+				waitForEnemyDeath = false;
+			}
+			else if (!(playerCombat->getCurrentHealth() <= 0)) {
+				playerCombat->setDebuffAmt(0);
+				_asm {
+					//resets the enemy health back after killing an enemy
+					mov		eax, dword ptr[this] //copy all variables into eax register
+					mov		ecx, dword ptr[eax]Game.enemyCombat //from eax register copy only enemyCombat address into ecx register
+					call	EnemyCombatSystem::resetEnemy //call the reset enemy function for enemy combat
 
-				//sets isLoading bool to true
-				mov		eax, dword ptr[this] //copy all variables into eax register
-				mov[eax]Game.isLoading, 1 //from eax register access and change isLoading boolean to true
+					//sets isLoading bool to true
+					mov		eax, dword ptr[this] //copy all variables into eax register
+					mov[eax]Game.isLoading, 1 //from eax register access and change isLoading boolean to true
 
-				//sets isReturning bool to true
-				mov		eax, dword ptr[this] //copy all variables into eax register
-				mov[eax]Game.isReturning, 1 //from eax register access and change isReturning boolean to true
+					//sets isReturning bool to true
+					mov		eax, dword ptr[this] //copy all variables into eax register
+					mov[eax]Game.isReturning, 1 //from eax register access and change isReturning boolean to true
 
-				//sets scene value to 0
-				mov		eax, dword ptr[this] //copy all variables into eax register
-				mov[eax]Game.scene, 0 //from eax register access and change scene int to 0
+					//sets scene value to 0
+					mov		eax, dword ptr[this] //copy all variables into eax register
+					mov[eax]Game.scene, 0 //from eax register access and change scene int to 0
+				}
 			}
 		}
 
-		if (playerCombat->getCurrentHealth() <= 0) {
-			doesWin = false;
-			isLoading = true;
-			scene = END_GAME_SCENE;
+		if (playerCombat->getCurrentHealth() <= 0 && knightSprite->ready && skeletonSprite->ready) {
+			if (waitForPlayerDeath) {
+				skeletonSprite->SwitchState(SkeletonSprite::Dying);
+				waitForPlayerDeath = false;
+			}
+			else {
+				doesWin = false;
+				isLoading = true;
+				scene = END_GAME_SCENE;
+			}
 		}
 	}
 	else if (scene == BOSS_FIGHT_SCENE) {
-		if (enemyCombat->getCurrentHealth() <= 0) {
-			doesWin = true;
-			isLoading = true;
-			scene = END_GAME_SCENE;
+		if (enemyCombat->getCurrentHealth() <= 0 && skeletonSprite->ready && bossSprite->ready) {
+			if (waitForEnemyDeath) {
+				bossSprite->SwitchState(BossSprite::Dying);
+				thread th1(&AudioEngine::enemyDeath, AE);
+				th1.join();
+				waitForEnemyDeath = false;
+			}
+			else if (!(playerCombat->getCurrentHealth() <= 0)) {
+				doesWin = true;
+				isLoading = true;
+				scene = END_GAME_SCENE;
+			}
 		}
-		else if (playerCombat->getCurrentHealth() <= 0) {
-			doesWin = false;
-			isLoading = true;
-			scene = END_GAME_SCENE;
+		if (playerCombat->getCurrentHealth() <= 0 && skeletonSprite->ready && bossSprite->ready) {
+			if (waitForPlayerDeath) {
+				skeletonSprite->SwitchState(SkeletonSprite::Dying);
+				waitForPlayerDeath = false;
+			}
+			else {
+				doesWin = false;
+				isLoading = true;
+				scene = END_GAME_SCENE;
+			}
 		}
 	}
 }
@@ -944,6 +983,10 @@ void Game::CombatRound(int atkType) {
 			bossSprite->SwitchState(BossSprite::Dodging);
 		}
 	}
+	else {
+		thread th1(&AudioEngine::enemyHurt, AE);
+		th1.join();
+	}
 	cout << "Enemy took " << playerAtk << " damage" << endl;
 	enemyCombat->takeDmg(playerAtk);
 	int enemyAtk = enemyCombat->performAtk();
@@ -952,6 +995,7 @@ void Game::CombatRound(int atkType) {
 	string enemyStatus;
 	if (playerCombat->checkIfDead()) {
 		playerStatus = "dead";
+		waitForPlayerDeath = true;
 	}
 	else {
 		playerStatus = "alive";
@@ -959,6 +1003,7 @@ void Game::CombatRound(int atkType) {
 
 	if (enemyCombat->checkIfDead()) {
 		enemyStatus = "dead";
+		waitForEnemyDeath = true;
 		int XPAmt = enemyCombat->getXP();
 		bool doesLevel = playerLevels->addXP(XPAmt);
 		if (doesLevel) {

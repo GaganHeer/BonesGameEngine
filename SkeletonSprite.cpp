@@ -44,31 +44,20 @@ void SkeletonSprite::UpdateActor(float deltaTime)
 
 			sc->SetTexture(this->GetGame()->GetRenderer()->GetTexture(file));
 		}
-		else if (state == Dodging) {
-			tileNum++;
-			if (tileNum > 14) {
-				tileNum = 14;
-				ready = true;
-			}
-			string file = "Assets/boss-idle/tile" + std::to_string(tileNum);
-			file.append(".png");
-
-			sc->SetTexture(this->GetGame()->GetRenderer()->GetTexture(file));
-		}
 		else if (state == Dying) {
 			tileNum++;
 			if (tileNum > 14) {
 				tileNum = 14;
 				ready = true;
 			}
-			string file = "Assets/boss-dead/tile" + std::to_string(tileNum);
+			string file = "Assets/skele-dead/tile" + std::to_string(tileNum);
 			file.append(".png");
 
 			sc->SetTexture(this->GetGame()->GetRenderer()->GetTexture(file));
 		}
 		time = 0;
 	}
-	if (ready && state != Idle)
+	if (ready && state == Attacking)
 	SwitchState(Idle);
 }
 
