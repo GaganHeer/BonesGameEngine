@@ -1,11 +1,13 @@
-﻿  Game.cpp
-C:\Users\happi\Documents\BonesEngine\Game.cpp(360,30): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
-C:\Users\happi\Documents\BonesEngine\Game.cpp(361,30): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
-C:\Users\happi\Documents\BonesEngine\Game.cpp(504,30): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
-C:\Users\happi\Documents\BonesEngine\Game.cpp(505,30): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
-C:\Users\happi\Documents\BonesEngine\Game.cpp(517,23): warning C4018: '<': signed/unsigned mismatch
-C:\Users\happi\Documents\BonesEngine\Game.cpp(522,16): warning C4244: 'initializing': conversion from 'const float' to 'int', possible loss of data
-C:\Users\happi\Documents\BonesEngine\Game.cpp(523,16): warning C4244: 'initializing': conversion from 'const float' to 'int', possible loss of data
-C:\Users\happi\Documents\BonesEngine\Game.cpp(525,31): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
-C:\Users\happi\Documents\BonesEngine\Game.cpp(526,31): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
-  Game.vcxproj -> C:\Users\happi\Documents\BonesEngine\Debug\Game.exe
+﻿  MoveComponent.cpp
+C:\Users\renzd\Desktop\New folder\Bones-Engine\MoveComponent.cpp(23,84): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\renzd\Desktop\New folder\Bones-Engine\MoveComponent.cpp(24,29): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\renzd\Desktop\New folder\Bones-Engine\MoveComponent.cpp(43,34): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\renzd\Desktop\New folder\Bones-Engine\MoveComponent.cpp(47,31): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\renzd\Desktop\New folder\Bones-Engine\MoveComponent.cpp(54,34): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\renzd\Desktop\New folder\Bones-Engine\MoveComponent.cpp(66,89): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\renzd\Desktop\New folder\Bones-Engine\MoveComponent.cpp(67,34): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\renzd\Desktop\New folder\Bones-Engine\MoveComponent.cpp(77,36): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\renzd\Desktop\New folder\Bones-Engine\MoveComponent.cpp(86,39): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\renzd\Desktop\New folder\Bones-Engine\MoveComponent.cpp(89,36): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\renzd\Desktop\New folder\Bones-Engine\MoveComponent.cpp(96,39): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+  Game.vcxproj -> C:\Users\renzd\Desktop\New folder\Bones-Engine\Debug\Game.exe

@@ -13,6 +13,7 @@
   <ItemGroup>
     <ClCompile Include="Actor.cpp" />
     <ClCompile Include="Animation.cpp" />
+    <ClCompile Include="AStar.cpp" />
     <ClCompile Include="AudioEngine.cpp" />
     <ClCompile Include="BoneTransform.cpp" />
     <ClCompile Include="BossSprite.cpp" />
@@ -58,6 +59,7 @@
   <ItemGroup>
     <ClInclude Include="Actor.h" />
     <ClInclude Include="Animation.h" />
+    <ClInclude Include="AStar.h" />
     <ClInclude Include="AudioEngine.h" />
     <ClInclude Include="BoneTransform.h" />
     <ClInclude Include="BossSprite.h" />

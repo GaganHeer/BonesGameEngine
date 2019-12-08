@@ -2,18 +2,13 @@ c:\users\happi\documents\bonesengine\debug\vc142.pdb
 c:\users\happi\documents\bonesengine\debug\vc142.idb
 c:\users\happi\documents\bonesengine\debug\hudelement.obj
 c:\users\happi\documents\bonesengine\debug\hud.obj
-c:\users\happi\documents\bonesengine\debug\game.obj
-c:\users\happi\documents\bonesengine\debug\spritecomponent.obj
-c:\users\happi\documents\bonesengine\debug\room.obj
+c:\users\happi\documents\bonesengine\debug\gui.obj
 c:\users\happi\documents\bonesengine\debug\generator.obj
-c:\users\happi\documents\bonesengine\debug\actor.obj
-c:\users\happi\documents\bonesengine\debug\pointlightcomponent.obj
-c:\users\happi\documents\bonesengine\debug\planeactor.obj
-c:\users\happi\documents\bonesengine\debug\movecomponent.obj
-c:\users\happi\documents\bonesengine\debug\meshcomponent.obj
-c:\users\happi\documents\bonesengine\debug\main.obj
-c:\users\happi\documents\bonesengine\debug\knightsprite.obj
+c:\users\happi\documents\bonesengine\debug\gbuffer.obj
+c:\users\happi\documents\bonesengine\debug\game.obj
+c:\users\happi\documents\bonesengine\debug\font.obj
 c:\users\happi\documents\bonesengine\debug\enemymovecomponent.obj
+c:\users\happi\documents\bonesengine\debug\enemycombatsystem.obj
 c:\users\happi\documents\bonesengine\debug\enemyactor.obj
 c:\users\happi\documents\bonesengine\debug\cubeactor.obj
 c:\users\happi\documents\bonesengine\debug\component.obj
@@ -21,35 +16,84 @@ c:\users\happi\documents\bonesengine\debug\circlecomponent.obj
 c:\users\happi\documents\bonesengine\debug\cameratargetactor.obj
 c:\users\happi\documents\bonesengine\debug\cameracomponent.obj
 c:\users\happi\documents\bonesengine\debug\bosssprite.obj
+c:\users\happi\documents\bonesengine\debug\bonetransform.obj
 c:\users\happi\documents\bonesengine\debug\audioengine.obj
-c:\users\happi\documents\bonesengine\debug\victorysprite.obj
-c:\users\happi\documents\bonesengine\debug\topdowncamera.obj
+c:\users\happi\documents\bonesengine\debug\animation.obj
+c:\users\happi\documents\bonesengine\debug\actor.obj
+c:\users\happi\documents\bonesengine\debug\texture.obj
 c:\users\happi\documents\bonesengine\debug\stairactor.obj
+c:\users\happi\documents\bonesengine\debug\spritecomponent.obj
 c:\users\happi\documents\bonesengine\debug\skeletonsprite.obj
+c:\users\happi\documents\bonesengine\debug\skeleton.obj
 c:\users\happi\documents\bonesengine\debug\skeletalmeshcomponent.obj
+c:\users\happi\documents\bonesengine\debug\shader.obj
+c:\users\happi\documents\bonesengine\debug\room.obj
 c:\users\happi\documents\bonesengine\debug\renderer.obj
+c:\users\happi\documents\bonesengine\debug\pointlightcomponent.obj
+c:\users\happi\documents\bonesengine\debug\playercombatsystem.obj
+c:\users\happi\documents\bonesengine\debug\planeactor.obj
+c:\users\happi\documents\bonesengine\debug\movecomponent.obj
+c:\users\happi\documents\bonesengine\debug\meshcomponent.obj
+c:\users\happi\documents\bonesengine\debug\mesh.obj
+c:\users\happi\documents\bonesengine\debug\math.obj
+c:\users\happi\documents\bonesengine\debug\main.obj
+c:\users\happi\documents\bonesengine\debug\levelupsystem.obj
+c:\users\happi\documents\bonesengine\debug\knightsprite.obj
+c:\users\happi\documents\bonesengine\debug\inputsystem.obj
+c:\users\happi\documents\bonesengine\debug\victorysprite.obj
+c:\users\happi\documents\bonesengine\debug\vertexarray.obj
+c:\users\happi\documents\bonesengine\debug\topdowncamera.obj
+c:\users\renzd\desktop\new folder\bones-engine\debug\vc142.pdb
+c:\users\renzd\desktop\new folder\bones-engine\debug\vc142.idb
+c:\users\renzd\desktop\new folder\bones-engine\debug\gui.obj
+c:\users\renzd\desktop\new folder\bones-engine\debug\gbuffer.obj
+c:\users\renzd\desktop\new folder\bones-engine\debug\font.obj
+c:\users\renzd\desktop\new folder\bones-engine\debug\enemycombatsystem.obj
+c:\users\renzd\desktop\new folder\bones-engine\debug\bonetransform.obj
+c:\users\renzd\desktop\new folder\bones-engine\debug\audioengine.obj
+c:\users\renzd\desktop\new folder\bones-engine\debug\astar.obj
+c:\users\renzd\desktop\new folder\bones-engine\debug\animation.obj
+c:\users\renzd\desktop\new folder\bones-engine\debug\skeleton.obj
+c:\users\renzd\desktop\new folder\bones-engine\debug\shader.obj
+c:\users\renzd\desktop\new folder\bones-engine\debug\playercombatsystem.obj
+c:\users\renzd\desktop\new folder\bones-engine\debug\mesh.obj
+c:\users\renzd\desktop\new folder\bones-engine\debug\math.obj
+c:\users\renzd\desktop\new folder\bones-engine\debug\levelupsystem.obj
+c:\users\renzd\desktop\new folder\bones-engine\debug\inputsystem.obj
+c:\users\renzd\desktop\new folder\bones-engine\debug\vertexarray.obj
+c:\users\renzd\desktop\new folder\bones-engine\debug\texture.obj
 c:\users\happi\documents\bonesengine\debug\game.exe
 c:\users\happi\documents\bonesengine\debug\game.ilk
 c:\users\happi\documents\bonesengine\debug\game.pdb
-c:\users\happi\documents\bonesengine\debug\animation.obj
-c:\users\happi\documents\bonesengine\debug\bonetransform.obj
-c:\users\happi\documents\bonesengine\debug\enemycombatsystem.obj
-c:\users\happi\documents\bonesengine\debug\font.obj
-c:\users\happi\documents\bonesengine\debug\gbuffer.obj
-c:\users\happi\documents\bonesengine\debug\gui.obj
-c:\users\happi\documents\bonesengine\debug\inputsystem.obj
-c:\users\happi\documents\bonesengine\debug\levelupsystem.obj
-c:\users\happi\documents\bonesengine\debug\math.obj
-c:\users\happi\documents\bonesengine\debug\mesh.obj
-c:\users\happi\documents\bonesengine\debug\playercombatsystem.obj
-c:\users\happi\documents\bonesengine\debug\shader.obj
-c:\users\happi\documents\bonesengine\debug\skeleton.obj
-c:\users\happi\documents\bonesengine\debug\texture.obj
-c:\users\happi\documents\bonesengine\debug\vertexarray.obj
-c:\users\happi\documents\bonesengine\debug\hudelement.new.obj.enc
-c:\users\happi\documents\bonesengine\debug\game.tlog\cl.command.1.tlog
-c:\users\happi\documents\bonesengine\debug\game.tlog\cl.read.1.tlog
-c:\users\happi\documents\bonesengine\debug\game.tlog\cl.write.1.tlog
-c:\users\happi\documents\bonesengine\debug\game.tlog\link.command.1.tlog
-c:\users\happi\documents\bonesengine\debug\game.tlog\link.read.1.tlog
-c:\users\happi\documents\bonesengine\debug\game.tlog\link.write.1.tlog
+c:\users\renzd\desktop\new folder\bones-engine\debug\actor.obj
+c:\users\renzd\desktop\new folder\bones-engine\debug\cameracomponent.obj
+c:\users\renzd\desktop\new folder\bones-engine\debug\cameratargetactor.obj
+c:\users\renzd\desktop\new folder\bones-engine\debug\circlecomponent.obj
+c:\users\renzd\desktop\new folder\bones-engine\debug\component.obj
+c:\users\renzd\desktop\new folder\bones-engine\debug\cubeactor.obj
+c:\users\renzd\desktop\new folder\bones-engine\debug\enemyactor.obj
+c:\users\renzd\desktop\new folder\bones-engine\debug\enemymovecomponent.obj
+c:\users\renzd\desktop\new folder\bones-engine\debug\game.obj
+c:\users\renzd\desktop\new folder\bones-engine\debug\generator.obj
+c:\users\renzd\desktop\new folder\bones-engine\debug\hud.obj
+c:\users\renzd\desktop\new folder\bones-engine\debug\hudelement.obj
+c:\users\renzd\desktop\new folder\bones-engine\debug\main.obj
+c:\users\renzd\desktop\new folder\bones-engine\debug\meshcomponent.obj
+c:\users\renzd\desktop\new folder\bones-engine\debug\movecomponent.obj
+c:\users\renzd\desktop\new folder\bones-engine\debug\planeactor.obj
+c:\users\renzd\desktop\new folder\bones-engine\debug\pointlightcomponent.obj
+c:\users\renzd\desktop\new folder\bones-engine\debug\renderer.obj
+c:\users\renzd\desktop\new folder\bones-engine\debug\room.obj
+c:\users\renzd\desktop\new folder\bones-engine\debug\skeletalmeshcomponent.obj
+c:\users\renzd\desktop\new folder\bones-engine\debug\spritecomponent.obj
+c:\users\renzd\desktop\new folder\bones-engine\debug\stairactor.obj
+c:\users\renzd\desktop\new folder\bones-engine\debug\topdowncamera.obj
+c:\users\renzd\desktop\new folder\bones-engine\debug\game.ilk
+c:\users\renzd\desktop\new folder\bones-engine\debug\game.pdb
+c:\users\renzd\desktop\new folder\bones-engine\debug\game.exe
+c:\users\renzd\desktop\new folder\bones-engine\debug\game.tlog\cl.command.1.tlog
+c:\users\renzd\desktop\new folder\bones-engine\debug\game.tlog\cl.read.1.tlog
+c:\users\renzd\desktop\new folder\bones-engine\debug\game.tlog\cl.write.1.tlog
+c:\users\renzd\desktop\new folder\bones-engine\debug\game.tlog\link.command.1.tlog
+c:\users\renzd\desktop\new folder\bones-engine\debug\game.tlog\link.read.1.tlog
+c:\users\renzd\desktop\new folder\bones-engine\debug\game.tlog\link.write.1.tlog
