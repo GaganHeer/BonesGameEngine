@@ -13,7 +13,7 @@ public:
 	Generator(Game* game);
 	~Generator();
 
-	static const int NUM_ROOMS = 2;
+	static const int NUM_ROOMS = 10;
 	void setParams(int x, int y, int variance);
 	
 	vector<Room*> generate();

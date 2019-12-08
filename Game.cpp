@@ -220,7 +220,7 @@ void Game::UpdateGame()
 		HudElement* stairsMessage = new HudElement(new Actor(this), Vector3(300.0f, 180.0f, 0.0f), Vector2(), stairsMessageStr);
 		hud->addElement(stairsMessage);
 		enemyCombat->enemyLevel(10, 10, 50);
-		if (level >= 1) {
+		if (level >= 5) {
 			if (currentAudioInstance) {
 				AE->stopAudio(currentAudioInstance);
 			}
@@ -649,7 +649,7 @@ void Game::LoadData(){
 	else if (scene == 2) {
 		waitForEnemyAttack = false;
 		AE->stopAudio(currentAudioInstance);
-		currentAudioInstance = AE->startFightBGM();
+		currentAudioInstance = AE->startBossBGM();
 		enemyCombat = new EnemyCombatSystem(200, 25, 500);
 
 		Actor* combatText = new Actor(this);
