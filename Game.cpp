@@ -7,6 +7,7 @@
 #include "Generator.h"
 #include "BossSprite.h"
 #include "SkeletonSprite.h"
+#include "VictorySprite.h"
 #include "KnightSprite.h"
 #include "SpriteComponent.h"
 #include "MeshComponent.h"
@@ -115,7 +116,7 @@ void Game::ProcessInput() {
 			if (state.Keyboard.GetKeyState(SDL_SCANCODE_H) == ButtonState::Pressed) {
 				printf("H Button Pressed \n");
 				if ((scene == 1 || scene == 2) && !isAttacking) {
-					thread th1(&AudioEngine::enemyAtk, AE);
+					thread th1(&AudioEngine::playerHeavyAtk, AE);
 					th1.join();
 					CombatRound(1);
 				}
@@ -219,7 +220,7 @@ void Game::UpdateGame()
 		HudElement* stairsMessage = new HudElement(new Actor(this), Vector3(300.0f, 180.0f, 0.0f), Vector2(), stairsMessageStr);
 		hud->addElement(stairsMessage);
 		enemyCombat->enemyLevel(10, 10, 50);
-		if (level >= 5) {
+		if (level >= 1) {
 			if (currentAudioInstance) {
 				AE->stopAudio(currentAudioInstance);
 			}
@@ -687,6 +688,8 @@ void Game::LoadData(){
 				AE->stopAudio(currentAudioInstance);
 			}
 			currentAudioInstance = AE->startWinAltBGM();
+
+			//victorySprite = new VictorySprite(this);
 			endTextStr = new string("YOU WIN");
 		}
 		else {
