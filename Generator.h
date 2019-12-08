@@ -13,7 +13,7 @@ public:
 	Generator(Game* game);
 	~Generator();
 
-	static const int NUM_ROOMS = 5;
+	static const int NUM_ROOMS = 2;
 	void setParams(int x, int y, int variance);
 	
 	vector<Room*> generate();
@@ -38,7 +38,7 @@ private:
 	int y = 7;
 	int variance = 3;
 
-	int maxEnemies = 10;
+	int maxEnemies = 2;
 	int diffInc = 1;
 
 	Game* game;

@@ -126,6 +126,7 @@ private:
 
 	Texture* fontEnemyHealth;
 	Texture* fontPlayerHealth;
+	Texture* fontEndScreen;
 	class HUD* hud;
 
 	bool isReturning;
@@ -133,6 +134,7 @@ private:
 	bool stairCollision;
 	bool isAttacking;
 	bool waitForEnemyAttack;
+	bool doesWin;
 	
 	Vector3 savedPlayerPosition;
 	vector<Vector3> saved_enemies;

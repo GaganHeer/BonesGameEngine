@@ -50,3 +50,10 @@ bool EnemyCombatSystem::checkIfDead() {
 void EnemyCombatSystem::resetEnemy() {
 	setCurrentHealth(getBaseHealth());
 }
+
+void EnemyCombatSystem::enemyLevel(int newHealth, int newAtk, int newXP) {
+	setBaseHealth(getBaseHealth() + newHealth);
+	setAtk(getAtk() + newAtk);
+	setXP(getXP() + newXP);
+	resetEnemy();
+}
