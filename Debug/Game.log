@@ -1,6 +1,0 @@
-﻿  EnemyActor.cpp
-  EnemyMoveComponent.cpp
-C:\Users\renzd\Desktop\Bones\Bones-Engine\EnemyMoveComponent.cpp(188,60): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-  Generating Code...
-C:\Users\renzd\Desktop\Bones\Bones-Engine\EnemyMoveComponent.cpp(188,51): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-  Game.vcxproj -> C:\Users\renzd\Desktop\Bones\Bones-Engine\Debug\Game.exe
