@@ -37,7 +37,7 @@ void HudElement::SetPosition(Vector3 pos)
 
 HudElement::~HudElement()
 {
-	if (fontTexture != NULL) fontTexture->Unload();
+	if (fontTexture != nullptr) fontTexture->Unload();
 	delete fontRenderer;
 	delete sc;
 	delete element;
