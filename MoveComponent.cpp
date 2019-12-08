@@ -29,7 +29,7 @@ void MoveComponent::Update(float deltaTime){
 				else if (verticalMove < 0) {
 					movingDown = true;
 				}
-				cout << "Is Walkable" << endl;
+				//cout << "Is Walkable" << endl;
 				game->SetWalkable(row, col);
 				game->SetPlayerMapPos(row + verticalMove / 100, col);
 
@@ -41,7 +41,7 @@ void MoveComponent::Update(float deltaTime){
 				//cout << "Current row,col: " << pos.x / 100 << " " << pos.y / 100 << endl;
 			}
 			else if (game->IsWalkable(row + verticalMove / 100, col) == 2) { //for enemies
-				cout << "Enemy Encountered " << endl;
+				//cout << "Enemy Encountered " << endl;
 				game->SetWalkable(row, col);
 				game->SetPlayerMapPos(row + verticalMove / 100, col);
 				Vector3 pos = owner->GetPosition() + Vector3(verticalMove, .0f, .0f);
@@ -51,11 +51,11 @@ void MoveComponent::Update(float deltaTime){
 				//do something;
 			}
 			else if (game->IsWalkable(row + verticalMove / 100, col) == 4) {
-				cout << "Stairs Found" << endl;
+				//cout << "Stairs Found" << endl;
 				StairsFound();
 			}
 			else {
-				cout << "Not Walkable" << endl;
+				//cout << "Not Walkable" << endl;
 			}
 		}
 		else if (!Math::NearZero(horizontalMove)) {
@@ -70,7 +70,7 @@ void MoveComponent::Update(float deltaTime){
 				else if (horizontalMove < 0) {
 					movingLeft = true;
 				}
-				cout << "Is Walkable" << endl;
+				//cout << "Is Walkable" << endl;
 				game->SetWalkable(row, col);
 				game->SetPlayerMapPos(row, col + -horizontalMove / 100);
 
@@ -82,7 +82,7 @@ void MoveComponent::Update(float deltaTime){
 				//cout << "Current row,col: " << pos.x / 100 << " " << pos.y / 100 << endl;
 			}
 			else if (game->IsWalkable(row, col + -horizontalMove / 100) == 2) {
-				cout << "Enemy Encountered " << endl;
+				//cout << "Enemy Encountered " << endl;
 				game->SetWalkable(row, col);
 				game->SetPlayerMapPos(row, col + -horizontalMove / 100);
 				Vector3 pos = owner->GetPosition() + Vector3(.0f, -horizontalMove, .0f);
@@ -92,11 +92,11 @@ void MoveComponent::Update(float deltaTime){
 				//do something;
 			}
 			else if (game->IsWalkable(row, col + -horizontalMove / 100) == 4) {
-				cout << "Stairs Found" << endl;
+				//cout << "Stairs Found" << endl;
 				StairsFound();
 			}
 			else {
-				cout << "Is Not Walkable" << endl;
+				//cout << "Is Not Walkable" << endl;
 			}
 		}
 	}
@@ -148,9 +148,9 @@ void MoveComponent::UpdatePosition()
 
 void MoveComponent::Collided()
 {
-	cout << "COLLISION: " << game->GetEnemyCollision() << endl;
+	//cout << "COLLISION: " << game->GetEnemyCollision() << endl;
 	game->SetEnemyCollision(true);
-	cout << "COLLISION: " << game->GetEnemyCollision() << endl;
+	//cout << "COLLISION: " << game->GetEnemyCollision() << endl;
 }
 
 void MoveComponent::StairsFound() {

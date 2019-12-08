@@ -19,7 +19,7 @@ void EnemyMoveComponent::Update(float deltaTime) {
 
 	if (movingUp) {
 		Vector3 pos = owner->GetPosition();
-		cout << " CURRENT POSITION: " << pos.y << endl;
+		//cout << " CURRENT POSITION: " << pos.y << endl;
 
 		pos.y += speed;
 		owner->SetPosition(pos);
@@ -31,7 +31,7 @@ void EnemyMoveComponent::Update(float deltaTime) {
 	}
 	if (movingRight) {
 		Vector3 pos = owner->GetPosition();
-		cout << " CURRENT POSITION: " << pos.x << endl;
+		//cout << " CURRENT POSITION: " << pos.x << endl;
 
 		pos.x += speed;
 		owner->SetPosition(pos);
@@ -45,7 +45,7 @@ void EnemyMoveComponent::Update(float deltaTime) {
 
 	if (movingDown) {
 		Vector3 pos = owner->GetPosition();
-		cout << " CURRENT POSITION: " << pos.y << endl;
+		//cout << " CURRENT POSITION: " << pos.y << endl;
 
 		pos.y -= speed;
 		owner->SetPosition(pos);
@@ -57,7 +57,7 @@ void EnemyMoveComponent::Update(float deltaTime) {
 	}
 	if (movingLeft) {
 		Vector3 pos = owner->GetPosition();
-		cout << " CURRENT POSITION: " << pos.x << endl;
+		//cout << " CURRENT POSITION: " << pos.x << endl;
 
 		pos.x -= speed;
 		owner->SetPosition(pos);
