@@ -236,8 +236,8 @@ void Game::UpdateGame()
 			else {
 				isAttacking = false;
 
-				playerHealth_text->UpdateText("player health: " + playerCombat->getCurrentHealth());
-				enemyHealth_text->UpdateText("enemy health: " + enemyCombat->getCurrentHealth());
+				playerHealth_text->UpdateText("player health: " + std::to_string(playerCombat->getCurrentHealth()));
+				enemyHealth_text->UpdateText("enemy health: " + std::to_string(enemyCombat->getCurrentHealth()));
 			}
 		}
 		else if (scene == BOSS_FIGHT_SCENE && bossSprite->ready) {
@@ -248,8 +248,8 @@ void Game::UpdateGame()
 			else {
 				isAttacking = false;
 
-				playerHealth_text->UpdateText("player health: " + playerCombat->getCurrentHealth());
-				enemyHealth_text->UpdateText("enemy health: " + enemyCombat->getCurrentHealth());
+				playerHealth_text->UpdateText("player health: " + std::to_string(playerCombat->getCurrentHealth()));
+				enemyHealth_text->UpdateText("enemy health: " + std::to_string(enemyCombat->getCurrentHealth()));
 			}
 		}
 	}
@@ -448,11 +448,9 @@ void Game::LoadData() {
 			dir.specColor = Vector3(11.8f, 0.5f, 0.5f);
 
 			// UI elements
-			/* TODO:
-			string* textString = new string("Find an exit point");
-			HudElement* fontArea1 = new HudElement(new Actor(this), Vector3(-350.0f, -350.0f, 0.0f), Vector2(), textString);
-			hud->addElement(fontArea1);
-			*/
+			
+			gameMessage_text->UpdateText("Find an exit point");
+			
 			isReturning = false;
 		}
 		else { // ----------------------------------------------------------------------------------------------------------------------
@@ -616,8 +614,8 @@ void Game::LoadData() {
 		sc->SetTexture(renderer->GetTexture("Assets/combatText.png"));
 		
 		// we wanna show it here as well
-		playerHealth_text->UpdateText("player health: " + playerCombat->getCurrentHealth());
-		enemyHealth_text->UpdateText("enemy health: " + enemyCombat->getCurrentHealth());
+		playerHealth_text->UpdateText("player health: " + std::to_string(playerCombat->getCurrentHealth()));
+		enemyHealth_text->UpdateText("enemy health: " + std::to_string(enemyCombat->getCurrentHealth()));
 
 		skeletonSprite = new SkeletonSprite(this);
 		knightSprite = new KnightSprite(this);
@@ -634,8 +632,8 @@ void Game::LoadData() {
 		sc->SetTexture(renderer->GetTexture("Assets/combatText.png"));
 
 		// we wanna show it here as well
-		playerHealth_text->UpdateText("player health: " + playerCombat->getCurrentHealth());
-		enemyHealth_text->UpdateText("enemy health: " + enemyCombat->getCurrentHealth());
+		playerHealth_text->UpdateText("player health: " + std::to_string(playerCombat->getCurrentHealth()));
+		enemyHealth_text->UpdateText("enemy health: " + std::to_string(enemyCombat->getCurrentHealth()));
 
 		skeletonSprite = new SkeletonSprite(this);
 
