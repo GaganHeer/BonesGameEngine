@@ -8,6 +8,7 @@ class EnemyMoveComponent : public Component
 public:
 	EnemyMoveComponent(class Actor* newOwner, int updateOrder = 10);
 	void Update(float deltaTime) override;
+	void CollisionDetected(int tempX, int tempY, int x, int y);
 	void MoveEnemy();
 
 	enum EnemyState {
@@ -48,6 +49,9 @@ private:
 	Vector3 dest_pos;
 	EnemyState state;
 	int** map2D;
+
+	int dest_row;
+	int dest_col;
 
 	bool spotted;
 };

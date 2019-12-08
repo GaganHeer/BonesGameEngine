@@ -700,10 +700,11 @@ Game::Pair Game::EnemySpotted(int row, int col) {
 	int map[9][9];
 	memset(map, false, sizeof(map));
 
-	//cout << "What" << endl;
+	cout << "''''''''''''''''''''''''''''''''''''''''''''" << endl;
 	for (int i = row + 4 + 50; i >= row - 4 + 50; i--) {
 		for (int j = col - 4 + 50; j <= col + 4 + 50; j++) {
 			map[r][c] = map2D[i][j];
+			cout << map2D[i][j];
 			if (map[r][c] == 3) {
 				//cout << map[r][c] << endl;
 				playerPosX = r;
@@ -719,10 +720,11 @@ Game::Pair Game::EnemySpotted(int row, int col) {
 			}
 			c++;
 		}
+		cout << endl;
 		r++;
 		c = 0;
 	}
-
+	cout << "''''''''''''''''''''''''''''''''''''''''''''" << endl;
 	if (playerPosX != -1) {
 		for (int i = 0; i < 9; i++) {
 			for (int j = 0; j < 9; j++) {
@@ -731,6 +733,8 @@ Game::Pair Game::EnemySpotted(int row, int col) {
 			cout << endl;
 		}
 	}
+
+
 	Pair fm = pair<int,int>(-1,-1);
 	if (playerPosX != -1) {
 		Pair fm = astar->GetPath(map, playerPosX, playerPosY);

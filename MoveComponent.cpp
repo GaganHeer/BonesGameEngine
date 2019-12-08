@@ -31,7 +31,8 @@ void MoveComponent::Update(float deltaTime){
 				}
 				cout << "Is Walkable" << endl;
 				game->SetWalkable(row, col);
-				game->SetPlayerMapPos(row + verticalMove / 100, col);
+				int row_pos = row + (int)(verticalMove / 100);
+				game->SetPlayerMapPos(row_pos, col);
 
 				dest = owner->GetPosition().x + verticalMove;
 				dest_pos = owner->GetPosition() + Vector3(verticalMove, .0f, .0f);
@@ -43,6 +44,7 @@ void MoveComponent::Update(float deltaTime){
 			else if (game->IsWalkable(row + verticalMove / 100, col) == 2) { //for enemies
 				cout << "Enemy Encountered " << endl;
 				game->SetWalkable(row, col);
+				int row_pos = row + (int)(verticalMove / 100);
 				game->SetPlayerMapPos(row + verticalMove / 100, col);
 				Vector3 pos = owner->GetPosition() + Vector3(verticalMove, .0f, .0f);
 				owner->SetPosition(pos);
@@ -72,6 +74,7 @@ void MoveComponent::Update(float deltaTime){
 				}
 				cout << "Is Walkable" << endl;
 				game->SetWalkable(row, col);
+				int col_pos = col + (int)(-horizontalMove / 100);
 				game->SetPlayerMapPos(row, col + -horizontalMove / 100);
 
 				dest = owner->GetPosition().y + (-horizontalMove);
