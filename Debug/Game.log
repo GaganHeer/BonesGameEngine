@@ -1,6 +1,11 @@
-﻿  AudioEngine.cpp
-  BossSprite.cpp
-  KnightSprite.cpp
-  SkeletonSprite.cpp
-  Generating Code...
+﻿  Game.cpp
+C:\Users\Jason\Desktop\Bones-Engine\Game.cpp(421,30): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+C:\Users\Jason\Desktop\Bones-Engine\Game.cpp(422,30): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+C:\Users\Jason\Desktop\Bones-Engine\Game.cpp(568,30): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+C:\Users\Jason\Desktop\Bones-Engine\Game.cpp(569,30): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+C:\Users\Jason\Desktop\Bones-Engine\Game.cpp(581,23): warning C4018: '<': signed/unsigned mismatch
+C:\Users\Jason\Desktop\Bones-Engine\Game.cpp(586,16): warning C4244: 'initializing': conversion from 'const float' to 'int', possible loss of data
+C:\Users\Jason\Desktop\Bones-Engine\Game.cpp(587,16): warning C4244: 'initializing': conversion from 'const float' to 'int', possible loss of data
+C:\Users\Jason\Desktop\Bones-Engine\Game.cpp(589,31): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+C:\Users\Jason\Desktop\Bones-Engine\Game.cpp(590,31): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
   Game.vcxproj -> C:\Users\Jason\Desktop\Bones-Engine\Debug\Game.exe

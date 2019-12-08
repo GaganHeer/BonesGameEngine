@@ -501,7 +501,7 @@ void Game::LoadData() {
 			//cout << tempX << " :TEMPX" << endl;
 			//cout << tempY << " :TEMPY" << endl;
 
-			a->SetPosition(Vector3(tempY * size, tempX * size, -50.0f));
+			a->SetPosition(Vector3(tempY * size, tempX * size, -60.0f));
 			a->SetScale(100.f);
 
 			// Setup lights
@@ -648,7 +648,7 @@ void Game::LoadData() {
 			/*cout << tempX + 50 << " :TEMPX" << endl;
 			cout << tempY + 50 << " :TEMPY" << endl;*/
 
-			a->SetPosition(Vector3(tempY * size, tempX * size, -10.0f));
+			a->SetPosition(Vector3(tempY * size, tempX * size, -60.0f));
 			a->SetScale(100.f);
 
 			//cout << " LAST ENEMY ACTOR: " << randGen.getEnemies(9).at(0).getActor() << endl;
