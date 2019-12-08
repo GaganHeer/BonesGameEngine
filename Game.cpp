@@ -5,6 +5,9 @@
 #include "Actor.h"
 #include "EnemyActor.h"
 #include "Generator.h"
+#include "BossSprite.h"
+#include "SkeletonSprite.h"
+#include "KnightSprite.h"
 #include "SpriteComponent.h"
 #include "MeshComponent.h"
 #include "PlaneActor.h"
@@ -23,6 +26,7 @@ Game::Game()
 	updatingActors(false),
 	isReturning(false),
 	isAttacking(false),
+	waitForEnemyAttack(false),
 	enemyCollision(false),
 	stairCollision(false),
 	level(0),
@@ -110,7 +114,7 @@ void Game::ProcessInput() {
 
 			if (state.Keyboard.GetKeyState(SDL_SCANCODE_H) == ButtonState::Pressed) {
 				printf("H Button Pressed \n");
-				if (scene == 1 || scene == 2) {
+				if ((scene == 1 || scene == 2) && !isAttacking) {
 					thread th1(&AudioEngine::enemyAtk, AE);
 					th1.join();
 					CombatRound(1);
@@ -119,7 +123,7 @@ void Game::ProcessInput() {
 
 			if (state.Keyboard.GetKeyState(SDL_SCANCODE_L) == ButtonState::Pressed) {
 				printf("L Button Pressed \n");
-				if (scene == 1 || scene == 2) {
+				if ((scene == 1 || scene == 2) && !isAttacking) {
 					thread th2(&AudioEngine::playerAtk, AE);
 					th2.join();
 					CombatRound(0);
@@ -225,15 +229,39 @@ void Game::UpdateGame()
 		}
 		isLoading = true;
 		stairCollision = false;
-	} else if (isAttacking) {
-		isAttacking = false;
-		
-		string* playerHealthStr = new string("player health: " + std::to_string(playerCombat->getCurrentHealth()));
-		string* enemyHealthStr = new string("enemy health: " + std::to_string(enemyCombat->getCurrentHealth()));
-		HudElement* playerHealth = new HudElement(new Actor(this), Vector3(-300.0f, 180.0f, 0.0f), Vector2(), playerHealthStr);
-		hud->addElement(playerHealth);
-		HudElement* enemyHealth = new HudElement(new Actor(this), Vector3(300.0f, 180.0f, 0.0f), Vector2(), enemyHealthStr);
-		hud->addElement(enemyHealth);
+	} else if (isAttacking && skeletonSprite->ready) {
+		if (scene == 1 && knightSprite->ready) {
+			if (waitForEnemyAttack) {
+				knightSprite->SwitchState(KnightSprite::Attacking);
+				waitForEnemyAttack = false;
+			}
+			else {
+				isAttacking = false;
+
+				string* playerHealthStr = new string("player health: " + std::to_string(playerCombat->getCurrentHealth()));
+				string* enemyHealthStr = new string("enemy health: " + std::to_string(enemyCombat->getCurrentHealth()));
+				HudElement* playerHealth = new HudElement(new Actor(this), Vector3(-300.0f, 180.0f, 0.0f), Vector2(), playerHealthStr);
+				hud->addElement(playerHealth);
+				HudElement* enemyHealth = new HudElement(new Actor(this), Vector3(300.0f, 180.0f, 0.0f), Vector2(), enemyHealthStr);
+				hud->addElement(enemyHealth);
+			}
+		}
+		else if (scene == 2 && bossSprite->ready) {
+			if (waitForEnemyAttack) {
+				bossSprite->SwitchState(BossSprite::Attacking);
+				waitForEnemyAttack = false;
+			}
+			else {
+				isAttacking = false;
+
+				string* playerHealthStr = new string("player health: " + std::to_string(playerCombat->getCurrentHealth()));
+				string* enemyHealthStr = new string("enemy health: " + std::to_string(enemyCombat->getCurrentHealth()));
+				HudElement* playerHealth = new HudElement(new Actor(this), Vector3(-300.0f, 180.0f, 0.0f), Vector2(), playerHealthStr);
+				hud->addElement(playerHealth);
+				HudElement* enemyHealth = new HudElement(new Actor(this), Vector3(300.0f, 180.0f, 0.0f), Vector2(), enemyHealthStr);
+				hud->addElement(enemyHealth);
+			}
+		}
 	}
 
 	if (scene == 1) {
@@ -356,8 +384,7 @@ void Game::LoadData(){
 						enemyActor->SetPosition(savedEnemy);
 						enemyActor->SetSkeletalMesh();
 						enemyActor->SetMoveable(true);
-						
-						//*************************************************************
+
 						rows = (int)(savedEnemy.x / 100);
 						cols = (int)(savedEnemy.y / 100);
 						//SetEnemyMapPos(rows-50, cols-50);
@@ -419,7 +446,7 @@ void Game::LoadData(){
 			//cout << tempX << " :TEMPX" << endl;
 			//cout << tempY << " :TEMPY" << endl;
 
-			a->SetPosition(Vector3(tempY * size, tempX * size, -10.0f));
+			a->SetPosition(Vector3(tempY * size, tempX * size, -50.0f));
 			a->SetScale(100.f);
 
 			// Setup lights
@@ -586,7 +613,43 @@ void Game::LoadData(){
 			level++;
 		}
 
-	} else if (scene == 1 || scene == 2) {
+	} else if (scene == 1) {
+		waitForEnemyAttack = false;
+		AE->stopAudio(currentAudioInstance);
+		currentAudioInstance = AE->startFightBGM();
+		
+		Actor* combatText = new Actor(this);
+		combatText->SetPosition(Vector3(0.0f, -210.0f, 0.0f));
+		SpriteComponent* sc = new SpriteComponent(combatText);
+		sc->SetTexture(renderer->GetTexture("Assets/combatText.png"));
+
+		// we wanna show it here as well
+		string* playerHealthStr = new string("player health: " + std::to_string(playerCombat->getCurrentHealth()));
+		string* enemyHealthStr = new string("enemy health: " + std::to_string(enemyCombat->getCurrentHealth()));
+		HudElement* playerHealth = new HudElement(new Actor(this), Vector3(-300.0f, 180.0f, 0.0f), Vector2(), playerHealthStr);
+		hud->addElement(playerHealth);
+		HudElement* enemyHealth = new HudElement(new Actor(this), Vector3(300.0f, 180.0f, 0.0f), Vector2(), enemyHealthStr);
+		hud->addElement(enemyHealth);
+
+		skeletonSprite = new SkeletonSprite(this);
+
+		knightSprite = new KnightSprite(this);
+		
+		Actor* playerHealthText = new Actor(this);
+		playerHealthText->SetPosition(Vector3(-300.0f, 180.0f, 0.0f));
+		SpriteComponent* playerHealthSC = new SpriteComponent(playerHealthText);
+		if (fontPlayerHealth) playerHealthSC->SetTexture(fontPlayerHealth);
+
+		Actor* enemyHealthText = new Actor(this);
+		enemyHealthText->SetPosition(Vector3(300.0f, 180.0f, 0.0f));
+		SpriteComponent* enemyHealthSC = new SpriteComponent(enemyHealthText);
+		if (fontEnemyHealth) enemyHealthSC->SetTexture(fontEnemyHealth);
+	}
+	else if (scene == 2) {
+		waitForEnemyAttack = false;
+		AE->stopAudio(currentAudioInstance);
+		currentAudioInstance = AE->startFightBGM();
+		enemyCombat = new EnemyCombatSystem(200, 25, 500);
 
 		Actor* combatText = new Actor(this);
 		combatText->SetPosition(Vector3(0.0f, -210.0f, 0.0f));
@@ -601,18 +664,12 @@ void Game::LoadData(){
 		HudElement* enemyHealth = new HudElement(new Actor(this), Vector3(300.0f, 180.0f, 0.0f), Vector2(), enemyHealthStr);
 		hud->addElement(enemyHealth);
 
-		Actor* skeletonSprite = new Actor(this);
-		skeletonSprite->SetPosition(Vector3(-380.0f, 50.0, 0.0f));
-		skeletonSprite->SetScale(0.5f);
-		SpriteComponent* skelSC = new SpriteComponent(skeletonSprite);
-		skelSC->SetTexture(renderer->GetTexture("Assets/skeleton.png"));
+		skeletonSprite = new SkeletonSprite(this);
 
-		Actor* enemySprite = new Actor(this);
-		enemySprite->SetPosition(Vector3(350.0f, 50.0, 0.0f));
-		enemySprite->SetScale(0.5f);
-		SpriteComponent* enemySC = new SpriteComponent(enemySprite);
-		enemySC->SetTexture(renderer->GetTexture("Assets/enemy.png"));
-		
+		bossSprite = new BossSprite(this);
+		bossSprite->SetPosition(Vector3(350.0f, 50.0, 0.0f));
+		bossSprite->SetScale(5.f);
+
 		Actor* playerHealthText = new Actor(this);
 		playerHealthText->SetPosition(Vector3(-300.0f, 180.0f, 0.0f));
 		SpriteComponent* playerHealthSC = new SpriteComponent(playerHealthText);
@@ -622,8 +679,7 @@ void Game::LoadData(){
 		enemyHealthText->SetPosition(Vector3(300.0f, 180.0f, 0.0f));
 		SpriteComponent* enemyHealthSC = new SpriteComponent(enemyHealthText);
 		if (fontEnemyHealth) enemyHealthSC->SetTexture(fontEnemyHealth);
-	}
-	else if (scene == 3) {
+	} else if (scene == 3) {
 		string* replayTextStr = new string("PRESS R TO REPLAY");
 		string* endTextStr;
 		if (doesWin) {
@@ -854,8 +910,13 @@ void Game::CombatRound(int atkType) {
 	cout << "Enemy Health: " << enemyCombat->getCurrentHealth() << endl;
 	cout << "Enemy Atk: " << enemyCombat->getAtk() << endl;
 	printf("\n\n");
-
+	skeletonSprite->SwitchState(SkeletonSprite::Attacking);
 	int playerAtk = playerCombat->dealDmg(atkType);
+	if (playerAtk == 0)
+		if (scene == 1)
+			knightSprite->SwitchState(KnightSprite::Dodging);
+		else if (scene == 2)
+			bossSprite->SwitchState(BossSprite::Dodging);
 	cout << "Enemy took " << playerAtk << " damage" << endl;
 	enemyCombat->takeDmg(playerAtk);
 	int enemyAtk = enemyCombat->performAtk();
@@ -904,7 +965,7 @@ void Game::CombatRound(int atkType) {
 	cout << "Enemy Atk: " << enemyCombat->getAtk() << endl;
 	cout << "Enemy is " << enemyStatus << endl;
 
+	isAttacking = true;
+	waitForEnemyAttack = true;
 	cout << "SCENE NUM: " << scene << endl;
-
-	isAttacking = true;	
 }

@@ -120,6 +120,9 @@ private:
 	class LevelUpSystem* playerLevels;
 	class EnemyCombatSystem* enemyCombat;
 	class EnemyActor* enemyActor;
+	class BossSprite* bossSprite;
+	class SkeletonSprite* skeletonSprite;
+	class KnightSprite* knightSprite;
 
 	Texture* fontEnemyHealth;
 	Texture* fontPlayerHealth;
@@ -130,6 +133,7 @@ private:
 	bool enemyCollision;
 	bool stairCollision;
 	bool isAttacking;
+	bool waitForEnemyAttack;
 	bool doesWin;
 	
 	Vector3 savedPlayerPosition;
