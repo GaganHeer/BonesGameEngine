@@ -126,17 +126,24 @@ private:
 	class LevelUpSystem* playerLevels;
 	class EnemyCombatSystem* enemyCombat;
 	class EnemyActor* enemyActor;
+	class BossSprite* bossSprite;
+	class SkeletonSprite* skeletonSprite;
+	class KnightSprite* knightSprite;
+	class VictorySprite* victorySprite;
 
 	class HUD* hud;
 
 	class HudElement* playerHealth_text;
 	class HudElement* enemyHealth_text;
 	class HudElement* gameMessage_text;
+	class HudElement* endMessage_text;
+	class HudElement* replayMessage_text;
 
 	bool isReturning;
 	bool enemyCollision;
 	bool stairCollision;
 	bool isAttacking;
+	bool waitForEnemyAttack;
 	bool doesWin;
 	
 	Vector3 savedPlayerPosition;

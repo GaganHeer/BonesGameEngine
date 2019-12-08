@@ -86,12 +86,22 @@ Studio::EventInstance* AudioEngine::startLoseBGM() {
 void AudioEngine::playerAtk() {
 	play("{21448bf9-0ba1-407b-93a7-5b2080f629c8}");
 }
-void AudioEngine::enemyAtk() {
+void AudioEngine::playerHeavyAtk() {
 	play("{0d1a8728-cf23-4511-8489-afa36a5b4b6b}");
 }
 void AudioEngine::enemyDeath() {
 	play("{afdb6b8e-6f22-4209-a949-1e85da29cfc2}");
 }
+void AudioEngine::enemyAtk() {
+
+}
+void AudioEngine::playerHurt() {
+
+}
+void AudioEngine::enemyHurt() {
+
+}
+
 
 void AudioEngine::update() {
 	result = sys->update();
