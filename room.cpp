@@ -122,7 +122,7 @@ bool Room::generate(bool lastDoor) {
 		}
 	}
 
-	_debug(); //Debug function. Uncomment to debug
+	//_debug(); //Debug function. Uncomment to debug
 
 	return _exit;
 }

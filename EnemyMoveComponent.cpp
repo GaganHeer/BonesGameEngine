@@ -7,19 +7,85 @@ EnemyMoveComponent::EnemyMoveComponent(class Actor* newOwner, int updateOrder)
 	movingDown(false),
 	movingLeft(false),
 	movingRight(false),
+	spotted(false),
 	speed(20.0f)
 {
 	game = newOwner->GetGame();
+	state = WANDER;
 }
 
 void EnemyMoveComponent::Update(float deltaTime) {
 	if (move && moveable && !movingUp && !movingDown && !movingLeft && !movingRight) {
-		MoveEnemy();
+		map2D = game->GetMap2D();
+		Vector3 epos = owner->GetPosition();
+		int row = (int)(epos.x / 100);
+		int col = (int)(epos.y / 100);
+		pair<int, int> p = game->EnemySpotted(row, col);
+		cout << "Spotted at: " << p.first << "," << p.second << endl;
+		if (p.first > -1 && p.second > -1) {
+		    spotted = true;
+			cout << "spotted" << endl;
+		}
+		else {
+			spotted = false;
+			cout << "spotted false" << endl;
+		}
+
+		if (!spotted) {
+			//MoveEnemy();
+		} else {
+			//cout << "Spotted at: " << p.first << "," << p.second << endl;
+			if (p.first > 4 && p.second == 4) {
+				movingLeft = true;
+				dest = owner->GetPosition().x - 100;
+			}
+			else if (p.first < 4 && p.second == 4) {
+				movingRight = true;
+				dest = owner->GetPosition().x + 100;
+			}
+			else if (p.first == 4 && p.second > 4) {
+
+				movingUp = true;
+				dest = owner->GetPosition().y + 100;
+			}
+			else if (p.first == 4 && p.second < 4) {
+				movingDown = true;
+				dest = owner->GetPosition().y - 100;
+			}
+			
+			/*
+			if (p.first > 4 && p.second == 4) {
+				movingUp = true;
+				dest = owner->GetPosition().y + 100;
+			}
+			else if (p.first < 4 && p.second == 4) {
+				movingDown = true;
+				dest = owner->GetPosition().y - 100;
+			}
+			else if (p.first == 4 && p.second > 4) {
+				movingRight = true;
+				dest = owner->GetPosition().x + 100;
+			}
+			else if (p.first == 4 && p.second < 4) {
+				movingLeft = true;
+				dest = owner->GetPosition().x - 100;
+			}
+			*/
+
+			/*
+			game->SetWalkable(enem_row, enem_col);
+			//pos2 = owner->GetPosition() + Vector3(x * 100, y * 100, .0f);
+			//owner->SetPosition(pos2);
+			game->SetEnemyMapPos(tempX, tempY);
+		*/
+		}
+
+
 	}
 
 	if (movingUp) {
 		Vector3 pos = owner->GetPosition();
-		cout << " CURRENT POSITION: " << pos.y << endl;
+		//cout << " CURRENT POSITION: " << pos.y << endl;
 
 		pos.y += speed;
 		owner->SetPosition(pos);
@@ -31,7 +97,7 @@ void EnemyMoveComponent::Update(float deltaTime) {
 	}
 	if (movingRight) {
 		Vector3 pos = owner->GetPosition();
-		cout << " CURRENT POSITION: " << pos.x << endl;
+		//cout << " CURRENT POSITION: " << pos.x << endl;
 
 		pos.x += speed;
 		owner->SetPosition(pos);
@@ -41,11 +107,9 @@ void EnemyMoveComponent::Update(float deltaTime) {
 			owner->SetPosition(pos);
 		}
 	}
-
-
 	if (movingDown) {
 		Vector3 pos = owner->GetPosition();
-		cout << " CURRENT POSITION: " << pos.y << endl;
+		//cout << " CURRENT POSITION: " << pos.y << endl;
 
 		pos.y -= speed;
 		owner->SetPosition(pos);
@@ -57,7 +121,7 @@ void EnemyMoveComponent::Update(float deltaTime) {
 	}
 	if (movingLeft) {
 		Vector3 pos = owner->GetPosition();
-		cout << " CURRENT POSITION: " << pos.x << endl;
+		//cout << " CURRENT POSITION: " << pos.x << endl;
 
 		pos.x -= speed;
 		owner->SetPosition(pos);
@@ -67,7 +131,6 @@ void EnemyMoveComponent::Update(float deltaTime) {
 			owner->SetPosition(pos);
 		}
 	}
-
 }
 
 void EnemyMoveComponent::MoveEnemy()

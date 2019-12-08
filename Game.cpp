@@ -72,6 +72,28 @@ bool Game::Initialize(){
 	LoadData();
 	ticksCount = SDL_GetTicks();
 	printf("%s%lu\n", "Number of Ticks Initialized: ", ticksCount);
+
+	cout << "++++++++++++++++++++++++++++++++++++++++++++++++++++++++" << endl;
+	astar = new AStar();
+
+	const int R = 9;
+	const int C = 9;
+	int grid[R][C] =
+	{
+		{ 1, 0, 1, 1, 1, 1, 0, 1, 1},
+		{ 1, 1, 1, 0, 1, 1, 1, 0, 1},
+		{ 1, 1, 1, 0, 1, 1, 0, 1, 0},
+		{ 0, 0, 1, 0, 1, 0, 0, 0, 0},
+		{ 1, 1, 1, 0, 1, 1, 1, 0, 1},
+		{ 1, 0, 1, 1, 1, 1, 0, 1, 0},
+		{ 1, 0, 0, 0, 0, 1, 0, 0, 0},
+		{ 1, 0, 1, 1, 1, 1, 0, 1, 1},
+		{ 1, 1, 1, 0, 0, 0, 1, 0, 0}
+	};
+
+	astar->GetPath(grid, 1, 1);
+	cout << "++++++++++++++++++++++++++++++++++++++++++++++++++++++++" << endl;
+
 	return true;
 }
 
@@ -277,7 +299,7 @@ void Game::LoadData(){
 				map2D[i][0] = map_cols;
 
 				for (int j = 1; j <= map_cols; j++)
-					map2D[i][j] = NULL;
+					map2D[i][j] = 0;
 			}
 
 			cameraTargetActor = new CameraTargetActor(this);
@@ -327,7 +349,8 @@ void Game::LoadData(){
 						//*************************************************************
 						rows = (int)(savedEnemy.x / 100);
 						cols = (int)(savedEnemy.y / 100);
-						SetEnemyMapPos(rows, cols);
+						//cout << "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX" << rows << " " << cols << endl;
+						//map2D[rows][cols] = 2;
 					}
 				}
 				saved_enemies.clear();
@@ -668,6 +691,58 @@ void Game::SetStairMapPos(int row, int col) {
 	map2D[row + 50][col + 50] = 4;
 }
 
+Game::Pair Game::EnemySpotted(int row, int col) {
+	bool spotted = false;
+	int r = 0;
+	int c = 0;
+	int playerPosX = -1;
+	int playerPosY = -1;
+	int map[9][9];
+	memset(map, false, sizeof(map));
+
+	//cout << "What" << endl;
+	for (int i = row + 4 + 50; i >= row - 4 + 50; i--) {
+		for (int j = col - 4 + 50; j <= col + 4 + 50; j++) {
+			map[r][c] = map2D[i][j];
+			if (map[r][c] == 3) {
+				//cout << map[r][c] << endl;
+				playerPosX = r;
+				playerPosY = c;
+				map[r][c] = 1;
+				//spotted = true;
+			}
+			if (map[r][c] == 2) {
+				map[r][c] = 1;
+			}
+			if (map[r][c] == 4) {
+				map[r][c] = 1;
+			}
+			c++;
+		}
+		r++;
+		c = 0;
+	}
+
+	if (playerPosX != -1) {
+		for (int i = 0; i < 9; i++) {
+			for (int j = 0; j < 9; j++) {
+				cout << map[i][j];
+			}
+			cout << endl;
+		}
+	}
+	Pair fm = pair<int,int>(-1,-1);
+	if (playerPosX != -1) {
+		Pair fm = astar->GetPath(map, playerPosX, playerPosY);
+		cout << "______________________________________________________" << endl;
+		cout << "FM in Game CPP: " << fm.first << " + " << fm.second << endl;
+		return fm;
+	}
+
+	return fm;
+}
+
+
 void Game::CreatePointLights(Actor*& a, Vector3& pos, int z)
 {
 	// Create some point lights
@@ -709,6 +784,8 @@ void Game::UnloadData(){
 	if (renderer){
 		renderer->UnloadData();
 	}
+
+	//delete astar;
 }
 
 void Game::UnloadSkelAnim() {
