@@ -17,6 +17,19 @@
 class Game
 {
 public:
+	enum GameState {
+		gameplay,
+		paused,
+		quit
+	};
+
+	enum GameScene {
+		MAZE_SCENE = 0,
+		ENEMY_FIGHT_SCENE,
+		BOSS_FIGHT_SCENE,
+		END_GAME_SCENE
+	};
+
 	Game();
 	bool Initialize();
 	void RunLoop();
@@ -24,12 +37,6 @@ public:
 
 	void AddActor(class Actor* actor);
 	void RemoveActor(class Actor* actor);
-
-	enum GameState {
-		gameplay,
-		paused,
-		quit
-	};
 
 	class Renderer* GetRenderer() { 
 		return renderer; 
@@ -78,9 +85,8 @@ private:
 	void CreatePointLights(Actor*& a, Vector3& pos, int z);
 	void UnloadData();
 	void UnloadSkelAnim();
-	void InitFontRenderer();
-	void UpdateText(Texture*& fontArea, const std::string& text);
-	void CleanupFontAreas();
+	void InitHUD();
+	void UnloadHud();
 	
 	
 	std::vector<class Actor*> actors;
@@ -121,10 +127,11 @@ private:
 	class EnemyCombatSystem* enemyCombat;
 	class EnemyActor* enemyActor;
 
-	Texture* fontEnemyHealth;
-	Texture* fontPlayerHealth;
-	Texture* fontEndScreen;
 	class HUD* hud;
+
+	class HudElement* playerHealth_text;
+	class HudElement* enemyHealth_text;
+	class HudElement* gameMessage_text;
 
 	bool isReturning;
 	bool enemyCollision;

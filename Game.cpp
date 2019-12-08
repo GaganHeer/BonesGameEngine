@@ -37,7 +37,6 @@ Game::Game()
 	playerCombat = new PlayerCombatSystem();
 	playerLevels = new LevelUpSystem();
 	enemyCombat = new EnemyCombatSystem(50, 10, 100);
-	hud = new HUD();
 }
 
 bool Game::Initialize(){
@@ -68,7 +67,7 @@ bool Game::Initialize(){
 	}
 
 	//InitFontRenderer();
-
+	
 	AE->setup();
 	LoadData();
 	ticksCount = SDL_GetTicks();
@@ -197,9 +196,7 @@ void Game::UpdateGame()
 	AE->update();
 
 	if (enemyCollision) {
-		string* combatMessageStr = new string("entering combat mode");
-		HudElement* combatMessage = new HudElement(new Actor(this), Vector3(300.0f, 180.0f, 0.0f), Vector2(), combatMessageStr);
-		hud->addElement(combatMessage);
+		gameMessage_text->UpdateText("entering combat mode");
 
 		savedPlayerPosition = cameraTargetActor->GetPosition();
 		for (Actor* enemyPos : enems) {
@@ -211,9 +208,8 @@ void Game::UpdateGame()
 		isLoading = true;
 		enemyCollision = false;
 	} else if (stairCollision) {
-		string* stairsMessageStr = new string("Stairs found!");
-		HudElement* stairsMessage = new HudElement(new Actor(this), Vector3(300.0f, 180.0f, 0.0f), Vector2(), stairsMessageStr);
-		hud->addElement(stairsMessage);
+		gameMessage_text->UpdateText("Stairs found!");
+
 		enemyCombat->enemyLevel(10, 10, 50);
 		if (level >= 5) {
 			if (currentAudioInstance) {
@@ -227,16 +223,11 @@ void Game::UpdateGame()
 		stairCollision = false;
 	} else if (isAttacking) {
 		isAttacking = false;
-		
-		string* playerHealthStr = new string("player health: " + std::to_string(playerCombat->getCurrentHealth()));
-		string* enemyHealthStr = new string("enemy health: " + std::to_string(enemyCombat->getCurrentHealth()));
-		HudElement* playerHealth = new HudElement(new Actor(this), Vector3(-300.0f, 180.0f, 0.0f), Vector2(), playerHealthStr);
-		hud->addElement(playerHealth);
-		HudElement* enemyHealth = new HudElement(new Actor(this), Vector3(300.0f, 180.0f, 0.0f), Vector2(), enemyHealthStr);
-		hud->addElement(enemyHealth);
+		playerHealth_text->UpdateText("player health: " + std::to_string(playerCombat->getCurrentHealth()));
+		enemyHealth_text->UpdateText("enemy health: " + std::to_string(enemyCombat->getCurrentHealth()));
 	}
 
-	if (scene == 1) {
+	if (scene == ENEMY_FIGHT_SCENE) {
 		if (enemyCombat->getCurrentHealth() <= 0) {
 			playerCombat->setDebuffAmt(0);
 			thread th3(&AudioEngine::enemyDeath, AE);
@@ -287,6 +278,7 @@ void Game::GenerateOutput(){
 
 void Game::LoadData(){
 	Actor* a = new Actor(this);
+	InitHUD();
 	if (scene == 0) {
 		if (currentAudioInstance) {
 			AE->stopAudio(currentAudioInstance);
@@ -430,10 +422,11 @@ void Game::LoadData(){
 			dir.specColor = Vector3(11.8f, 0.5f, 0.5f);
 
 			// UI elements
+			/*
 			string* textString = new string("Find an exit point");
 			HudElement* fontArea1 = new HudElement(new Actor(this), Vector3(-350.0f, -350.0f, 0.0f), Vector2(), textString);
 			hud->addElement(fontArea1);
-
+			*/
 			isReturning = false;
 		} else { // ----------------------------------------------------------------------------------------------------------------------
 			
@@ -579,14 +572,12 @@ void Game::LoadData(){
 			dir.specColor = Vector3(11.8f, 0.5f, 0.5f);
 
 			// UI elements
-			string* textString = new string("Find an exit point");
-			HudElement* fontArea1 = new HudElement(new Actor(this), Vector3(-320.0f, -320.0f, 0.0f), Vector2(), textString);
-			hud->addElement(fontArea1);
-			
+			gameMessage_text->UpdateText("Find an exit point");
+
 			level++;
 		}
 
-	} else if (scene == 1 || scene == 2) {
+	} else if (scene == ENEMY_FIGHT_SCENE || scene == BOSS_FIGHT_SCENE) {
 
 		Actor* combatText = new Actor(this);
 		combatText->SetPosition(Vector3(0.0f, -210.0f, 0.0f));
@@ -594,12 +585,8 @@ void Game::LoadData(){
 		sc->SetTexture(renderer->GetTexture("Assets/combatText.png"));
 
 		// we wanna show it here as well
-		string* playerHealthStr = new string("player health: " + std::to_string(playerCombat->getCurrentHealth()));
-		string* enemyHealthStr = new string("enemy health: " + std::to_string(enemyCombat->getCurrentHealth()));
-		HudElement* playerHealth = new HudElement(new Actor(this), Vector3(-300.0f, 180.0f, 0.0f), Vector2(), playerHealthStr);
-		hud->addElement(playerHealth);
-		HudElement* enemyHealth = new HudElement(new Actor(this), Vector3(300.0f, 180.0f, 0.0f), Vector2(), enemyHealthStr);
-		hud->addElement(enemyHealth);
+		playerHealth_text->UpdateText("player health: " + std::to_string(playerCombat->getCurrentHealth()));
+		enemyHealth_text->UpdateText("enemy health: " + std::to_string(enemyCombat->getCurrentHealth()));
 
 		Actor* skeletonSprite = new Actor(this);
 		skeletonSprite->SetPosition(Vector3(-380.0f, 50.0, 0.0f));
@@ -612,7 +599,7 @@ void Game::LoadData(){
 		enemySprite->SetScale(0.5f);
 		SpriteComponent* enemySC = new SpriteComponent(enemySprite);
 		enemySC->SetTexture(renderer->GetTexture("Assets/enemy.png"));
-		
+		/*
 		Actor* playerHealthText = new Actor(this);
 		playerHealthText->SetPosition(Vector3(-300.0f, 180.0f, 0.0f));
 		SpriteComponent* playerHealthSC = new SpriteComponent(playerHealthText);
@@ -622,8 +609,9 @@ void Game::LoadData(){
 		enemyHealthText->SetPosition(Vector3(300.0f, 180.0f, 0.0f));
 		SpriteComponent* enemyHealthSC = new SpriteComponent(enemyHealthText);
 		if (fontEnemyHealth) enemyHealthSC->SetTexture(fontEnemyHealth);
+		*/
 	}
-	else if (scene == 3) {
+	else if (scene == END_GAME_SCENE) {
 		string* replayTextStr = new string("PRESS R TO REPLAY");
 		string* endTextStr;
 		if (doesWin) {
@@ -640,6 +628,8 @@ void Game::LoadData(){
 			currentAudioInstance = AE->startLoseBGM();
 			endTextStr = new string("GAME OVER");
 		}
+
+		/*
 		HudElement* endHUD = new HudElement(new Actor(this), Vector3(0.0f, 200.0f, 0.0f), Vector2(), endTextStr);
 		HudElement* replayHUD = new HudElement(new Actor(this), Vector3(0.0f, 0.0f, 0.0f), Vector2(), replayTextStr);
 		hud->addElement(endHUD);
@@ -650,6 +640,7 @@ void Game::LoadData(){
 		SpriteComponent* replayTextSC = new SpriteComponent(replayHUDText);
 		if (fontEndScreen) endTextSC->SetTexture(fontEndScreen);
 		if (fontEndScreen) replayTextSC->SetTexture(fontEndScreen);
+		*/
 	}
 }
 
@@ -716,11 +707,7 @@ void Game::CreatePointLights(Actor*& a, Vector3& pos, int z)
 
 void Game::UnloadData(){
 	
-
-	if (hud)
-	{
-		hud->clearHUD();
-	}
+	UnloadHud();
 	
 	if (renderer){
 		renderer->UnloadData();
@@ -748,11 +735,6 @@ void Game::UnloadSkelAnim() {
 
 void Game::Shutdown(){
 	UnloadData();
-
-	if (hud)
-	{
-		delete hud;
-	}
 
 	UnloadSkelAnim();
 
@@ -907,4 +889,27 @@ void Game::CombatRound(int atkType) {
 	cout << "SCENE NUM: " << scene << endl;
 
 	isAttacking = true;	
+}
+
+void Game::InitHUD()
+{
+	hud = new HUD();
+	
+	playerHealth_text = hud->addElement(new Actor(this), HUD::TEXT_BOX);
+	playerHealth_text->SetPosition(Vector3(-300.0f, 180.0f, 0.0f));
+
+	enemyHealth_text = hud->addElement(new Actor(this), HUD::TEXT_BOX);
+	enemyHealth_text->SetPosition(Vector3(300.0f, 180.0f, 0.0f));
+
+	gameMessage_text = hud->addElement(new Actor(this), HUD::TEXT_BOX);
+	gameMessage_text->SetPosition(Vector3(-350.0f, -350.0f, 0.0f));
+}
+
+void Game::UnloadHud()
+{
+	if (hud)
+	{
+		hud->clearHUD();
+		delete hud;
+	}
 }
