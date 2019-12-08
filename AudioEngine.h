@@ -22,7 +22,14 @@ public:
 	void stopAudio(Studio::EventInstance* inst);
 	Studio::EventInstance* startDungeonBGM();
 	Studio::EventInstance* startFightBGM();
+	Studio::EventInstance* startBossBGM();
+	Studio::EventInstance* startWinBGM();
+	Studio::EventInstance* startWinAltBGM();
+	Studio::EventInstance* startLoseBGM();
 	void playerAtk();
+	void playerHeavyAtk();
+	void playerHurt();
+	void enemyHurt();
 	void enemyAtk();
 	void enemyDeath();
 

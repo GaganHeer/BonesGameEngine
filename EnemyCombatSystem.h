@@ -47,6 +47,7 @@ public:
 	void takeDmg(int playerAtk);
 	bool checkIfDead();
 	void resetEnemy();
+	void enemyLevel(int addHealth, int addAtk, int addXP);
 
 private:
 	int baseHealth;

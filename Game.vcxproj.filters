@@ -40,7 +40,14 @@
     <ClCompile Include="TopDownCamera.cpp" />
     <ClCompile Include="VertexArray.cpp" />
     <ClCompile Include="StairActor.cpp" />
+<<<<<<< HEAD
     <ClCompile Include="AStar.cpp" />
+=======
+    <ClCompile Include="BossSprite.cpp" />
+    <ClCompile Include="SkeletonSprite.cpp" />
+    <ClCompile Include="KnightSprite.cpp" />
+    <ClCompile Include="VictorySprite.cpp" />
+>>>>>>> 14923dc897b70832f63414ac0aafa398b2479ad3
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Actor.h" />
@@ -82,7 +89,14 @@
     <ClInclude Include="TopDownCamera.h" />
     <ClInclude Include="VertexArray.h" />
     <ClInclude Include="StairActor.h" />
+<<<<<<< HEAD
     <ClInclude Include="AStar.h" />
+=======
+    <ClInclude Include="BossSprite.h" />
+    <ClInclude Include="SkeletonSprite.h" />
+    <ClInclude Include="KnightSprite.h" />
+    <ClInclude Include="VictorySprite.h" />
+>>>>>>> 14923dc897b70832f63414ac0aafa398b2479ad3
   </ItemGroup>
   <ItemGroup>
     <None Include="Shaders\BasicMesh.frag" />

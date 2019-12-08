@@ -82,6 +82,22 @@ bool Room::generate(bool lastDoor) {
 	else {
 		_stairX = rand() % _width + (0);
 		_stairY = rand() % _height + (0);
+		if (_stairX == _entryDoor && _entry) {
+			if (_stairX < _width) {
+				_stairX++;
+			}
+			else {
+				_stairX--;
+			}
+		}
+		if (_stairY == _entryDoor && !_entry) {
+			if (_stairY < _height) {
+				_stairY++;
+			}
+			else {
+				_stairY--;
+			}
+		}
 	}
 
 	//Creates enemies

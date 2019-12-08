@@ -5,6 +5,10 @@
 #include "Actor.h"
 #include "EnemyActor.h"
 #include "Generator.h"
+#include "BossSprite.h"
+#include "SkeletonSprite.h"
+#include "VictorySprite.h"
+#include "KnightSprite.h"
 #include "SpriteComponent.h"
 #include "MeshComponent.h"
 #include "PlaneActor.h"
@@ -23,10 +27,12 @@ Game::Game()
 	updatingActors(false),
 	isReturning(false),
 	isAttacking(false),
+	waitForEnemyAttack(false),
 	enemyCollision(false),
 	stairCollision(false),
 	level(0),
-	scene(0)
+	scene(0),
+	doesWin(true)
 {
 	inputSystem = new InputSystem();
 	AE = new AudioEngine();
@@ -36,23 +42,22 @@ Game::Game()
 	playerCombat = new PlayerCombatSystem();
 	playerLevels = new LevelUpSystem();
 	enemyCombat = new EnemyCombatSystem(50, 10, 100);
-	hud = new HUD();
 }
 
-bool Game::Initialize(){
-	if (SDL_Init(SDL_INIT_VIDEO|SDL_INIT_AUDIO) != 0){
+bool Game::Initialize() {
+	if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO) != 0) {
 		SDL_Log("Failed to initialize SDL: %s", SDL_GetError());
 		return false;
 	}
 
-	if (!inputSystem->Initialize()){
+	if (!inputSystem->Initialize()) {
 		SDL_Log("Failed to initialize input system");
 		return false;
 	}
 
 	// Create the renderer
 	renderer = new Renderer(this);
-	if (!renderer->Initialize(1024.0f, 768.0f)){
+	if (!renderer->Initialize(1024.0f, 768.0f)) {
 		SDL_Log("Failed to initialize renderer");
 		delete renderer;
 		renderer = nullptr;
@@ -97,8 +102,8 @@ bool Game::Initialize(){
 	return true;
 }
 
-void Game::RunLoop(){
-	while (isRunning){
+void Game::RunLoop() {
+	while (isRunning) {
 		if (isLoading) {
 			UnloadData();
 			LoadData();
@@ -125,30 +130,14 @@ void Game::ProcessInput() {
 
 		case SDL_KEYDOWN:
 			//Quit Game
-			if (state.Keyboard.GetKeyState(SDL_SCANCODE_ESCAPE) == ButtonState::Pressed){
+			if (state.Keyboard.GetKeyState(SDL_SCANCODE_ESCAPE) == ButtonState::Pressed) {
 				isRunning = false;
 			}
 
-			/*if (state.Keyboard.GetKeyState(SDL_SCANCODE_Q) == ButtonState::Pressed){
-				printf("Q Button Pressed \n");
-				savedPlayerPosition = cameraTargetActor->GetPosition();
-				isLoading = true;
-				isReturning = false;
-				scene = 1;
-			}
-
-
-			if (state.Keyboard.GetKeyState(SDL_SCANCODE_E) == ButtonState::Pressed){
-				printf("E Button Pressed \n");
-				isLoading = true;
-				isReturning = true;
-				scene = 0;
-			}*/
-
 			if (state.Keyboard.GetKeyState(SDL_SCANCODE_H) == ButtonState::Pressed) {
 				printf("H Button Pressed \n");
-				if (scene == 1) {
-					thread th1(&AudioEngine::enemyAtk, AE);
+				if ((scene == ENEMY_FIGHT_SCENE || scene == BOSS_FIGHT_SCENE) && !isAttacking) {
+					thread th1(&AudioEngine::playerHeavyAtk, AE);
 					th1.join();
 					CombatRound(1);
 				}
@@ -156,17 +145,40 @@ void Game::ProcessInput() {
 
 			if (state.Keyboard.GetKeyState(SDL_SCANCODE_L) == ButtonState::Pressed) {
 				printf("L Button Pressed \n");
-				if (scene == 1) {
+				if ((scene == ENEMY_FIGHT_SCENE || scene == BOSS_FIGHT_SCENE) && !isAttacking) {
 					thread th2(&AudioEngine::playerAtk, AE);
 					th2.join();
 					CombatRound(0);
+				}
+			}
+
+			if (state.Keyboard.GetKeyState(SDL_SCANCODE_R) == ButtonState::Pressed) {
+				printf("R Button Pressed \n");
+				if (scene == END_GAME_SCENE) {
+					scene = MAZE_SCENE;
+					level = 0;
+					enemyCombat->setBaseHealth(50);
+					enemyCombat->setAtk(10);
+					enemyCombat->setXP(50);
+					enemyCombat->resetEnemy();
+					playerCombat->setBaseHealth(100);
+					playerCombat->setBaseAtk(25);
+					playerCombat->setCurrentHealth(playerCombat->getBaseHealth());
+					playerCombat->setCurrentAtk(playerCombat->getBaseAtk());
+					playerCombat->setDebuffAmt(0);
+					playerLevels->setCurrentLevel(1);
+					playerLevels->setCurrentXP(0);
+					playerLevels->setRequiredXP(100);
+					doesWin = true;
+					isReturning = false;
+					isLoading = true;
 				}
 			}
 		}
 	}
 
 	updatingActors = true;
-	for (auto actor : actors){
+	for (auto actor : actors) {
 		actor->ProcessInput(state);
 	}
 	updatingActors = false;
@@ -178,72 +190,93 @@ void Game::UpdateGame()
 	while (!SDL_TICKS_PASSED(SDL_GetTicks(), ticksCount + 16));
 
 	float deltaTime = (SDL_GetTicks() - ticksCount) / 1000.0f;
-	if (deltaTime > 0.05f){
+	if (deltaTime > 0.05f) {
 		deltaTime = 0.05f;
 	}
 	ticksCount = SDL_GetTicks();
 
 	// Update all actors
 	updatingActors = true;
-	for (auto actor : actors){
-		if(!enemyCollision)
+	for (auto actor : actors) {
+		if (!enemyCollision)
 			actor->Update(deltaTime);
 	}
 	updatingActors = false;
 
-	for (auto pending : pendingActors){
+	for (auto pending : pendingActors) {
 		pending->ComputeWorldTransform();
 		actors.emplace_back(pending);
 	}
 	pendingActors.clear();
 
 	std::vector<Actor*> deadActors;
-	for (auto actor : actors){
-		if (actor->GetState() == Actor::State::Dead){
+	for (auto actor : actors) {
+		if (actor->GetState() == Actor::State::Dead) {
 			deadActors.emplace_back(actor);
 		}
 	}
 
-	for (auto actor : deadActors){
+	for (auto actor : deadActors) {
 		delete actor;
 	}
 
 	AE->update();
 
 	if (enemyCollision) {
-		string* combatMessageStr = new string("entering combat mode");
-		HudElement* combatMessage = new HudElement(new Actor(this), Vector3(300.0f, 180.0f, 0.0f), Vector2(), combatMessageStr);
-		hud->addElement(combatMessage);
+		gameMessage_text->UpdateText("entering combat mode");
 
 		savedPlayerPosition = cameraTargetActor->GetPosition();
 		for (Actor* enemyPos : enems) {
 			saved_enemies.push_back(enemyPos->GetPosition());
 		}
-		scene = 1;
+		scene = ENEMY_FIGHT_SCENE;
+		AE->stopAudio(currentAudioInstance);
+		currentAudioInstance = AE->startFightBGM();
 		isLoading = true;
 		enemyCollision = false;
-	} else if (stairCollision) {
-		string* stairsMessageStr = new string("Stairs found!");
-		HudElement* stairsMessage = new HudElement(new Actor(this), Vector3(300.0f, 180.0f, 0.0f), Vector2(), stairsMessageStr);
-		hud->addElement(stairsMessage);
-		if (level == 5)
-			scene = 2;
-		else
-			scene = 0;
+	}
+	else if (stairCollision) {
+		gameMessage_text->UpdateText("Stairs found!");
+		enemyCombat->enemyLevel(10, 10, 50);
+		if (level >= 5) {
+			if (currentAudioInstance) {
+				AE->stopAudio(currentAudioInstance);
+			}
+			currentAudioInstance = AE->startBossBGM();
+			scene = BOSS_FIGHT_SCENE;
+			enemyCombat->enemyLevel(150, 30, 500);
+		}
 		isLoading = true;
 		stairCollision = false;
-	} else if (isAttacking) {
-		isAttacking = false;
-		
-		string* playerHealthStr = new string("player health: " + std::to_string(playerCombat->getCurrentHealth()));
-		string* enemyHealthStr = new string("enemy health: " + std::to_string(enemyCombat->getCurrentHealth()));
-		HudElement* playerHealth = new HudElement(new Actor(this), Vector3(-300.0f, 180.0f, 0.0f), Vector2(), playerHealthStr);
-		hud->addElement(playerHealth);
-		HudElement* enemyHealth = new HudElement(new Actor(this), Vector3(300.0f, 180.0f, 0.0f), Vector2(), enemyHealthStr);
-		hud->addElement(enemyHealth);
+	}
+	else if (isAttacking && skeletonSprite->ready) {
+		if (scene == ENEMY_FIGHT_SCENE && knightSprite->ready) {
+			if (waitForEnemyAttack) {
+				knightSprite->SwitchState(KnightSprite::Attacking);
+				waitForEnemyAttack = false;
+			}
+			else {
+				isAttacking = false;
+
+				playerHealth_text->UpdateText("player health: " + std::to_string(playerCombat->getCurrentHealth()));
+				enemyHealth_text->UpdateText("enemy health: " + std::to_string(enemyCombat->getCurrentHealth()));
+			}
+		}
+		else if (scene == BOSS_FIGHT_SCENE && bossSprite->ready) {
+			if (waitForEnemyAttack) {
+				bossSprite->SwitchState(BossSprite::Attacking);
+				waitForEnemyAttack = false;
+			}
+			else {
+				isAttacking = false;
+
+				playerHealth_text->UpdateText("player health: " + std::to_string(playerCombat->getCurrentHealth()));
+				enemyHealth_text->UpdateText("enemy health: " + std::to_string(enemyCombat->getCurrentHealth()));
+			}
+		}
 	}
 
-	if (scene == 1) {
+	if (scene == ENEMY_FIGHT_SCENE) {
 		if (enemyCombat->getCurrentHealth() <= 0) {
 			playerCombat->setDebuffAmt(0);
 			thread th3(&AudioEngine::enemyDeath, AE);
@@ -267,16 +300,35 @@ void Game::UpdateGame()
 				mov[eax]Game.scene, 0 //from eax register access and change scene int to 0
 			}
 		}
+
+		if (playerCombat->getCurrentHealth() <= 0) {
+			doesWin = false;
+			isLoading = true;
+			scene = END_GAME_SCENE;
+		}
+	}
+	else if (scene == BOSS_FIGHT_SCENE) {
+		if (enemyCombat->getCurrentHealth() <= 0) {
+			doesWin = true;
+			isLoading = true;
+			scene = END_GAME_SCENE;
+		}
+		else if (playerCombat->getCurrentHealth() <= 0) {
+			doesWin = false;
+			isLoading = true;
+			scene = END_GAME_SCENE;
+		}
 	}
 }
 
-void Game::GenerateOutput(){
+void Game::GenerateOutput() {
 	renderer->Draw();
 }
 
-void Game::LoadData(){
+void Game::LoadData() {
 	Actor* a = new Actor(this);
-	if (scene == 0) {
+	InitHUD();
+	if (scene == MAZE_SCENE) {
 		if (currentAudioInstance) {
 			AE->stopAudio(currentAudioInstance);
 		}
@@ -312,19 +364,19 @@ void Game::LoadData(){
 
 				int width1 = randGen->getWidth(r);
 				int height1 = randGen->getHeight(r);
-				cout << "WIDTH: " << width1 << endl;
+				/*cout << "WIDTH: " << width1 << endl;
 				cout << "HEIGHT: " << height1 << endl;
 				cout << "OFFSETx: " << offsetX << endl;
 				cout << "OFFSETy: " << offsetY << endl;
 				cout << "CORRIDOR LENGTH: " << randGen->getCorridorLength(r) << endl;
-				cout << "entryDoor: " << randGen->getEntryDoor(r) << endl;
+				cout << "entryDoor: " << randGen->getEntryDoor(r) << endl;*/
 
 				const float start = 0;
 				int rows = 0;
 				int cols = 0;
 				int enemyX = 0;
 				int enemyY = 0;
-				//generates for each tile
+				//generatzzes for each tile
 				for (int i = 0; i < height1; i++) {
 					for (int j = 0; j < width1; j++) {
 						rows = offsetY + start + i;
@@ -345,12 +397,13 @@ void Game::LoadData(){
 						enemyActor->SetPosition(savedEnemy);
 						enemyActor->SetSkeletalMesh();
 						enemyActor->SetMoveable(true);
-						
-						//*************************************************************
+
 						rows = (int)(savedEnemy.x / 100);
 						cols = (int)(savedEnemy.y / 100);
-						//cout << "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX" << rows << " " << cols << endl;
-						//map2D[rows][cols] = 2;
+						SetEnemyMapPos(rows, cols);
+						cout << "----------------------------------------------------------------" << endl;
+						cout << "ROW: " << rows << "COL: " << cols << endl;
+						cout << "----------------------------------------------------------------" << endl;
 					}
 				}
 				saved_enemies.clear();
@@ -372,8 +425,8 @@ void Game::LoadData(){
 							CreatePointLights(a, pos, z);
 
 						}
-						cout << "corridor placement: " << offsetX + randGen->getExitLocation(r) << endl;
-						cout << " IS True " << endl;
+						/*cout << "corridor placement: " << offsetX + randGen->getExitLocation(r) << endl;
+						cout << " IS True " << endl;*/
 						offsetY += height1 + randGen->getCorridorLength(r);
 						offsetX += randGen->getExitDoor(r) - randGen->getEntryDoor(r + 1);
 
@@ -392,8 +445,8 @@ void Game::LoadData(){
 							CreatePointLights(a, pos, z);
 
 						}
-						cout << "corridor placement: " << offsetY + randGen->getExitLocation(r) << endl;
-						cout << " IS FALSE " << endl;
+						/*cout << "corridor placement: " << offsetY + randGen->getExitLocation(r) << endl;
+						cout << " IS FALSE " << endl;*/
 						offsetX += width1 + randGen->getCorridorLength(r);
 						offsetY += randGen->getExitDoor(r) - randGen->getEntryDoor(r + 1);
 					}
@@ -406,10 +459,10 @@ void Game::LoadData(){
 
 			map2D[tempY + 50][tempX + 50] = 4;
 
-			cout << tempX << " :TEMPX" << endl;
-			cout << tempY << " :TEMPY" << endl;
+			//cout << tempX << " :TEMPX" << endl;
+			//cout << tempY << " :TEMPY" << endl;
 
-			a->SetPosition(Vector3(tempY * size, tempX * size, -10.0f));
+			a->SetPosition(Vector3(tempY * size, tempX * size, -50.0f));
 			a->SetScale(100.f);
 
 			// Setup lights
@@ -420,13 +473,13 @@ void Game::LoadData(){
 			dir.specColor = Vector3(11.8f, 0.5f, 0.5f);
 
 			// UI elements
-			string* textString = new string("Find an exit point");
-			HudElement* fontArea1 = new HudElement(new Actor(this), Vector3(-350.0f, -350.0f, 0.0f), Vector2(), textString);
-			hud->addElement(fontArea1);
-
-			isReturning = false;
-		} else { // ----------------------------------------------------------------------------------------------------------------------
 			
+			gameMessage_text->UpdateText("Find an exit point");
+			
+			isReturning = false;
+		}
+		else { // ----------------------------------------------------------------------------------------------------------------------
+
 			cameraTargetActor = new CameraTargetActor(this);
 			rooms = randGen->generate();
 
@@ -446,7 +499,7 @@ void Game::LoadData(){
 					map2D[i][j] = NULL;
 			}
 
-			
+
 			int count = 0;
 			const float size = 100.0f;
 			//enemies.assign(0, setup);
@@ -458,12 +511,12 @@ void Game::LoadData(){
 
 				int width1 = randGen->getWidth(r);
 				int height1 = randGen->getHeight(r);
-				cout << "WIDTH: " << width1 << endl;
+				/*cout << "WIDTH: " << width1 << endl;
 				cout << "HEIGHT: " << height1 << endl;
 				cout << "OFFSETx: " << offsetX << endl;
 				cout << "OFFSETy: " << offsetY << endl;
 				cout << "CORRIDOR LENGTH: " << randGen->getCorridorLength(r) << endl;
-				cout << "entryDoor: " << randGen->getEntryDoor(r) << endl;
+				cout << "entryDoor: " << randGen->getEntryDoor(r) << endl;*/
 
 				const float start = 0;
 				int rows = 0;
@@ -519,8 +572,8 @@ void Game::LoadData(){
 							CreatePointLights(a, pos, z);
 
 						}
-						cout << "corridor placement: " << offsetX + randGen->getExitLocation(r) << endl;
-						cout << " IS True " << endl;
+						/*cout << "corridor placement: " << offsetX + randGen->getExitLocation(r) << endl;
+						cout << " IS True " << endl;*/
 						offsetY += height1 + randGen->getCorridorLength(r);
 						offsetX += randGen->getExitDoor(r) - randGen->getEntryDoor(r + 1);
 
@@ -539,8 +592,8 @@ void Game::LoadData(){
 							CreatePointLights(a, pos, z);
 
 						}
-						cout << "corridor placement: " << offsetY + randGen->getExitLocation(r) << endl;
-						cout << " IS FALSE " << endl;
+						/*cout << "corridor placement: " << offsetY + randGen->getExitLocation(r) << endl;
+						cout << " IS FALSE " << endl;*/
 						offsetX += width1 + randGen->getCorridorLength(r);
 						offsetY += randGen->getExitDoor(r) - randGen->getEntryDoor(r + 1);
 					}
@@ -553,8 +606,8 @@ void Game::LoadData(){
 
 			map2D[tempY + 50][tempX + 50] = 4;
 
-			cout << tempX + 50 << " :TEMPX" << endl;
-			cout << tempY + 50 << " :TEMPY" << endl;
+			/*cout << tempX + 50 << " :TEMPX" << endl;
+			cout << tempY + 50 << " :TEMPY" << endl;*/
 
 			a->SetPosition(Vector3(tempY * size, tempX * size, -10.0f));
 			a->SetScale(100.f);
@@ -569,57 +622,34 @@ void Game::LoadData(){
 			dir.specColor = Vector3(11.8f, 0.5f, 0.5f);
 
 			// UI elements
-			string* textString = new string("Find an exit point");
-			HudElement* fontArea1 = new HudElement(new Actor(this), Vector3(-350.0f, -350.0f, 0.0f), Vector2(), textString);
-			hud->addElement(fontArea1);
+			gameMessage_text->UpdateText("Find an exit point");
 
-			
 			level++;
 		}
 
-	} else if (scene == 1) {
-
-		AE->stopAudio(currentAudioInstance);
-		currentAudioInstance = AE->startFightBGM();
-		
-		Actor* combatText = new Actor(this);
-		combatText->SetPosition(Vector3(0.0f, -210.0f, 0.0f));
-		SpriteComponent* sc = new SpriteComponent(combatText);
-		sc->SetTexture(renderer->GetTexture("Assets/combatText.png"));
-
-		// we wanna show it here as well
-		string* playerHealthStr = new string("player health: " + std::to_string(playerCombat->getCurrentHealth()));
-		string* enemyHealthStr = new string("enemy health: " + std::to_string(enemyCombat->getCurrentHealth()));
-		HudElement* playerHealth = new HudElement(new Actor(this), Vector3(-300.0f, 180.0f, 0.0f), Vector2(), playerHealthStr);
-		hud->addElement(playerHealth);
-		HudElement* enemyHealth = new HudElement(new Actor(this), Vector3(300.0f, 180.0f, 0.0f), Vector2(), enemyHealthStr);
-		hud->addElement(enemyHealth);
-
-		Actor* skeletonSprite = new Actor(this);
-		skeletonSprite->SetPosition(Vector3(-380.0f, 50.0, 0.0f));
-		skeletonSprite->SetScale(0.5f);
-		SpriteComponent* skelSC = new SpriteComponent(skeletonSprite);
-		skelSC->SetTexture(renderer->GetTexture("Assets/skeleton.png"));
-
-		Actor* enemySprite = new Actor(this);
-		enemySprite->SetPosition(Vector3(350.0f, 50.0, 0.0f));
-		enemySprite->SetScale(0.5f);
-		SpriteComponent* enemySC = new SpriteComponent(enemySprite);
-		enemySC->SetTexture(renderer->GetTexture("Assets/enemy.png"));
-		
-		Actor* playerHealthText = new Actor(this);
-		playerHealthText->SetPosition(Vector3(-300.0f, 180.0f, 0.0f));
-		SpriteComponent* playerHealthSC = new SpriteComponent(playerHealthText);
-		if (fontPlayerHealth) playerHealthSC->SetTexture(fontPlayerHealth);
-
-		Actor* enemyHealthText = new Actor(this);
-		enemyHealthText->SetPosition(Vector3(300.0f, 180.0f, 0.0f));
-		SpriteComponent* enemyHealthSC = new SpriteComponent(enemyHealthText);
-		if (fontEnemyHealth) enemyHealthSC->SetTexture(fontEnemyHealth);
 	}
-	else if (scene == 2) {
+	else if (scene == ENEMY_FIGHT_SCENE) {
+		waitForEnemyAttack = false;
 		AE->stopAudio(currentAudioInstance);
 		currentAudioInstance = AE->startFightBGM();
+		
+		Actor* combatText = new Actor(this);
+		combatText->SetPosition(Vector3(0.0f, -210.0f, 0.0f));
+		SpriteComponent* sc = new SpriteComponent(combatText);
+		sc->SetTexture(renderer->GetTexture("Assets/combatText.png"));
+		
+		// we wanna show it here as well
+		playerHealth_text->UpdateText("player health: " + std::to_string(playerCombat->getCurrentHealth()));
+		enemyHealth_text->UpdateText("enemy health: " + std::to_string(enemyCombat->getCurrentHealth()));
+
+		skeletonSprite = new SkeletonSprite(this);
+		knightSprite = new KnightSprite(this);
+	}
+	else if (scene == BOSS_FIGHT_SCENE) {
+		waitForEnemyAttack = false;
+		AE->stopAudio(currentAudioInstance);
+		currentAudioInstance = AE->startBossBGM();
+		enemyCombat = new EnemyCombatSystem(200, 25, 500);
 
 		Actor* combatText = new Actor(this);
 		combatText->SetPosition(Vector3(0.0f, -210.0f, 0.0f));
@@ -627,34 +657,36 @@ void Game::LoadData(){
 		sc->SetTexture(renderer->GetTexture("Assets/combatText.png"));
 
 		// we wanna show it here as well
-		string* playerHealthStr = new string("player health: " + std::to_string(playerCombat->getCurrentHealth()));
-		string* enemyHealthStr = new string("enemy health: " + std::to_string(enemyCombat->getCurrentHealth()));
-		HudElement* playerHealth = new HudElement(new Actor(this), Vector3(-300.0f, 180.0f, 0.0f), Vector2(), playerHealthStr);
-		hud->addElement(playerHealth);
-		HudElement* enemyHealth = new HudElement(new Actor(this), Vector3(300.0f, 180.0f, 0.0f), Vector2(), enemyHealthStr);
-		hud->addElement(enemyHealth);
+		playerHealth_text->UpdateText("player health: " + std::to_string(playerCombat->getCurrentHealth()));
+		enemyHealth_text->UpdateText("enemy health: " + std::to_string(enemyCombat->getCurrentHealth()));
 
-		Actor* skeletonSprite = new Actor(this);
-		skeletonSprite->SetPosition(Vector3(-380.0f, 50.0, 0.0f));
-		skeletonSprite->SetScale(0.5f);
-		SpriteComponent* skelSC = new SpriteComponent(skeletonSprite);
-		skelSC->SetTexture(renderer->GetTexture("Assets/skeleton.png"));
+		skeletonSprite = new SkeletonSprite(this);
 
-		Actor* enemySprite = new Actor(this);
-		enemySprite->SetPosition(Vector3(350.0f, 50.0, 0.0f));
-		enemySprite->SetScale(0.5f);
-		SpriteComponent* enemySC = new SpriteComponent(enemySprite);
-		enemySC->SetTexture(renderer->GetTexture("Assets/enemy.png"));
+		bossSprite = new BossSprite(this);
+		bossSprite->SetPosition(Vector3(350.0f, 50.0, 0.0f));
+		bossSprite->SetScale(5.f);
+	}
+	else if (scene == END_GAME_SCENE) {
+		string endTextStr;
+		if (doesWin) {
+			if (currentAudioInstance) {
+				AE->stopAudio(currentAudioInstance);
+			}
+			currentAudioInstance = AE->startWinAltBGM();
 
-		Actor* playerHealthText = new Actor(this);
-		playerHealthText->SetPosition(Vector3(-300.0f, 180.0f, 0.0f));
-		SpriteComponent* playerHealthSC = new SpriteComponent(playerHealthText);
-		if (fontPlayerHealth) playerHealthSC->SetTexture(fontPlayerHealth);
-
-		Actor* enemyHealthText = new Actor(this);
-		enemyHealthText->SetPosition(Vector3(300.0f, 180.0f, 0.0f));
-		SpriteComponent* enemyHealthSC = new SpriteComponent(enemyHealthText);
-		if (fontEnemyHealth) enemyHealthSC->SetTexture(fontEnemyHealth);
+			//victorySprite = new VictorySprite(this);
+			endTextStr = "YOU WIN";
+		}
+		else {
+			if (currentAudioInstance) {
+				AE->stopAudio(currentAudioInstance);
+			}
+			currentAudioInstance = AE->startLoseBGM();
+			endTextStr = "GAME OVER";
+		}
+		
+		endMessage_text->UpdateText(endTextStr);
+		replayMessage_text->UpdateText("PRESS R TO REPLAY");
 	}
 }
 
@@ -663,10 +695,10 @@ int Game::IsWalkable(int row, int col) {
 	if (map2D[row + 50][col + 50] == 1) {
 		walkable = 1;
 	}
-	else if (map2D[row + 50][col + 50] == 2){
+	else if (map2D[row + 50][col + 50] == 2) {
 		walkable = 2;
 	}
-	else if (map2D[row + 50][col + 50] == 3) { 
+	else if (map2D[row + 50][col + 50] == 3) {
 		walkable = 3;
 	}
 	else if (map2D[row + 50][col + 50] == 4) {
@@ -700,11 +732,9 @@ Game::Pair Game::EnemySpotted(int row, int col) {
 	int map[9][9];
 	memset(map, false, sizeof(map));
 
-	cout << "''''''''''''''''''''''''''''''''''''''''''''" << endl;
 	for (int i = row + 4 + 50; i >= row - 4 + 50; i--) {
 		for (int j = col - 4 + 50; j <= col + 4 + 50; j++) {
 			map[r][c] = map2D[i][j];
-			cout << map2D[i][j];
 			if (map[r][c] == 3) {
 				//cout << map[r][c] << endl;
 				playerPosX = r;
@@ -720,26 +750,13 @@ Game::Pair Game::EnemySpotted(int row, int col) {
 			}
 			c++;
 		}
-		cout << endl;
 		r++;
 		c = 0;
 	}
-	cout << "''''''''''''''''''''''''''''''''''''''''''''" << endl;
-	if (playerPosX != -1) {
-		for (int i = 0; i < 9; i++) {
-			for (int j = 0; j < 9; j++) {
-				cout << map[i][j];
-			}
-			cout << endl;
-		}
-	}
-
 
 	Pair fm = pair<int,int>(-1,-1);
 	if (playerPosX != -1) {
 		Pair fm = astar->GetPath(map, playerPosX, playerPosY);
-		cout << "______________________________________________________" << endl;
-		cout << "FM in Game CPP: " << fm.first << " + " << fm.second << endl;
 		return fm;
 	}
 
@@ -775,21 +792,20 @@ void Game::CreatePointLights(Actor*& a, Vector3& pos, int z)
 	p->outerRadius = 100.0f;
 }
 
-void Game::UnloadData(){
-	while (!actors.empty()){
-		delete actors.back();
-	}
+void Game::UnloadData() {
 
-	if (hud)
-	{
-		hud->clearHUD();
-	}
-	
-	if (renderer){
+
+	UnloadHud();
+
+	if (renderer) {
 		renderer->UnloadData();
 	}
 
 	//delete astar;
+	while (!actors.empty()) {
+		delete actors.back();
+	}
+	actors.clear();
 }
 
 void Game::UnloadSkelAnim() {
@@ -806,7 +822,7 @@ void Game::UnloadSkelAnim() {
 	}
 }
 
-void Game::Shutdown(){
+void Game::Shutdown() {
 	UnloadData();
 
 	if (hud)
@@ -816,29 +832,30 @@ void Game::Shutdown(){
 
 	UnloadSkelAnim();
 
-	if (renderer){
+	if (renderer) {
 		renderer->Shutdown();
 	}
 	SDL_Quit();
 }
 
-void Game::AddActor(Actor* actor){
-	if (updatingActors){
+void Game::AddActor(Actor* actor) {
+	if (updatingActors) {
 		pendingActors.emplace_back(actor);
-	}else{
+	}
+	else {
 		actors.emplace_back(actor);
 	}
 }
 
-void Game::RemoveActor(Actor* actor){
+void Game::RemoveActor(Actor* actor) {
 	auto iter = std::find(pendingActors.begin(), pendingActors.end(), actor);
-	if (iter != pendingActors.end()){
+	if (iter != pendingActors.end()) {
 		std::iter_swap(iter, pendingActors.end() - 1);
 		pendingActors.pop_back();
 	}
 
 	iter = std::find(actors.begin(), actors.end(), actor);
-	if (iter != actors.end()){
+	if (iter != actors.end()) {
 		std::iter_swap(iter, actors.end() - 1);
 		actors.pop_back();
 	}
@@ -914,8 +931,19 @@ void Game::CombatRound(int atkType) {
 	cout << "Enemy Health: " << enemyCombat->getCurrentHealth() << endl;
 	cout << "Enemy Atk: " << enemyCombat->getAtk() << endl;
 	printf("\n\n");
-
+	skeletonSprite->SwitchState(SkeletonSprite::Attacking);
 	int playerAtk = playerCombat->dealDmg(atkType);
+	if (playerAtk == 0)
+	{
+		if (scene == ENEMY_FIGHT_SCENE)
+		{
+			knightSprite->SwitchState(KnightSprite::Dodging);
+		}
+		else if (scene == BOSS_FIGHT_SCENE)
+		{
+			bossSprite->SwitchState(BossSprite::Dodging);
+		}
+	}
 	cout << "Enemy took " << playerAtk << " damage" << endl;
 	enemyCombat->takeDmg(playerAtk);
 	int enemyAtk = enemyCombat->performAtk();
@@ -965,4 +993,35 @@ void Game::CombatRound(int atkType) {
 	cout << "Enemy is " << enemyStatus << endl;
 
 	isAttacking = true;
+	waitForEnemyAttack = true;
+	cout << "SCENE NUM: " << scene << endl;
+}
+
+void Game::InitHUD()
+{
+	hud = new HUD();
+
+	playerHealth_text = hud->addElement(new Actor(this), HUD::TEXT_BOX);
+	playerHealth_text->SetPosition(Vector3(-300.0f, 180.0f, 0.0f));
+
+	enemyHealth_text = hud->addElement(new Actor(this), HUD::TEXT_BOX);
+	enemyHealth_text->SetPosition(Vector3(300.0f, 180.0f, 0.0f));
+
+	gameMessage_text = hud->addElement(new Actor(this), HUD::TEXT_BOX);
+	gameMessage_text->SetPosition(Vector3(-350.0f, -350.0f, 0.0f));
+
+	endMessage_text = hud->addElement(new Actor(this), HUD::TEXT_BOX);
+	endMessage_text->SetPosition(Vector3(0.0f, 200.0f, 0.0f));
+
+	replayMessage_text = hud->addElement(new Actor(this), HUD::TEXT_BOX);
+	replayMessage_text->SetPosition(Vector3(0.0f, 0.0f, 0.0f));
+}
+
+void Game::UnloadHud()
+{
+	if (hud)
+	{
+		hud->clearHUD();
+		delete hud;
+	}
 }

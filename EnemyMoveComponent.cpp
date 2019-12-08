@@ -8,64 +8,83 @@ EnemyMoveComponent::EnemyMoveComponent(class Actor* newOwner, int updateOrder)
 	movingLeft(false),
 	movingRight(false),
 	spotted(false),
-	speed(10.0f)
+	speed(20.0f)
 {
 	game = newOwner->GetGame();
 }
 
 void EnemyMoveComponent::Update(float deltaTime) {
 	if (move && moveable && !movingUp && !movingDown && !movingLeft && !movingRight) {
-		map2D = game->GetMap2D();
-		Vector3 epos = owner->GetPosition();
-		int row = (int)(epos.x / 100);
-		int col = (int)(epos.y / 100);
-		pair<int, int> p = game->EnemySpotted(row, col);
-		//cout << "Spotted at: " << p.first << "," << p.second << endl;
-		if (p.first > -1 && p.second > -1) {
-		    spotted = true;
-		}
-		else {
-			spotted = false;
-		}
-		if (!spotted) {
-			MoveEnemy();
-		} else {
-			//cout << "Spotted at: " << p.first << "," << p.second << endl;
-			int x = 0;
-			int y = 0;
+		MoveEnemy();
+	}
+	UpdateMovement();
+}
 
-			if (p.first > 4 && p.second == 4) {
-				movingLeft = true;
-				dest = owner->GetPosition().x - 100;
-				x = -1;
-			}
-			else if (p.first < 4 && p.second == 4) {
-				movingRight = true;
-				dest = owner->GetPosition().x + 100;
-				x = 1;
-			}
-			else if (p.first == 4 && p.second > 4) {
+void EnemyMoveComponent::MoveEnemy()
+{
+	map2D = game->GetMap2D();
+	Vector3 epos = owner->GetPosition();
+	int row = (int)(epos.x / 100);
+	int col = (int)(epos.y / 100);
+	pair<int, int> p = game->EnemySpotted(row, col);
+	if (p.first > -1 && p.second > -1) {
+		spotted = true;
+	}
+	else {
+		spotted = false;
+	}
 
-				movingUp = true;
-				dest = owner->GetPosition().y + 100;
-				y = 1;
-			}
-			else if (p.first == 4 && p.second < 4) {
-				movingDown = true;
-				dest = owner->GetPosition().y - 100;
-				y = -1;
-			}
-			int enem_row = (int)(owner->GetPosition().x / 100);
-			int enem_col = (int)(owner->GetPosition().y / 100);
-			dest_row = enem_row + x;
-			dest_col = enem_col + y;
-			game->SetWalkable(enem_row, enem_col);
+	if (!spotted) {
+		EnemyWander();
+	}
+	else {
+		int x = 0;
+		int y = 0;
+
+		if (p.first > 4 && p.second == 4) {
+			x = -1;
+		}
+		else if (p.first < 4 && p.second == 4) {
+			x = 1;
+		}
+		else if (p.first == 4 && p.second > 4) {
+			y = 1;
+		}
+		else if (p.first == 4 && p.second < 4) {
+			y = -1;
+		}
+		int enem_row = (int)(owner->GetPosition().x / 100);
+		int enem_col = (int)(owner->GetPosition().y / 100);
+		dest_row = enem_row + x;
+		dest_col = enem_col + y;
+		game->SetWalkable(enem_row, enem_col);
+		if (game->IsWalkable(dest_row, dest_col) == 1 || game->IsWalkable(dest_row, dest_col) == 3) {
+			// Set enemy pos here so its blocked for other enemies
 			if (game->IsWalkable(dest_row, dest_col) == 1) {
 				game->SetEnemyMapPos(dest_row, dest_col);
 			}
+			if (x == -1) {
+				movingLeft = true;
+				dest = owner->GetPosition().x - 100;
+			}
+			else if (x == 1) {
+				movingRight = true;
+				dest = owner->GetPosition().x + 100;
+			}
+			else if (y == -1) {
+				movingDown = true;
+				dest = owner->GetPosition().y - 100;
+			}
+			else if (y == 1) {
+				movingUp = true;
+				dest = owner->GetPosition().y + 100;
+			}
 		}
 	}
+}
 
+void EnemyMoveComponent::UpdateMovement()
+{
 	if (movingUp) {
 		Vector3 pos = owner->GetPosition();
 		//cout << " CURRENT POSITION: " << pos.y << endl;
@@ -128,7 +147,7 @@ void EnemyMoveComponent::Update(float deltaTime) {
 	}
 }
 
-void EnemyMoveComponent::MoveEnemy()
+void EnemyMoveComponent::EnemyWander()
 {
 	int moveChance = rand() % 100;
 	if (moveChance < 25) {
@@ -140,15 +159,13 @@ void EnemyMoveComponent::MoveEnemy()
 		int tempX = 0;
 		int tempY = 0;
 		int direction = rand() % 4 + (0);
-		//cout << "DIRECTION : " << direction << endl;
 		enem_row = (int)(owner->GetPosition().x / 100);
 		enem_col = (int)(owner->GetPosition().y / 100);
 		direction = rand() % 4 + (0);
-		//cout << "DIRECTION : " << direction << endl;
 		if (direction == 0) { // North
 			y = 1;
 		}
-		else if (direction == 1) { // eAST
+		else if (direction == 1) { // East
 			x = 1;
 		}
 		else if (direction == 2) { // South

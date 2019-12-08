@@ -8,8 +8,10 @@ class EnemyMoveComponent : public Component
 public:
 	EnemyMoveComponent(class Actor* newOwner, int updateOrder = 10);
 	void Update(float deltaTime) override;
-	void CollisionDetected(int tempX, int tempY, int x, int y);
 	void MoveEnemy();
+	void UpdateMovement();
+	void CollisionDetected(int tempX, int tempY, int x, int y);
+	void EnemyWander();
 
 	enum EnemyState {
 		WANDER,

@@ -20,6 +20,19 @@
 class Game
 {
 public:
+	enum GameState {
+		gameplay,
+		paused,
+		quit
+	};
+
+	enum GameScene {
+		MAZE_SCENE = 0,
+		ENEMY_FIGHT_SCENE,
+		BOSS_FIGHT_SCENE,
+		END_GAME_SCENE
+	};
+
 	Game();
 	bool Initialize();
 	void RunLoop();
@@ -27,12 +40,6 @@ public:
 
 	void AddActor(class Actor* actor);
 	void RemoveActor(class Actor* actor);
-
-	enum GameState {
-		gameplay,
-		paused,
-		quit
-	};
 
 	typedef pair<int, int> Pair;
 
@@ -88,9 +95,8 @@ private:
 	void CreatePointLights(Actor*& a, Vector3& pos, int z);
 	void UnloadData();
 	void UnloadSkelAnim();
-	void InitFontRenderer();
-	void UpdateText(Texture*& fontArea, const std::string& text);
-	void CleanupFontAreas();
+	void InitHUD();
+	void UnloadHud();
 	
 	
 	std::vector<class Actor*> actors;
@@ -131,15 +137,25 @@ private:
 	class LevelUpSystem* playerLevels;
 	class EnemyCombatSystem* enemyCombat;
 	class EnemyActor* enemyActor;
+	class BossSprite* bossSprite;
+	class SkeletonSprite* skeletonSprite;
+	class KnightSprite* knightSprite;
+	class VictorySprite* victorySprite;
 
-	Texture* fontEnemyHealth;
-	Texture* fontPlayerHealth;
 	class HUD* hud;
+
+	class HudElement* playerHealth_text;
+	class HudElement* enemyHealth_text;
+	class HudElement* gameMessage_text;
+	class HudElement* endMessage_text;
+	class HudElement* replayMessage_text;
 
 	bool isReturning;
 	bool enemyCollision;
 	bool stairCollision;
 	bool isAttacking;
+	bool waitForEnemyAttack;
+	bool doesWin;
 	
 	Vector3 savedPlayerPosition;
 	vector<Vector3> saved_enemies;

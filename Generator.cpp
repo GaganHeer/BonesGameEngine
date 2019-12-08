@@ -49,7 +49,7 @@ vector<Room*> Generator::generate() {
 		int* returnedParams = rooms[n]->getParameters();
 		//cout << "Room: " << n << " -> " << "[" << temp[0] << ", " << temp[1] << "]";
 		//printf("\n");
-		cout << " CORRIDOR LENGTH TWO: " << returnedParams[10] << endl;
+		//cout << " CORRIDOR LENGTH TWO: " << returnedParams[10] << endl;
 	}
 
 	return rooms;

@@ -70,15 +70,38 @@ Studio::EventInstance* AudioEngine::startFightBGM() {
 	return(play("{e4271e0b-f029-4234-8e24-058ea31e5847}"));
 }
 
+Studio::EventInstance* AudioEngine::startBossBGM() {
+	return(play("{e1ed1bc3-db4d-423b-ab30-f5b138278564}"));
+}
+Studio::EventInstance* AudioEngine::startWinBGM() {
+	return(play("{f170eebb-395a-4659-be05-37e35a8a1162}"));
+}
+Studio::EventInstance* AudioEngine::startWinAltBGM() {
+	return(play("{0602e465-e551-48ac-b51e-bbcedb1d521a}"));
+}
+Studio::EventInstance* AudioEngine::startLoseBGM() {
+	return(play("{609e2c80-9539-41b4-a571-62aa61612de6}"));
+}
+
 void AudioEngine::playerAtk() {
 	play("{21448bf9-0ba1-407b-93a7-5b2080f629c8}");
 }
-void AudioEngine::enemyAtk() {
-	play("{fec55164-3b98-462e-9377-2196815b9da1}");
+void AudioEngine::playerHeavyAtk() {
+	play("{0d1a8728-cf23-4511-8489-afa36a5b4b6b}");
 }
 void AudioEngine::enemyDeath() {
 	play("{afdb6b8e-6f22-4209-a949-1e85da29cfc2}");
 }
+void AudioEngine::enemyAtk() {
+
+}
+void AudioEngine::playerHurt() {
+
+}
+void AudioEngine::enemyHurt() {
+
+}
+
 
 void AudioEngine::update() {
 	result = sys->update();
