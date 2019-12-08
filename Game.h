@@ -155,6 +155,8 @@ private:
 	bool stairCollision;
 	bool isAttacking;
 	bool waitForEnemyAttack;
+	bool waitForEnemyDeath;
+	bool waitForPlayerDeath;
 	bool doesWin;
 	
 	Vector3 savedPlayerPosition;
