@@ -43,6 +43,7 @@
     <ClCompile Include="BossSprite.cpp" />
     <ClCompile Include="SkeletonSprite.cpp" />
     <ClCompile Include="KnightSprite.cpp" />
+    <ClCompile Include="VictorySprite.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Actor.h" />
@@ -87,6 +88,7 @@
     <ClInclude Include="BossSprite.h" />
     <ClInclude Include="SkeletonSprite.h" />
     <ClInclude Include="KnightSprite.h" />
+    <ClInclude Include="VictorySprite.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Shaders\BasicMesh.frag" />

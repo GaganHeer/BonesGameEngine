@@ -27,6 +27,9 @@ public:
 	Studio::EventInstance* startWinAltBGM();
 	Studio::EventInstance* startLoseBGM();
 	void playerAtk();
+	void playerHeavyAtk();
+	void playerHurt();
+	void enemyHurt();
 	void enemyAtk();
 	void enemyDeath();
 

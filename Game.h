@@ -123,6 +123,7 @@ private:
 	class BossSprite* bossSprite;
 	class SkeletonSprite* skeletonSprite;
 	class KnightSprite* knightSprite;
+	class VictorySprite* victorySprite;
 
 	Texture* fontEnemyHealth;
 	Texture* fontPlayerHealth;
