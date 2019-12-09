@@ -3,7 +3,7 @@
 
 TopDownCamera::TopDownCamera(Actor* owner) :
 	CameraComponent(owner),
-	horzDist(250.f),
+	horzDist(150.0f),
 	vertDist(500.0f),
 	targetDist(150.0f),
 	springConstant(64.0f) {

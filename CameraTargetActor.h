@@ -15,6 +15,7 @@ private:
 	class MeshComponent* meshComponent;
 	class TopDownCamera* cameraComponent;
 	class SkeletalMeshComponent* skeletalMeshComponent;
-//	bool moving;
+	int dir;
+	bool idle;
 };
 

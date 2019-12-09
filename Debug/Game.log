@@ -1,14 +1,2 @@
-﻿  Game.cpp
-C:\Users\Eric Lin\Downloads\Bones-Engine\Game.cpp(421,30): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
-C:\Users\Eric Lin\Downloads\Bones-Engine\Game.cpp(422,30): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
-C:\Users\Eric Lin\Downloads\Bones-Engine\Game.cpp(568,30): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
-C:\Users\Eric Lin\Downloads\Bones-Engine\Game.cpp(569,30): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
-C:\Users\Eric Lin\Downloads\Bones-Engine\Game.cpp(581,23): warning C4018: '<': signed/unsigned mismatch
-C:\Users\Eric Lin\Downloads\Bones-Engine\Game.cpp(586,16): warning C4244: 'initializing': conversion from 'const float' to 'int', possible loss of data
-C:\Users\Eric Lin\Downloads\Bones-Engine\Game.cpp(587,16): warning C4244: 'initializing': conversion from 'const float' to 'int', possible loss of data
-C:\Users\Eric Lin\Downloads\Bones-Engine\Game.cpp(590,31): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
-C:\Users\Eric Lin\Downloads\Bones-Engine\Game.cpp(591,31): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
-  GBuffer.cpp
-  VictorySprite.cpp
-  Generating Code...
-C:\Users\Eric Lin\Downloads\Bones-Engine\Game.cpp(730,1): error C2059: syntax error: '>>'
+﻿  EnemyActor.cpp
+  Game.vcxproj -> C:\Users\Eric Lin\Downloads\Bones-Engine\Debug\Game.exe

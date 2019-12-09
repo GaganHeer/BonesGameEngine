@@ -7,16 +7,17 @@
 #include "MoveComponent.h"
 
 CameraTargetActor::CameraTargetActor(Game* game) :
-	Actor(game)
-	//,moving(false) 
+	Actor(game),
+	dir(0),
+	idle(true)
 {
 
 	moveComponent = new MoveComponent(this);
 
 	skeletalMeshComponent = new SkeletalMeshComponent(this);
 
-	skeletalMeshComponent->SetMesh(game->GetRenderer()->GetMesh("Assets/skellyRunForward.gpmesh"));
-	skeletalMeshComponent->SetSkeleton(game->GetSkeleton("Assets/skellyRunForward.gpskel"));
+	skeletalMeshComponent->SetMesh(game->GetRenderer()->GetMesh("Assets/Animations/skellyRunMesh.obj"));
+	skeletalMeshComponent->SetSkeleton(game->GetSkeleton("Assets/Animations/skellyRunSkel.json"));
 	SetPosition(Vector3(0.0f, 0.0f, -100.0f));
 	SetScale(25.0f);
 
@@ -25,27 +26,55 @@ CameraTargetActor::CameraTargetActor(Game* game) :
 }
 
 void CameraTargetActor::ActorInput(InputState keyState) {
+
+	if (idle) {
+		if (dir == 0 && !moveComponent->movingUp) {
+			skeletalMeshComponent->PlayAnimation(GetGame()->GetAnimation("Assets/Animations/skellyIdleForward.json"), 1.25f);
+			idle = false;
+		}
+		else if (dir == 1 && !moveComponent->movingDown) {
+			skeletalMeshComponent->PlayAnimation(GetGame()->GetAnimation("Assets/Animations/skellyIdleBackward.json"), 1.25f);
+			idle = false;
+		}
+		else if (dir == 2 && !moveComponent->movingRight) {
+			skeletalMeshComponent->PlayAnimation(GetGame()->GetAnimation("Assets/Animations/skellyIdleLeft.json"), 1.25f);
+			idle = false;
+		}
+		else if (dir == 3 && !moveComponent->movingLeft) {
+			skeletalMeshComponent->PlayAnimation(GetGame()->GetAnimation("Assets/Animations/skellyIdleRight.json"), 1.25f);
+			idle = false;
+		}
+	}
+
 	float verticalMove = 0.0f;
 	float horizontalMove = 0.0f;
 	if (keyState.Keyboard.GetKeyState(SDL_SCANCODE_W) == ButtonState::Pressed)
 	{
 		verticalMove = 100.0f;
-		skeletalMeshComponent->PlayAnimation(GetGame()->GetAnimation("Assets/skellyIdleForward.gpanim"), 1.25f);
+		dir = 0;
+		idle = true;
+		skeletalMeshComponent->PlayAnimation(GetGame()->GetAnimation("Assets/Animations/skellyRunForward.json"), 1.25f);
 	}
 	if (keyState.Keyboard.GetKeyState(SDL_SCANCODE_S) == ButtonState::Pressed)
 	{
 		verticalMove = -100.0f;
-		skeletalMeshComponent->PlayAnimation(GetGame()->GetAnimation("Assets/skellyIdleBackward.gpanim"), 1.25f);
+		dir = 1;
+		idle = true;
+		skeletalMeshComponent->PlayAnimation(GetGame()->GetAnimation("Assets/Animations/skellyRunBackward.json"), 1.25f);
 	}
 	if (keyState.Keyboard.GetKeyState(SDL_SCANCODE_A) == ButtonState::Pressed)
 	{
 		horizontalMove = 100.0f;
-		skeletalMeshComponent->PlayAnimation(GetGame()->GetAnimation("Assets/skellyIdleLeft.gpanim"), 1.25f);
+		dir = 2;
+		idle = true;
+		skeletalMeshComponent->PlayAnimation(GetGame()->GetAnimation("Assets/Animations/skellyRunLeft.json"), 1.25f);
 	}
 	if (keyState.Keyboard.GetKeyState(SDL_SCANCODE_D) == ButtonState::Pressed)
 	{
 		horizontalMove = -100.0f;
-		skeletalMeshComponent->PlayAnimation(GetGame()->GetAnimation("Assets/skellyIdleRight.gpanim"), 1.25f);
+		dir = 3;
+		idle = true;
+		skeletalMeshComponent->PlayAnimation(GetGame()->GetAnimation("Assets/Animations/skellyRunRight.json"), 1.25f);
 	}
 
 	moveComponent->SetHorizontalMove(horizontalMove);
