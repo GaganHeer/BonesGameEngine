@@ -65,18 +65,22 @@ void EnemyMoveComponent::MoveEnemy()
 			}
 			if (x == -1) {
 				movingLeft = true;
+				cout << "movingLEFT" << endl;
 				dest = owner->GetPosition().x - 100;
 			}
 			else if (x == 1) {
 				movingRight = true;
+				cout << "movingRIGHT" << endl;
 				dest = owner->GetPosition().x + 100;
 			}
 			else if (y == -1) {
 				movingDown = true;
+				cout << "movingDOWN" << endl;
 				dest = owner->GetPosition().y - 100;
 			}
 			else if (y == 1) {
 				movingUp = true;
+				cout << "movingUP" << endl;
 				dest = owner->GetPosition().y + 100;
 			}
 		}

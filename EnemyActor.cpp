@@ -11,13 +11,6 @@ EnemyActor::EnemyActor(Game* game) :
 	moveable(false),
 	game(game)
 {
-	/*
-	skeletalMeshComponent = new SkeletalMeshComponent(this);
-	skeletalMeshComponent->SetMesh(game->GetRenderer()->GetMesh("Assets/knightMesh.json"));
-	skeletalMeshComponent->SetSkeleton(game->GetSkeleton("Assets/knightSkel.json"));
-	
-	SetScale(0.5f);
-	*/
 	enemyMoveComponent = new EnemyMoveComponent(this);
 	Vector3 pos = GetPosition();
 }
@@ -25,6 +18,19 @@ EnemyActor::EnemyActor(Game* game) :
 void EnemyActor::ActorInput(InputState keyState) {
 	bool move = false;
 	enemyMoveComponent->SetMoveable(moveable);
+
+	if (enemyMoveComponent->movingLeft) {
+		skeletalMeshComponent->PlayAnimation(GetGame()->GetAnimation("Assets/Animations/knightRunBackward.json"), 1.25f);
+	}
+	else if (enemyMoveComponent->movingUp) {
+		skeletalMeshComponent->PlayAnimation(GetGame()->GetAnimation("Assets/Animations/knightRunRight.json"), 1.25f);
+	}
+	else if (enemyMoveComponent->movingDown) {
+		skeletalMeshComponent->PlayAnimation(GetGame()->GetAnimation("Assets/Animations/knightRunLeft.json"), 1.25f);
+	}
+	else if (enemyMoveComponent->movingRight) {
+		skeletalMeshComponent->PlayAnimation(GetGame()->GetAnimation("Assets/Animations/knightRunForward.json"), 1.25f);
+	}
 
 	if (keyState.Keyboard.GetKeyState(SDL_SCANCODE_W) == ButtonState::Pressed || keyState.Keyboard.GetKeyState(SDL_SCANCODE_S) == ButtonState::Pressed ||
 		keyState.Keyboard.GetKeyState(SDL_SCANCODE_A) == ButtonState::Pressed || keyState.Keyboard.GetKeyState(SDL_SCANCODE_D) == ButtonState::Pressed)
@@ -41,7 +47,8 @@ void EnemyActor::SetVisible(bool visible) {
 
 void EnemyActor::SetSkeletalMesh() {
 	skeletalMeshComponent = new SkeletalMeshComponent(this);
-	skeletalMeshComponent->SetMesh(game->GetRenderer()->GetMesh("Assets/knightMesh.json"));
-	skeletalMeshComponent->SetSkeleton(game->GetSkeleton("Assets/knightSkel.json"));
-	SetScale(0.5f);
+	skeletalMeshComponent->SetMesh(game->GetRenderer()->GetMesh("Assets/Animations/knightMesh.obj"));
+	skeletalMeshComponent->SetSkeleton(game->GetSkeleton("Assets/Animations/knightSkel.json"));
+	skeletalMeshComponent->PlayAnimation(GetGame()->GetAnimation("Assets/Animations/knightIdleBackward.json"), 1.25f);
+	SetScale(100.0f);
 }
