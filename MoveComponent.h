@@ -29,15 +29,15 @@ public:
 		verticalMove = move;
 	}
 
-private:
-	float horizontalMove;
-	float verticalMove;
-	Game* game;
-
 	bool movingUp;
 	bool movingDown;
 	bool movingLeft;
 	bool movingRight;
+
+private:
+	float horizontalMove;
+	float verticalMove;
+	Game* game;
 
 	float dest;
 	float speed;

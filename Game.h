@@ -1,4 +1,5 @@
 #pragma once
+
 #include <SDL.h>
 #include <unordered_map>
 #include <string>
@@ -13,6 +14,8 @@
 #include "Font.h"
 #include "Texture.h"
 #include <thread>
+#include "AStar.h"
+#include <utility>
 
 class Game
 {
@@ -37,6 +40,9 @@ public:
 
 	void AddActor(class Actor* actor);
 	void RemoveActor(class Actor* actor);
+
+	typedef pair<int, int> Pair;
+
 
 	class Renderer* GetRenderer() { 
 		return renderer; 
@@ -70,13 +76,17 @@ public:
 		return enemyCollision;
 	}
 
+	int** GetMap2D() {
+		return map2D;
+	}
+
 	int IsWalkable(int row, int col);
 	void Game::SetWalkable(int row, int col);
 	void Game::SetEnemyMapPos(int row, int col);
 	void Game::SetPlayerMapPos(int row, int col);
 	void Game::SetStairMapPos(int row, int col);
 	void CombatRound(int atkType);
-
+	Pair Game::EnemySpotted(int row, int col);
 private:
 	void ProcessInput();
 	void UpdateGame();
@@ -118,6 +128,7 @@ private:
 	int start_posY;
 
 	int** map2D;
+	AStar* astar;
 
 	//Game Specific
 	class CameraTargetActor* cameraTargetActor;
@@ -145,6 +156,8 @@ private:
 	bool stairCollision;
 	bool isAttacking;
 	bool waitForEnemyAttack;
+	bool waitForEnemyDeath;
+	bool waitForPlayerDeath;
 	bool doesWin;
 	
 	Vector3 savedPlayerPosition;

@@ -14,6 +14,7 @@ HealthBar::HealthBar(Actor* actor, Vector3 pos, int minValue, int maxValue) : Hu
 
 HealthBar::~HealthBar()
 {
+	printf("~HealthBar()");
 	if (textureBG != nullptr) textureBG->Unload();
 	if (textureFG != nullptr) textureFG->Unload();
 

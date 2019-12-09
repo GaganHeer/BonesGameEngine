@@ -30,6 +30,8 @@ Game::Game()
 	isReturning(false),
 	isAttacking(false),
 	waitForEnemyAttack(false),
+	waitForEnemyDeath(false),
+	waitForPlayerDeath(false),
 	enemyCollision(false),
 	stairCollision(false),
 	level(0),
@@ -79,6 +81,28 @@ bool Game::Initialize() {
 	LoadData();
 	ticksCount = SDL_GetTicks();
 	printf("%s%lu\n", "Number of Ticks Initialized: ", ticksCount);
+
+	cout << "++++++++++++++++++++++++++++++++++++++++++++++++++++++++" << endl;
+	astar = new AStar();
+
+	const int R = 9;
+	const int C = 9;
+	int grid[R][C] =
+	{
+		{ 1, 0, 1, 1, 1, 1, 0, 1, 1},
+		{ 1, 1, 1, 0, 1, 1, 1, 0, 1},
+		{ 1, 1, 1, 0, 1, 1, 0, 1, 0},
+		{ 0, 0, 1, 0, 1, 0, 0, 0, 0},
+		{ 1, 1, 1, 0, 1, 1, 1, 0, 1},
+		{ 1, 0, 1, 1, 1, 1, 0, 1, 0},
+		{ 1, 0, 0, 0, 0, 1, 0, 0, 0},
+		{ 1, 0, 1, 1, 1, 1, 0, 1, 1},
+		{ 1, 1, 1, 0, 0, 0, 1, 0, 0}
+	};
+
+	astar->GetPath(grid, 1, 1);
+	cout << "++++++++++++++++++++++++++++++++++++++++++++++++++++++++" << endl;
+
 	return true;
 }
 
@@ -126,8 +150,8 @@ void Game::ProcessInput() {
 			if (state.Keyboard.GetKeyState(SDL_SCANCODE_L) == ButtonState::Pressed) {
 				printf("L Button Pressed \n");
 				if ((scene == ENEMY_FIGHT_SCENE || scene == BOSS_FIGHT_SCENE) && !isAttacking) {
-					thread th2(&AudioEngine::playerAtk, AE);
-					th2.join();
+					thread th1(&AudioEngine::playerAtk, AE);
+					th1.join();
 					CombatRound(0);
 				}
 			}
@@ -152,6 +176,9 @@ void Game::ProcessInput() {
 					doesWin = true;
 					isReturning = false;
 					isLoading = true;
+					waitForEnemyAttack = false;
+					waitForEnemyDeath = false;
+					waitForPlayerDeath = false;
 				}
 			}
 		}
@@ -221,7 +248,7 @@ void Game::UpdateGame()
 		gameMessage_text->UpdateText("Stairs found!");
 		
 		enemyCombat->enemyLevel(10, 10, 50);
-		if (level >= 5) {
+		if (level >= 1) {
 			if (currentAudioInstance) {
 				AE->stopAudio(currentAudioInstance);
 			}
@@ -236,6 +263,10 @@ void Game::UpdateGame()
 		if (scene == ENEMY_FIGHT_SCENE && knightSprite->ready) {
 			if (waitForEnemyAttack) {
 				knightSprite->SwitchState(KnightSprite::Attacking);
+				thread th1(&AudioEngine::enemyAtk, AE);
+				thread th2(&AudioEngine::playerHurt, AE);
+				th1.join();
+				th2.join();
 				waitForEnemyAttack = false;
 			}
 			else {
@@ -251,6 +282,10 @@ void Game::UpdateGame()
 		else if (scene == BOSS_FIGHT_SCENE && bossSprite->ready) {
 			if (waitForEnemyAttack) {
 				bossSprite->SwitchState(BossSprite::Attacking);
+				thread th1(&AudioEngine::enemyAtk, AE);
+				thread th2(&AudioEngine::playerHurt, AE);
+				th1.join();
+				th2.join();
 				waitForEnemyAttack = false;
 			}
 			else {
@@ -265,46 +300,72 @@ void Game::UpdateGame()
 	}
 
 	if (scene == ENEMY_FIGHT_SCENE) {
-		if (enemyCombat->getCurrentHealth() <= 0) {
-			playerCombat->setDebuffAmt(0);
-			thread th3(&AudioEngine::enemyDeath, AE);
-			th3.join();
-			_asm {
-				//resets the enemy health back after killing an enemy
-				mov		eax, dword ptr[this] //copy all variables into eax register
-				mov		ecx, dword ptr[eax]Game.enemyCombat //from eax register copy only enemyCombat address into ecx register
-				call	EnemyCombatSystem::resetEnemy //call the reset enemy function for enemy combat
+		if (enemyCombat->getCurrentHealth() <= 0 && skeletonSprite->ready && knightSprite->ready) {
+			if (waitForEnemyDeath) {
+				knightSprite->SwitchState(KnightSprite::Dying);
+				thread th1(&AudioEngine::enemyDeath, AE);
+				th1.join();
+				waitForEnemyDeath = false;
+			}
+			else if (!(playerCombat->getCurrentHealth() <= 0)) {
+				playerCombat->setDebuffAmt(0);
+				_asm {
+					//resets the enemy health back after killing an enemy
+					mov		eax, dword ptr[this] //copy all variables into eax register
+					mov		ecx, dword ptr[eax]Game.enemyCombat //from eax register copy only enemyCombat address into ecx register
+					call	EnemyCombatSystem::resetEnemy //call the reset enemy function for enemy combat
 
-				//sets isLoading bool to true
-				mov		eax, dword ptr[this] //copy all variables into eax register
-				mov[eax]Game.isLoading, 1 //from eax register access and change isLoading boolean to true
+					//sets isLoading bool to true
+					mov		eax, dword ptr[this] //copy all variables into eax register
+					mov[eax]Game.isLoading, 1 //from eax register access and change isLoading boolean to true
 
-				//sets isReturning bool to true
-				mov		eax, dword ptr[this] //copy all variables into eax register
-				mov[eax]Game.isReturning, 1 //from eax register access and change isReturning boolean to true
+					//sets isReturning bool to true
+					mov		eax, dword ptr[this] //copy all variables into eax register
+					mov[eax]Game.isReturning, 1 //from eax register access and change isReturning boolean to true
 
-				//sets scene value to 0
-				mov		eax, dword ptr[this] //copy all variables into eax register
-				mov[eax]Game.scene, 0 //from eax register access and change scene int to 0
+					//sets scene value to 0
+					mov		eax, dword ptr[this] //copy all variables into eax register
+					mov[eax]Game.scene, 0 //from eax register access and change scene int to 0
+				}
 			}
 		}
 
-		if (playerCombat->getCurrentHealth() <= 0) {
-			doesWin = false;
-			isLoading = true;
-			scene = END_GAME_SCENE;
+		if (playerCombat->getCurrentHealth() <= 0 && knightSprite->ready && skeletonSprite->ready) {
+			if (waitForPlayerDeath) {
+				skeletonSprite->SwitchState(SkeletonSprite::Dying);
+				waitForPlayerDeath = false;
+			}
+			else {
+				doesWin = false;
+				isLoading = true;
+				scene = END_GAME_SCENE;
+			}
 		}
 	}
 	else if (scene == BOSS_FIGHT_SCENE) {
-		if (enemyCombat->getCurrentHealth() <= 0) {
-			doesWin = true;
-			isLoading = true;
-			scene = END_GAME_SCENE;
+		if (enemyCombat->getCurrentHealth() <= 0 && skeletonSprite->ready && bossSprite->ready) {
+			if (waitForEnemyDeath) {
+				bossSprite->SwitchState(BossSprite::Dying);
+				thread th1(&AudioEngine::enemyDeath, AE);
+				th1.join();
+				waitForEnemyDeath = false;
+			}
+			else if (!(playerCombat->getCurrentHealth() <= 0)) {
+				doesWin = true;
+				isLoading = true;
+				scene = END_GAME_SCENE;
+			}
 		}
-		else if (playerCombat->getCurrentHealth() <= 0) {
-			doesWin = false;
-			isLoading = true;
-			scene = END_GAME_SCENE;
+		if (playerCombat->getCurrentHealth() <= 0 && skeletonSprite->ready && bossSprite->ready) {
+			if (waitForPlayerDeath) {
+				skeletonSprite->SwitchState(SkeletonSprite::Dying);
+				waitForPlayerDeath = false;
+			}
+			else {
+				doesWin = false;
+				isLoading = true;
+				scene = END_GAME_SCENE;
+			}
 		}
 	}
 }
@@ -339,7 +400,7 @@ void Game::LoadData() {
 				map2D[i][0] = map_cols;
 
 				for (int j = 1; j <= map_cols; j++)
-					map2D[i][j] = NULL;
+					map2D[i][j] = 0;
 			}
 
 			cameraTargetActor = new CameraTargetActor(this);
@@ -388,7 +449,10 @@ void Game::LoadData() {
 
 						rows = (int)(savedEnemy.x / 100);
 						cols = (int)(savedEnemy.y / 100);
-						//SetEnemyMapPos(rows-50, cols-50);
+						SetEnemyMapPos(rows, cols);
+						cout << "----------------------------------------------------------------" << endl;
+						cout << "ROW: " << rows << "COL: " << cols << endl;
+						cout << "----------------------------------------------------------------" << endl;
 					}
 				}
 				saved_enemies.clear();
@@ -447,7 +511,7 @@ void Game::LoadData() {
 			//cout << tempX << " :TEMPX" << endl;
 			//cout << tempY << " :TEMPY" << endl;
 
-			a->SetPosition(Vector3(tempY * size, tempX * size, -50.0f));
+			a->SetPosition(Vector3(tempY * size, tempX * size, -60.0f));
 			a->SetScale(100.f);
 
 			// Setup lights
@@ -458,11 +522,11 @@ void Game::LoadData() {
 			dir.specColor = Vector3(11.8f, 0.5f, 0.5f);
 
 			// UI elements
-			
+
 			gameMessage_text->UpdateText("Find an exit point");
 			playerHealthBar->updateRange(0, playerCombat->getBaseHealth());
 			playerHealthBar->update(playerCombat->getCurrentHealth());
-			
+
 			isReturning = false;
 		}
 		else { // ----------------------------------------------------------------------------------------------------------------------
@@ -596,7 +660,7 @@ void Game::LoadData() {
 			/*cout << tempX + 50 << " :TEMPX" << endl;
 			cout << tempY + 50 << " :TEMPY" << endl;*/
 
-			a->SetPosition(Vector3(tempY * size, tempX * size, -10.0f));
+			a->SetPosition(Vector3(tempY * size, tempX * size, -60.0f));
 			a->SetScale(100.f);
 
 			//cout << " LAST ENEMY ACTOR: " << randGen.getEnemies(9).at(0).getActor() << endl;
@@ -622,12 +686,12 @@ void Game::LoadData() {
 		waitForEnemyAttack = false;
 		AE->stopAudio(currentAudioInstance);
 		currentAudioInstance = AE->startFightBGM();
-		
+
 		Actor* combatText = new Actor(this);
 		combatText->SetPosition(Vector3(0.0f, -210.0f, 0.0f));
 		SpriteComponent* sc = new SpriteComponent(combatText);
 		sc->SetTexture(renderer->GetTexture("Assets/combatText.png"));
-		
+
 		// we wanna show it here as well
 		
 		playerHealth_text->UpdateText("player health: " + std::to_string(playerCombat->getCurrentHealth()));
@@ -670,7 +734,7 @@ void Game::LoadData() {
 			}
 			currentAudioInstance = AE->startWinAltBGM();
 
-			//victorySprite = new VictorySprite(this);
+			victorySprite = new VictorySprite(this);
 			endTextStr = "YOU WIN";
 		}
 		else {
@@ -680,7 +744,7 @@ void Game::LoadData() {
 			currentAudioInstance = AE->startLoseBGM();
 			endTextStr = "GAME OVER";
 		}
-		
+
 		endMessage_text->UpdateText(endTextStr);
 		replayMessage_text->UpdateText("PRESS R TO REPLAY");
 		
@@ -720,6 +784,47 @@ void Game::SetStairMapPos(int row, int col) {
 	map2D[row + 50][col + 50] = 4;
 }
 
+Game::Pair Game::EnemySpotted(int row, int col) {
+	bool spotted = false;
+	int r = 0;
+	int c = 0;
+	int playerPosX = -1;
+	int playerPosY = -1;
+	int map[9][9];
+	memset(map, false, sizeof(map));
+
+	for (int i = row + 4 + 50; i >= row - 4 + 50; i--) {
+		for (int j = col - 4 + 50; j <= col + 4 + 50; j++) {
+			map[r][c] = map2D[i][j];
+			if (map[r][c] == 3) {
+				//cout << map[r][c] << endl;
+				playerPosX = r;
+				playerPosY = c;
+				map[r][c] = 1;
+				//spotted = true;
+			}
+			if (map[r][c] == 2) {
+				map[r][c] = 1;
+			}
+			if (map[r][c] == 4) {
+				map[r][c] = 1;
+			}
+			c++;
+		}
+		r++;
+		c = 0;
+	}
+
+	Pair fm = pair<int, int>(-1, -1);
+	if (playerPosX != -1) {
+		Pair fm = astar->GetPath(map, playerPosX, playerPosY);
+		return fm;
+	}
+
+	return fm;
+}
+
+
 void Game::CreatePointLights(Actor*& a, Vector3& pos, int z)
 {
 	// Create some point lights
@@ -757,6 +862,7 @@ void Game::UnloadData() {
 		renderer->UnloadData();
 	}
 
+	//delete astar;
 	while (!actors.empty()) {
 		delete actors.back();
 	}
@@ -894,6 +1000,10 @@ void Game::CombatRound(int atkType) {
 			bossSprite->SwitchState(BossSprite::Dodging);
 		}
 	}
+	else {
+		thread th1(&AudioEngine::enemyHurt, AE);
+		th1.join();
+	}
 	cout << "Enemy took " << playerAtk << " damage" << endl;
 	enemyCombat->takeDmg(playerAtk);
 	int enemyAtk = enemyCombat->performAtk();
@@ -902,6 +1012,7 @@ void Game::CombatRound(int atkType) {
 	string enemyStatus;
 	if (playerCombat->checkIfDead()) {
 		playerStatus = "dead";
+		waitForPlayerDeath = true;
 	}
 	else {
 		playerStatus = "alive";
@@ -909,6 +1020,7 @@ void Game::CombatRound(int atkType) {
 
 	if (enemyCombat->checkIfDead()) {
 		enemyStatus = "dead";
+		waitForEnemyDeath = true;
 		int XPAmt = enemyCombat->getXP();
 		bool doesLevel = playerLevels->addXP(XPAmt);
 		if (doesLevel) {

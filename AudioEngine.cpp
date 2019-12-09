@@ -93,13 +93,13 @@ void AudioEngine::enemyDeath() {
 	play("{afdb6b8e-6f22-4209-a949-1e85da29cfc2}");
 }
 void AudioEngine::enemyAtk() {
-
+	play("{80dfabec-fab0-40ea-a239-693dc521538c}");
 }
 void AudioEngine::playerHurt() {
-
+	play("{8c711b91-e861-40be-b961-46db4b207133}");
 }
 void AudioEngine::enemyHurt() {
-
+	play("{d77665b7-86be-4f0f-96ea-941865c07b28}");
 }
 
 
