@@ -47,7 +47,12 @@
     <ClCompile Include="SkeletonSprite.cpp" />
     <ClCompile Include="KnightSprite.cpp" />
     <ClCompile Include="VictorySprite.cpp" />
+<<<<<<< HEAD
+    <ClCompile Include="TextBox.cpp" />
+    <ClCompile Include="HealthBar.cpp" />
+=======
 >>>>>>> 14923dc897b70832f63414ac0aafa398b2479ad3
+>>>>>>> ccf5a11fbabd6e6fa1461f49130ca56c32642162
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Actor.h" />
@@ -96,7 +101,12 @@
     <ClInclude Include="SkeletonSprite.h" />
     <ClInclude Include="KnightSprite.h" />
     <ClInclude Include="VictorySprite.h" />
+<<<<<<< HEAD
+    <ClInclude Include="TextBox.h" />
+    <ClInclude Include="HealthBar.h" />
+=======
 >>>>>>> 14923dc897b70832f63414ac0aafa398b2479ad3
+>>>>>>> ccf5a11fbabd6e6fa1461f49130ca56c32642162
   </ItemGroup>
   <ItemGroup>
     <None Include="Shaders\BasicMesh.frag" />

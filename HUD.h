@@ -1,6 +1,8 @@
 #pragma once
 
 #include "HudElement.h"
+#include "TextBox.h"
+#include "HealthBar.h"
 #include "Actor.h"
 
 class HUD
@@ -9,6 +11,7 @@ class HUD
 		enum ElementType
 		{
 			TEXT_BOX,
+			HEALTH_BAR,
 			DIALOG_BOX
 		};
 

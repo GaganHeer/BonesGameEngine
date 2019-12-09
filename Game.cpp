@@ -20,6 +20,8 @@
 #include "StairActor.h"
 #include "HudElement.h"
 #include "HUD.h"
+#include "TextBox.h"
+#include "HealthBar.h"
 
 Game::Game()
 	:renderer(nullptr),
@@ -228,8 +230,9 @@ void Game::UpdateGame()
 	AE->update();
 
 	if (enemyCollision) {
+		
 		gameMessage_text->UpdateText("entering combat mode");
-
+		
 		savedPlayerPosition = cameraTargetActor->GetPosition();
 		for (Actor* enemyPos : enems) {
 			saved_enemies.push_back(enemyPos->GetPosition());
@@ -241,7 +244,9 @@ void Game::UpdateGame()
 		enemyCollision = false;
 	}
 	else if (stairCollision) {
+		
 		gameMessage_text->UpdateText("Stairs found!");
+		
 		enemyCombat->enemyLevel(10, 10, 50);
 		if (level >= 1) {
 			if (currentAudioInstance) {
@@ -266,9 +271,12 @@ void Game::UpdateGame()
 			}
 			else {
 				isAttacking = false;
-
+				
 				playerHealth_text->UpdateText("player health: " + std::to_string(playerCombat->getCurrentHealth()));
 				enemyHealth_text->UpdateText("enemy health: " + std::to_string(enemyCombat->getCurrentHealth()));
+				playerHealthBar->updateRange(0, playerCombat->getBaseHealth());
+				playerHealthBar->update(playerCombat->getCurrentHealth());
+				
 			}
 		}
 		else if (scene == BOSS_FIGHT_SCENE && bossSprite->ready) {
@@ -282,9 +290,11 @@ void Game::UpdateGame()
 			}
 			else {
 				isAttacking = false;
-
+				
 				playerHealth_text->UpdateText("player health: " + std::to_string(playerCombat->getCurrentHealth()));
 				enemyHealth_text->UpdateText("enemy health: " + std::to_string(enemyCombat->getCurrentHealth()));
+				playerHealthBar->updateRange(0, playerCombat->getBaseHealth());
+				playerHealthBar->update(playerCombat->getCurrentHealth());
 			}
 		}
 	}
@@ -514,6 +524,8 @@ void Game::LoadData() {
 			// UI elements
 
 			gameMessage_text->UpdateText("Find an exit point");
+			playerHealthBar->updateRange(0, playerCombat->getBaseHealth());
+			playerHealthBar->update(playerCombat->getCurrentHealth());
 
 			isReturning = false;
 		}
@@ -661,8 +673,11 @@ void Game::LoadData() {
 			dir.specColor = Vector3(11.8f, 0.5f, 0.5f);
 
 			// UI elements
+			
 			gameMessage_text->UpdateText("Find an exit point");
-
+			playerHealthBar->updateRange(0, playerCombat->getBaseHealth());
+			playerHealthBar->update(playerCombat->getCurrentHealth());
+			
 			level++;
 		}
 
@@ -678,8 +693,11 @@ void Game::LoadData() {
 		sc->SetTexture(renderer->GetTexture("Assets/combatText.png"));
 
 		// we wanna show it here as well
+		
 		playerHealth_text->UpdateText("player health: " + std::to_string(playerCombat->getCurrentHealth()));
 		enemyHealth_text->UpdateText("enemy health: " + std::to_string(enemyCombat->getCurrentHealth()));
+		playerHealthBar->updateRange(0, playerCombat->getBaseHealth());
+		playerHealthBar->update(playerCombat->getCurrentHealth());
 
 		skeletonSprite = new SkeletonSprite(this);
 		knightSprite = new KnightSprite(this);
@@ -696,8 +714,11 @@ void Game::LoadData() {
 		sc->SetTexture(renderer->GetTexture("Assets/combatText.png"));
 
 		// we wanna show it here as well
+		
 		playerHealth_text->UpdateText("player health: " + std::to_string(playerCombat->getCurrentHealth()));
 		enemyHealth_text->UpdateText("enemy health: " + std::to_string(enemyCombat->getCurrentHealth()));
+		playerHealthBar->updateRange(0, playerCombat->getBaseHealth());
+		playerHealthBar->update(playerCombat->getCurrentHealth());
 
 		skeletonSprite = new SkeletonSprite(this);
 
@@ -726,6 +747,7 @@ void Game::LoadData() {
 
 		endMessage_text->UpdateText(endTextStr);
 		replayMessage_text->UpdateText("PRESS R TO REPLAY");
+		
 	}
 }
 
@@ -863,11 +885,6 @@ void Game::UnloadSkelAnim() {
 
 void Game::Shutdown() {
 	UnloadData();
-
-	if (hud)
-	{
-		delete hud;
-	}
 
 	UnloadSkelAnim();
 
@@ -1008,6 +1025,8 @@ void Game::CombatRound(int atkType) {
 		bool doesLevel = playerLevels->addXP(XPAmt);
 		if (doesLevel) {
 			playerCombat->increaseStats();
+			playerHealthBar->updateRange(0, playerCombat->getBaseHealth());
+			playerHealthBar->update(playerCombat->getCurrentHealth());
 		}
 	}
 	else {
@@ -1045,21 +1064,26 @@ void Game::CombatRound(int atkType) {
 void Game::InitHUD()
 {
 	hud = new HUD();
-
-	playerHealth_text = hud->addElement(new Actor(this), HUD::TEXT_BOX);
+	
+	playerHealth_text = (TextBox*)hud->addElement(new Actor(this), HUD::TEXT_BOX);
+	//assert(playerHealth_text != NULL);
 	playerHealth_text->SetPosition(Vector3(-300.0f, 180.0f, 0.0f));
 
-	enemyHealth_text = hud->addElement(new Actor(this), HUD::TEXT_BOX);
+	enemyHealth_text = (TextBox*)hud->addElement(new Actor(this), HUD::TEXT_BOX);
 	enemyHealth_text->SetPosition(Vector3(300.0f, 180.0f, 0.0f));
 
-	gameMessage_text = hud->addElement(new Actor(this), HUD::TEXT_BOX);
-	gameMessage_text->SetPosition(Vector3(-350.0f, -350.0f, 0.0f));
+	gameMessage_text = (TextBox*)hud->addElement(new Actor(this), HUD::TEXT_BOX);
+	gameMessage_text->SetPosition(Vector3(-340.0f, -350.0f, 0.0f));
 
-	endMessage_text = hud->addElement(new Actor(this), HUD::TEXT_BOX);
+	endMessage_text = (TextBox*)hud->addElement(new Actor(this), HUD::TEXT_BOX);
 	endMessage_text->SetPosition(Vector3(0.0f, 200.0f, 0.0f));
 
-	replayMessage_text = hud->addElement(new Actor(this), HUD::TEXT_BOX);
+	replayMessage_text = (TextBox*)hud->addElement(new Actor(this), HUD::TEXT_BOX);
 	replayMessage_text->SetPosition(Vector3(0.0f, 0.0f, 0.0f));
+	
+	playerHealthBar = (HealthBar*)hud->addElement(new Actor(this), HUD::HEALTH_BAR);
+	playerHealthBar->SetPosition(Vector3(-300.0f, 340.0f, 0.0f));
+	playerHealthBar->updateRange(0, playerCombat->getBaseHealth());
 }
 
 void Game::UnloadHud()

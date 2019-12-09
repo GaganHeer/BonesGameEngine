@@ -30,6 +30,7 @@
     <ClCompile Include="GBuffer.cpp" />
     <ClCompile Include="Generator.cpp" />
     <ClCompile Include="GUI.cpp" />
+    <ClCompile Include="HealthBar.cpp" />
     <ClCompile Include="HUD.cpp" />
     <ClCompile Include="HudElement.cpp" />
     <ClCompile Include="InputSystem.cpp" />
@@ -51,6 +52,7 @@
     <ClCompile Include="SkeletonSprite.cpp" />
     <ClCompile Include="SpriteComponent.cpp" />
     <ClCompile Include="StairActor.cpp" />
+    <ClCompile Include="TextBox.cpp" />
     <ClCompile Include="Texture.cpp" />
     <ClCompile Include="TopDownCamera.cpp" />
     <ClCompile Include="VertexArray.cpp" />
@@ -76,6 +78,7 @@
     <ClInclude Include="GBuffer.h" />
     <ClInclude Include="Generator.h" />
     <ClInclude Include="GUI.h" />
+    <ClInclude Include="HealthBar.h" />
     <ClInclude Include="HUD.h" />
     <ClInclude Include="HudElement.h" />
     <ClInclude Include="InputSystem.h" />
@@ -97,6 +100,7 @@
     <ClInclude Include="SkeletonSprite.h" />
     <ClInclude Include="SpriteComponent.h" />
     <ClInclude Include="StairActor.h" />
+    <ClInclude Include="TextBox.h" />
     <ClInclude Include="Texture.h" />
     <ClInclude Include="TopDownCamera.h" />
     <ClInclude Include="VertexArray.h" />

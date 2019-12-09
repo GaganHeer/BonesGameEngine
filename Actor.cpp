@@ -8,6 +8,7 @@ Actor::Actor(Game* gameInst)
 	rotation(Quaternion::Identity),
 	scale(1.0f),
 	game(gameInst),
+	v_scale(scale, scale, scale),
 	recomputeWorldTransform(true)
 {
 	game->AddActor(this);
@@ -92,7 +93,7 @@ void Actor::ComputeWorldTransform()
 	{
 		recomputeWorldTransform = false;
 		// Scale, then rotate, then translate
-		worldTransform = Matrix4::CreateScale(scale);
+		worldTransform = Matrix4::CreateScale(v_scale);
 		worldTransform *= Matrix4::CreateFromQuaternion(rotation);
 		worldTransform *= Matrix4::CreateTranslation(position);
 
