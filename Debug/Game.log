@@ -1,8 +1,2 @@
-﻿  room.cpp
-C:\Users\A00986529\Desktop\bonesbonesbones\Bones-Engine\room.cpp(138,45): warning C4244:  'argument': conversion from 'int' to 'float', possible loss of data
-C:\Users\A00986529\Desktop\bonesbonesbones\Bones-Engine\room.cpp(138,37): warning C4244:  'argument': conversion from 'int' to 'float', possible loss of data
-C:\Users\A00986529\Desktop\bonesbonesbones\Bones-Engine\room.cpp(142,42): warning C4244:  'argument': conversion from 'int' to 'float', possible loss of data
-C:\Users\A00986529\Desktop\bonesbonesbones\Bones-Engine\room.cpp(145,45): warning C4244:  'argument': conversion from 'int' to 'float', possible loss of data
-C:\Users\A00986529\Desktop\bonesbonesbones\Bones-Engine\room.cpp(243,20): warning C4018:  '<': signed/unsigned mismatch
-C:\Users\A00986529\Desktop\bonesbonesbones\Bones-Engine\room.cpp(174): warning C4172:  returning address of local variable or temporary: size
+﻿  VictorySprite.cpp
   Game.vcxproj -> C:\Users\A00986529\Desktop\bonesbonesbones\Bones-Engine\Debug\Game.exe
