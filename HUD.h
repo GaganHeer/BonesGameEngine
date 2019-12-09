@@ -1,6 +1,7 @@
 #pragma once
 
 #include "HudElement.h"
+#include "TextBox.h"
 #include "Actor.h"
 
 class HUD

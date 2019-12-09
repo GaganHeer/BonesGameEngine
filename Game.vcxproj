@@ -50,6 +50,7 @@
     <ClCompile Include="SkeletonSprite.cpp" />
     <ClCompile Include="SpriteComponent.cpp" />
     <ClCompile Include="StairActor.cpp" />
+    <ClCompile Include="TextBox.cpp" />
     <ClCompile Include="Texture.cpp" />
     <ClCompile Include="TopDownCamera.cpp" />
     <ClCompile Include="VertexArray.cpp" />
@@ -95,6 +96,7 @@
     <ClInclude Include="SkeletonSprite.h" />
     <ClInclude Include="SpriteComponent.h" />
     <ClInclude Include="StairActor.h" />
+    <ClInclude Include="TextBox.h" />
     <ClInclude Include="Texture.h" />
     <ClInclude Include="TopDownCamera.h" />
     <ClInclude Include="VertexArray.h" />

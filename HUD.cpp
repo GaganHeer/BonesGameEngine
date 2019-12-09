@@ -16,7 +16,7 @@ HudElement* HUD::addElement(Actor* actor, ElementType type)
 	{
 	case TEXT_BOX:
 	default:
-		hud_elements.push_back(new HudElement(actor, Vector3(), ""));
+		hud_elements.push_back(new TextBox(actor, Vector3(), ""));
 		break;
 	}
 	return hud_elements.back();

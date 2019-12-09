@@ -3,6 +3,7 @@
 #include <unordered_map>
 #include <string>
 #include <vector>
+#include <assert.h>
 #include "Math.h"
 #include "InputSystem.h"
 #include "AudioEngine.h"
@@ -12,7 +13,11 @@
 #include "Font.h"
 #include "Texture.h"
 #include <thread>
-
+/*
+#include "HUD.h"
+#include "HudElement.h"
+#include "TextBox.h"
+*/
 
 class Game
 {
@@ -132,13 +137,13 @@ private:
 	class VictorySprite* victorySprite;
 
 	class HUD* hud;
-
-	class HudElement* playerHealth_text;
-	class HudElement* enemyHealth_text;
-	class HudElement* gameMessage_text;
-	class HudElement* endMessage_text;
-	class HudElement* replayMessage_text;
-
+	
+	class TextBox* playerHealth_text;
+	class TextBox* enemyHealth_text;
+	class TextBox* gameMessage_text;
+	class TextBox* endMessage_text;
+	class TextBox* replayMessage_text;
+	
 	bool isReturning;
 	bool enemyCollision;
 	bool stairCollision;
