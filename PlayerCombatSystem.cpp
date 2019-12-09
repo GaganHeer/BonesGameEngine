@@ -1,7 +1,7 @@
 #include "PlayerCombatSystem.h"
 
 PlayerCombatSystem::PlayerCombatSystem() {
-	baseAtk = 2500;
+	baseAtk = 25;
 	baseHealth = 100;
 	currentAtk = baseAtk;
 	currentHealth = baseHealth;

@@ -243,7 +243,7 @@ void Game::UpdateGame()
 	else if (stairCollision) {
 		gameMessage_text->UpdateText("Stairs found!");
 		enemyCombat->enemyLevel(10, 10, 50);
-		if (level >= 1) {
+		if (level >= 5) {
 			if (currentAudioInstance) {
 				AE->stopAudio(currentAudioInstance);
 			}
