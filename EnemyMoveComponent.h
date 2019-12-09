@@ -36,15 +36,16 @@ public:
 
 	void Collided();
 
-private:
-	class Game* game;
-	bool move;
-	bool moveable;
 
 	bool movingUp;
 	bool movingDown;
 	bool movingLeft;
 	bool movingRight;
+private:
+	class Game* game;
+	bool move;
+	bool moveable;
+
 
 	float dest;
 	float speed;

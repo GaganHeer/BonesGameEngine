@@ -512,9 +512,9 @@ void Game::LoadData() {
 			dir.specColor = Vector3(11.8f, 0.5f, 0.5f);
 
 			// UI elements
-			
+
 			gameMessage_text->UpdateText("Find an exit point");
-			
+
 			isReturning = false;
 		}
 		else { // ----------------------------------------------------------------------------------------------------------------------
@@ -671,12 +671,12 @@ void Game::LoadData() {
 		waitForEnemyAttack = false;
 		AE->stopAudio(currentAudioInstance);
 		currentAudioInstance = AE->startFightBGM();
-		
+
 		Actor* combatText = new Actor(this);
 		combatText->SetPosition(Vector3(0.0f, -210.0f, 0.0f));
 		SpriteComponent* sc = new SpriteComponent(combatText);
 		sc->SetTexture(renderer->GetTexture("Assets/combatText.png"));
-		
+
 		// we wanna show it here as well
 		playerHealth_text->UpdateText("player health: " + std::to_string(playerCombat->getCurrentHealth()));
 		enemyHealth_text->UpdateText("enemy health: " + std::to_string(enemyCombat->getCurrentHealth()));
@@ -723,7 +723,7 @@ void Game::LoadData() {
 			currentAudioInstance = AE->startLoseBGM();
 			endTextStr = "GAME OVER";
 		}
-		
+
 		endMessage_text->UpdateText(endTextStr);
 		replayMessage_text->UpdateText("PRESS R TO REPLAY");
 	}
@@ -793,7 +793,7 @@ Game::Pair Game::EnemySpotted(int row, int col) {
 		c = 0;
 	}
 
-	Pair fm = pair<int,int>(-1,-1);
+	Pair fm = pair<int, int>(-1, -1);
 	if (playerPosX != -1) {
 		Pair fm = astar->GetPath(map, playerPosX, playerPosY);
 		return fm;
