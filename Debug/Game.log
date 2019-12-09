@@ -1,3 +1,2 @@
-﻿  PlayerCombatSystem.cpp
-C:\Users\Eric Lin\Downloads\Bones-Engine\PlayerCombatSystem.cpp(62,12): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
+﻿  EnemyActor.cpp
   Game.vcxproj -> C:\Users\Eric Lin\Downloads\Bones-Engine\Debug\Game.exe

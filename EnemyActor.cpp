@@ -49,5 +49,6 @@ void EnemyActor::SetSkeletalMesh() {
 	skeletalMeshComponent = new SkeletalMeshComponent(this);
 	skeletalMeshComponent->SetMesh(game->GetRenderer()->GetMesh("Assets/Animations/knightMesh.obj"));
 	skeletalMeshComponent->SetSkeleton(game->GetSkeleton("Assets/Animations/knightSkel.json"));
+	skeletalMeshComponent->PlayAnimation(GetGame()->GetAnimation("Assets/Animations/knightIdleBackward.json"), 1.25f);
 	SetScale(100.0f);
 }
