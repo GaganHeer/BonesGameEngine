@@ -2,6 +2,8 @@
 #include <iostream>
 #include <list>
 #include <array>
+#include <thread>
+#include <mutex>
 #include "Game.h"
 #include "Room.h"
 #include "EnemyActor.h"
@@ -37,11 +39,15 @@ private:
 	int x = 7;
 	int y = 7;
 	int variance = 3;
+	int idx = 0;
 
 	int maxEnemies = 2;
 	int diffInc = 1;
 
 	Game* game;
 
+
 	vector<Room*> rooms;
+
+	void genRoomTh(bool temp);
 };
