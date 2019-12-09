@@ -10,17 +10,18 @@
 class HudElement
 {
 	public:
-		HudElement(Actor* anActor, Vector3 pos, Vector2 size, string* data);
+		HudElement();
+		HudElement(Actor* anActor, Vector3 pos, std::string data);
 		~HudElement();
 
 		void UpdateText(const std::string& text);
+		void SetPosition(Vector3 pos);
 
 	private:
 		Actor* element;
 		Vector3 pos;
 		SpriteComponent* sc;
-		Vector2 size;
-		string* data;
+		std::string data;
 		Font* fontRenderer;
 		Texture* fontTexture;
 };

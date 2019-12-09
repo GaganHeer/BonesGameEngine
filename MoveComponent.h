@@ -10,7 +10,9 @@ public:
 	void Update(float deltaTime) override;
 
 	void Collided();
-	
+	void UpdatePosition();
+	void StairsFound();
+
 	float GetHorizontalMove() const {
 		return horizontalMove;
 	}
@@ -31,4 +33,13 @@ private:
 	float horizontalMove;
 	float verticalMove;
 	Game* game;
+
+	bool movingUp;
+	bool movingDown;
+	bool movingLeft;
+	bool movingRight;
+
+	float dest;
+	float speed;
+	Vector3 dest_pos;
 };

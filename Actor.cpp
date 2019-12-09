@@ -17,11 +17,10 @@ Actor::~Actor()
 {
 	game->RemoveActor(this);
 	
-	for (int i = 0; i < components.size(); i++)
+	while (!components.empty())
 	{
-		delete components[i];
+		delete components.back();
 	}
-	components.clear();
 }
 
 void Actor::Update(float deltaTime)

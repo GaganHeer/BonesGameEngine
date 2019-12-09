@@ -98,7 +98,7 @@ void PlayerCombatSystem::takeDmg(int enemyAtk) {
 	if (enemyAtk == 0) {
 		printf("Player is debuffed\n");
 		if (!(getCurrentAtk() - getDebuffAmt() <= 5)) {
-			setDebuffAmt(getDebuffAmt() + 5);
+			setDebuffAmt(getDebuffAmt() + 15);
 		}
 
 	}

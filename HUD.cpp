@@ -10,9 +10,16 @@ HUD::~HUD()
 	clearHUD();
 }
 
-void HUD::addElement(HudElement* hudElement)
+HudElement* HUD::addElement(Actor* actor, ElementType type)
 {
-	hud_elements.push_back(hudElement);
+	switch (type)
+	{
+	case TEXT_BOX:
+	default:
+		hud_elements.push_back(new HudElement(actor, Vector3(), ""));
+		break;
+	}
+	return hud_elements.back();
 }
 
 void HUD::removeElement(HudElement* hudElement)
@@ -23,9 +30,24 @@ void HUD::removeElement(HudElement* hudElement)
 		if ((*itr) == hudElement)
 		{
 			hud_elements.erase(itr);
+			delete hudElement;
 			break;
 		}
 	}
+}
+
+bool HUD::isElementInHUD(HudElement* hudElement)
+{
+	vector<HudElement*>::iterator itr;
+	for (itr = hud_elements.begin(); itr < hud_elements.end(); itr++)
+	{
+		if ((*itr) == hudElement)
+		{
+			return true;
+		}
+	}
+
+	return false;
 }
 
 void HUD::clearHUD()

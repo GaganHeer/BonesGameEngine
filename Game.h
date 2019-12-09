@@ -1,4 +1,5 @@
 #pragma once
+
 #include <SDL.h>
 #include <unordered_map>
 #include <string>
@@ -12,11 +13,26 @@
 #include "Font.h"
 #include "Texture.h"
 #include <thread>
+#include "AStar.h"
+#include <utility>
 
 
 class Game
 {
 public:
+	enum GameState {
+		gameplay,
+		paused,
+		quit
+	};
+
+	enum GameScene {
+		MAZE_SCENE = 0,
+		ENEMY_FIGHT_SCENE,
+		BOSS_FIGHT_SCENE,
+		END_GAME_SCENE
+	};
+
 	Game();
 	bool Initialize();
 	void RunLoop();
@@ -25,11 +41,8 @@ public:
 	void AddActor(class Actor* actor);
 	void RemoveActor(class Actor* actor);
 
-	enum GameState {
-		gameplay,
-		paused,
-		quit
-	};
+	typedef pair<int, int> Pair;
+
 
 	class Renderer* GetRenderer() { 
 		return renderer; 
@@ -55,20 +68,25 @@ public:
 		enemyCollision = isCollision;
 	}
 
+	void SetStairCollision(bool isCollision) {
+		stairCollision = isCollision;
+	}
+
 	bool GetEnemyCollision() {
 		return enemyCollision;
+	}
+
+	int** GetMap2D() {
+		return map2D;
 	}
 
 	int IsWalkable(int row, int col);
 	void Game::SetWalkable(int row, int col);
 	void Game::SetEnemyMapPos(int row, int col);
 	void Game::SetPlayerMapPos(int row, int col);
+	void Game::SetStairMapPos(int row, int col);
 	void CombatRound(int atkType);
-
-	vector<Vector3> getEnemies() {
-		return enem;
-	}
-
+	Pair Game::EnemySpotted(int row, int col);
 private:
 	void ProcessInput();
 	void UpdateGame();
@@ -77,9 +95,8 @@ private:
 	void CreatePointLights(Actor*& a, Vector3& pos, int z);
 	void UnloadData();
 	void UnloadSkelAnim();
-	void InitFontRenderer();
-	void UpdateText(Texture*& fontArea, const std::string& text);
-	void CleanupFontAreas();
+	void InitHUD();
+	void UnloadHud();
 	
 	
 	std::vector<class Actor*> actors;
@@ -97,12 +114,12 @@ private:
 	class Generator* randGen;
 	Uint32 ticksCount;
 	int scene;
+	int level;
 	GameState gameState;
 	bool isRunning;
 	bool isLoading;
 	bool updatingActors;
 	std::vector<class EnemyActor*> enemies;
-	std::vector<Vector3> enem;
 	std::vector<class Room*> rooms;
 
 	int exit_posX;
@@ -111,6 +128,7 @@ private:
 	int start_posY;
 
 	int** map2D;
+	AStar* astar;
 
 	//Game Specific
 	class CameraTargetActor* cameraTargetActor;
@@ -119,14 +137,27 @@ private:
 	class LevelUpSystem* playerLevels;
 	class EnemyCombatSystem* enemyCombat;
 	class EnemyActor* enemyActor;
+	class BossSprite* bossSprite;
+	class SkeletonSprite* skeletonSprite;
+	class KnightSprite* knightSprite;
+	class VictorySprite* victorySprite;
 
-	Texture* fontEnemyHealth;
-	Texture* fontPlayerHealth;
 	class HUD* hud;
+
+	class HudElement* playerHealth_text;
+	class HudElement* enemyHealth_text;
+	class HudElement* gameMessage_text;
+	class HudElement* endMessage_text;
+	class HudElement* replayMessage_text;
 
 	bool isReturning;
 	bool enemyCollision;
+	bool stairCollision;
 	bool isAttacking;
+	bool waitForEnemyAttack;
+	bool waitForEnemyDeath;
+	bool waitForPlayerDeath;
+	bool doesWin;
 	
 	Vector3 savedPlayerPosition;
 	vector<Vector3> saved_enemies;

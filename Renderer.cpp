@@ -67,16 +67,6 @@ bool Renderer::Initialize(float newScreenWidth, float newScreenHeight){
 	}
 	CreateSpriteVerts();
 
-	if (!CreateMirrorTarget()) {
-		SDL_Log("Failed to create render target for mirror.");
-		return false;
-	}
-
-	if (!CreateShadowMapTarget()) {
-		SDL_Log("Failed to create render target for shadow map.");
-		return false;
-	}
-
 	_GBuffer = new GBuffer();
 	int width = static_cast<int>(screenWidth);
 	int height = static_cast<int>(screenHeight);
@@ -111,13 +101,10 @@ void Renderer::UnloadData(){
 		i.second->Unload();
 	}
 	meshes.clear();
+	skeletalMeshes.clear();
 }
 
 void Renderer::Draw(){
-	// Draw to the mirror texture first
-	Draw3DScene(mirrorBuffer, mirrorView, projection, 0.25f);
-	//Draw the shadow map texture
-	DrawDepthMap(depthMapFBO, view, projection, 1.0f);
 	// Draw the 3D scene to the G-buffer
 	Draw3DScene(_GBuffer->GetBufferID(), view, projection, 1.0f, false);
 	// Set the frame buffer back to zero (screen's frame buffer)
@@ -187,12 +174,18 @@ void Renderer::RemoveMeshComp(MeshComponent* mesh){
 	{
 		SkeletalMeshComponent* sk = static_cast<SkeletalMeshComponent*>(mesh);
 		auto iter = std::find(skeletalMeshes.begin(), skeletalMeshes.end(), sk);
-		skeletalMeshes.erase(iter);
+		if (iter != skeletalMeshes.end())
+		{
+			skeletalMeshes.erase(iter);
+		}
 	}
 	else
 	{
 		auto iter = std::find(meshComps.begin(), meshComps.end(), mesh);
-		meshComps.erase(iter);
+		if (iter != meshComps.end())
+		{
+			meshComps.erase(iter);
+		}
 	}
 }
 
@@ -202,7 +195,10 @@ void Renderer::AddPointLight(PointLightComponent* light) {
 
 void Renderer::RemovePointLight(PointLightComponent* light) {
 	auto iter = std::find(pointLights.begin(), pointLights.end(), light);
-	pointLights.erase(iter);
+	if (iter != pointLights.end())
+	{
+		pointLights.erase(iter);
+	}
 }
 
 Texture* Renderer::GetTexture(const std::string& fileName){
@@ -241,13 +237,6 @@ Mesh* Renderer::GetMesh(const std::string & fileName){
 	return m;
 }
 
-void Renderer::DrawDepthMap(unsigned int framebuffer, const Matrix4& view, const Matrix4& proj, float viewPortScale, bool lit) {
-	glViewport(0, 0, static_cast<int>(screenWidth * viewPortScale), static_cast<int>(screenHeight * viewPortScale));
-	glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
-	glClear(GL_DEPTH_BUFFER_BIT);
-
-}
-
 void Renderer::Draw3DScene(unsigned int framebuffer, const Matrix4& view, const Matrix4& proj,
 	float viewPortScale, bool lit) {
 	// Set the current frame buffer
@@ -277,12 +266,11 @@ void Renderer::Draw3DScene(unsigned int framebuffer, const Matrix4& view, const 
 		SetLightUniforms(meshShader, view);
 	}
 
-	vector<MeshComponent*>::iterator itr;
-	for (itr = meshComps.begin(); itr < meshComps.end(); itr++)
+	for (auto mc : meshComps)
 	{
-		if ((*itr)->GetVisible())
+		if (mc->GetVisible())
 		{
-			(*itr)->Draw(meshShader);
+			mc->Draw(meshShader);
 		}
 	}
 
@@ -295,78 +283,13 @@ void Renderer::Draw3DScene(unsigned int framebuffer, const Matrix4& view, const 
 		SetLightUniforms(skinnedShader, view);
 	}
 
-	vector<SkeletalMeshComponent*>::iterator iter;
-	for (iter = skeletalMeshes.begin(); iter < skeletalMeshes.end(); iter++)
+	for (auto sk : skeletalMeshes)
 	{
-		if ((*iter)->GetVisible())
+		if (sk->GetVisible())
 		{
-			(*iter)->Draw(skinnedShader);
+			sk->Draw(skinnedShader);
 		}
 	}
-}
-
-bool Renderer::CreateMirrorTarget() {
-	int width = static_cast<int>(screenWidth) / 4;
-	int height = static_cast<int>(screenHeight) / 4;
-
-	// Generate a frame buffer for the mirror texture
-	glGenFramebuffers(1, &mirrorBuffer);
-	glBindFramebuffer(GL_FRAMEBUFFER, mirrorBuffer);
-
-	// Create the texture we'll use for rendering
-	mirrorTexture = new Texture();
-	mirrorTexture->CreateForRendering(width, height, GL_RGB);
-
-	// Add a depth buffer to this target
-	GLuint depthBuffer;
-	glGenRenderbuffers(1, &depthBuffer);
-	glBindRenderbuffer(GL_RENDERBUFFER, depthBuffer);
-	glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, width, height);
-	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, depthBuffer);
-
-	// Attach mirror texture as the output target for the frame buffer
-	glFramebufferTexture(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, mirrorTexture->GetTextureID(), 0);
-
-	// Set the list of buffers to draw to for this frame buffer
-	GLenum drawBuffers[] = { GL_COLOR_ATTACHMENT0 };
-	glDrawBuffers(1, drawBuffers);
-
-	// Make sure everything worked
-	if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
-		// If it didn't work, delete the framebuffer,
-		// unload/delete the texture and return false
-		glDeleteFramebuffers(1, &mirrorBuffer);
-		mirrorTexture->Unload();
-		delete mirrorTexture;
-		mirrorTexture = nullptr;
-		return false;
-	}
-	return true;
-}
-
-bool Renderer::CreateShadowMapTarget() {
-	glGenFramebuffers(1, &depthMapFBO);
-
-	depthMapTexture = new Texture();
-	depthMapTexture->CreateForRenderingShadowMap(1024, 1024, GL_DEPTH_COMPONENT);
-
-	glBindFramebuffer(GL_FRAMEBUFFER, depthMapFBO);
-	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, depthMapTexture->GetTextureID(), 0);
-
-	glDrawBuffer(GL_NONE); // No color buffer is drawn to.
-	glReadBuffer(GL_NONE);
-
-	glBindFramebuffer(GL_FRAMEBUFFER, 0);
-
-	// Always check that our framebuffer is ok
-	if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
-		glDeleteFramebuffers(1, &depthMapFBO);
-		depthMapTexture->Unload();
-		delete depthMapTexture;
-		depthMapTexture = nullptr;
-		return false;
-	}
-	return true;
 }
 
 void Renderer::DrawFromGBuffer()
@@ -433,22 +356,6 @@ bool Renderer::LoadShaders() {
 	spriteShader->SetActive();
 	Matrix4 spriteViewProj = Matrix4::CreateSimpleViewProj(screenWidth, screenHeight);
 	spriteShader->SetMatrixUniform("uViewProj", spriteViewProj);
-	
-	//Depth Shader
-	depthShader = new Shader();
-	if (!depthShader->Load("Shaders/Shadows.vert", "Shaders/Shadows.frag")) {
-		return false;
-	}
-	depthShader->SetActive();
-	float near_plane = 1.0f, far_plane = 7.5f;
-	Matrix4 lightProjection = Matrix4::CreateOrtho(10.0f, 10.0f, near_plane, far_plane);
-
-	Matrix4 lightView = Matrix4::CreateLookAt(Vector3(-2.0f, 4.0f, -1.0f),
-		Vector3(0.0f, 0.0f, 0.0f),
-		Vector3(0.0f, 1.0f, 0.0f));
-
-	Matrix4 lightSpaceMatrix = lightProjection * lightView;
-	depthShader->SetMatrixUniform("lightSpaceMatrix", lightSpaceMatrix);
 
 	//Mesh Shader
 	meshShader = new Shader();
