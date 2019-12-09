@@ -40,16 +40,17 @@ vector<Room*> Generator::generate() {
 	srand(time(NULL));
 
 	bool temp = false;
+	idx = 0;
+	while (idx < NUM_ROOMS) {
+		thread th1([&](Generator* gen) {gen->genRoomTh(temp);}, this);
+		thread th2([&](Generator* gen) {gen->genRoomTh(temp);}, this);
 
-	for (int i = 0; i < NUM_ROOMS; i++) {
-		temp = rooms[i]->generate(temp);
+		th1.join();
+		th2.join();
 	}
-	//prints room parameters
+
 	for (int n = 0; n < NUM_ROOMS; n++) {
 		int* returnedParams = rooms[n]->getParameters();
-		//cout << "Room: " << n << " -> " << "[" << temp[0] << ", " << temp[1] << "]";
-		//printf("\n");
-		//cout << " CORRIDOR LENGTH TWO: " << returnedParams[10] << endl;
 	}
 
 	return rooms;
@@ -57,6 +58,16 @@ vector<Room*> Generator::generate() {
 
 int Generator::getNumRooms() {
 	return NUM_ROOMS;
+}
+
+void Generator::genRoomTh(bool temp) {
+	if (idx < NUM_ROOMS) {
+		mutex mtx;
+		mtx.lock();
+		temp = rooms[idx]->generate(temp);
+		idx++;
+		mtx.unlock();
+	}
 }
 
 //{ _width, _height, _entry, _entryDoor, _exit, _exitDoor, _isStart, _isEnd, _stairX, _stairY, _nextRoomCorridor };
