@@ -18,6 +18,7 @@ HudElement::HudElement(Actor* anActor, Vector3 pos)
 
 void HudElement::SetPosition(Vector3 pos)
 {
+	this->pos = pos;
 	element->SetPosition(pos);
 }
 

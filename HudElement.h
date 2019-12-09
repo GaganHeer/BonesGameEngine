@@ -11,7 +11,8 @@ class HudElement
 		HudElement(Actor* anActor, Vector3 pos);
 		virtual ~HudElement();
 
-		void SetPosition(Vector3 pos);
+		virtual void SetPosition(Vector3 pos);
+		Vector3 GetPosition() const { return pos; };
 
 	protected:
 		Actor* element;

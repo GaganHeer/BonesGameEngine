@@ -40,6 +40,10 @@ public:
 		return scale; 
 	}
 
+	Vector3 GetScaleV() const { 
+		return v_scale; 
+	}
+
 	Vector3 GetForward() const { 
 		return Vector3::Transform(Vector3::UnitX, rotation); 
 	}
@@ -69,8 +73,14 @@ public:
 		position = newPosition; recomputeWorldTransform = true; 
 	}
 
-	void SetScale(float newScale) { 
-		scale = newScale;  recomputeWorldTransform = true; 
+	void SetScale(float newScale) {
+		scale = newScale;
+		SetScaleV(Vector3(newScale, newScale, newScale));
+	}
+
+	void SetScaleV(Vector3& newScale) { 
+		v_scale = newScale;
+		recomputeWorldTransform = true; 
 	}
 
 	void SetRotation(const Quaternion& newRotation) { 
@@ -90,6 +100,7 @@ private:
 	Vector3 position;
 	Quaternion rotation;
 	float scale;
+	Vector3 v_scale;
 	bool recomputeWorldTransform;
 
 	std::vector<class Component*> components;

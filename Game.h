@@ -13,11 +13,6 @@
 #include "Font.h"
 #include "Texture.h"
 #include <thread>
-/*
-#include "HUD.h"
-#include "HudElement.h"
-#include "TextBox.h"
-*/
 
 class Game
 {
@@ -143,6 +138,7 @@ private:
 	class TextBox* gameMessage_text;
 	class TextBox* endMessage_text;
 	class TextBox* replayMessage_text;
+	class HealthBar* playerHealthBar;
 	
 	bool isReturning;
 	bool enemyCollision;

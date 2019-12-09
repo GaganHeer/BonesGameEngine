@@ -1,11 +1,5 @@
-﻿  Game.cpp
-C:\Users\happi\Documents\BonesEngine\Game.cpp(366,30): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
-C:\Users\happi\Documents\BonesEngine\Game.cpp(367,30): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
-C:\Users\happi\Documents\BonesEngine\Game.cpp(510,30): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
-C:\Users\happi\Documents\BonesEngine\Game.cpp(511,30): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
-C:\Users\happi\Documents\BonesEngine\Game.cpp(523,23): warning C4018: '<': signed/unsigned mismatch
-C:\Users\happi\Documents\BonesEngine\Game.cpp(528,16): warning C4244: 'initializing': conversion from 'const float' to 'int', possible loss of data
-C:\Users\happi\Documents\BonesEngine\Game.cpp(529,16): warning C4244: 'initializing': conversion from 'const float' to 'int', possible loss of data
-C:\Users\happi\Documents\BonesEngine\Game.cpp(531,31): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
-C:\Users\happi\Documents\BonesEngine\Game.cpp(532,31): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+﻿  HealthBar.cpp
+C:\Users\happi\Documents\BonesEngine\HealthBar.cpp(41,11): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+C:\Users\happi\Documents\BonesEngine\HealthBar.cpp(42,14): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+C:\Users\happi\Documents\BonesEngine\HealthBar.cpp(44,31): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
   Game.vcxproj -> C:\Users\happi\Documents\BonesEngine\Debug\Game.exe

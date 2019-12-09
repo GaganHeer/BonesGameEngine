@@ -45,6 +45,7 @@
     <ClCompile Include="KnightSprite.cpp" />
     <ClCompile Include="VictorySprite.cpp" />
     <ClCompile Include="TextBox.cpp" />
+    <ClCompile Include="HealthBar.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Actor.h" />
@@ -91,6 +92,7 @@
     <ClInclude Include="KnightSprite.h" />
     <ClInclude Include="VictorySprite.h" />
     <ClInclude Include="TextBox.h" />
+    <ClInclude Include="HealthBar.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Shaders\BasicMesh.frag" />

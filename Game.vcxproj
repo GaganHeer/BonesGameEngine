@@ -29,6 +29,7 @@
     <ClCompile Include="GBuffer.cpp" />
     <ClCompile Include="Generator.cpp" />
     <ClCompile Include="GUI.cpp" />
+    <ClCompile Include="HealthBar.cpp" />
     <ClCompile Include="HUD.cpp" />
     <ClCompile Include="HudElement.cpp" />
     <ClCompile Include="InputSystem.cpp" />
@@ -75,6 +76,7 @@
     <ClInclude Include="GBuffer.h" />
     <ClInclude Include="Generator.h" />
     <ClInclude Include="GUI.h" />
+    <ClInclude Include="HealthBar.h" />
     <ClInclude Include="HUD.h" />
     <ClInclude Include="HudElement.h" />
     <ClInclude Include="InputSystem.h" />

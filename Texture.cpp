@@ -48,7 +48,6 @@ bool Texture::Load(const std::string& fileName){
 		// Enable it
 		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAX_ANISOTROPY_EXT, largest);
 	}
-	
 	return true;
 }
 
