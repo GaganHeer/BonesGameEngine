@@ -8,18 +8,18 @@ VictorySprite::VictorySprite(Game* game)
 	time(0), 
 	ready(true) 
 {
-	sc = new SpriteComponent(this, 100);
-	sc->SetTexture(game->GetRenderer()->GetTexture("Assets/victory-dance/tile0.png"));
+	sc = new SpriteComponent(this, 10);
+	sc->SetTexture(game->GetRenderer()->GetTexture("Assets/victory-dance-alt/tile0.png"));
 }
 
 void VictorySprite::UpdateActor(float deltaTime) {
 	time += deltaTime;
-	if (time >= .1) {
+	if (time >= .07f) {
 		ready = true;
-		SetPosition(Vector3(350.0f, 50.0f, 0.0f));
+		SetPosition(Vector3(0.0f, 50.0f, 0.0f));
 		SetScale(3.f);
 		tileNum++;
-		if (tileNum > 15)
+		if (tileNum > 137)
 			tileNum = 0;
 		
 		//string temp = "";
@@ -30,7 +30,7 @@ void VictorySprite::UpdateActor(float deltaTime) {
 		//	}
 		//}
 
-		string file = "Assets/victory-dance/tile" + std::to_string(tileNum);
+		string file = "Assets/victory-dance-alt/tile" + std::to_string(tileNum);
 		file.append(".png");
 
 		sc->SetTexture(this->GetGame()->GetRenderer()->GetTexture(file));

@@ -243,7 +243,7 @@ void Game::UpdateGame()
 	else if (stairCollision) {
 		gameMessage_text->UpdateText("Stairs found!");
 		enemyCombat->enemyLevel(10, 10, 50);
-		if (level >= 5) {
+		if (level >= 1) {
 			if (currentAudioInstance) {
 				AE->stopAudio(currentAudioInstance);
 			}
@@ -713,7 +713,7 @@ void Game::LoadData() {
 			}
 			currentAudioInstance = AE->startWinAltBGM();
 
-			//victorySprite = new VictorySprite(this);
+			victorySprite = new VictorySprite(this);
 			endTextStr = "YOU WIN";
 		}
 		else {
