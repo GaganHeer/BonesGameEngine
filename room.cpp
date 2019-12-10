@@ -37,6 +37,7 @@ Room::~Room()
 
 bool Room::generate(bool lastDoor) {
 	int tempVar = (_variance * 2) + 1;
+	srand(time(NULL));
 
 	_varX = rand() % tempVar + (-_variance);
 	_varY = rand() % tempVar + (-_variance);
@@ -52,7 +53,6 @@ bool Room::generate(bool lastDoor) {
 	if (!_isStart) {
 		//Makes the entry door the same face from the last rooms exit door. For simplicity. 
 		_entry = lastDoor;
-
 
 		//For entry doors. These doors will be placed either on the south or west walls, and are determined by counting from the left (for south) or from the bottom.
 		if (_entry) {

@@ -1,3 +1,12 @@
-﻿  PlayerCombatSystem.cpp
-C:\Users\gagan\Desktop\BonesRepo\Bones-Engine\PlayerCombatSystem.cpp(62,12): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
+﻿  room.cpp
+C:\Users\gagan\Desktop\BonesRepo\Bones-Engine\room.cpp(40,12): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
+C:\Users\gagan\Desktop\BonesRepo\Bones-Engine\room.cpp(57,13): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
+C:\Users\gagan\Desktop\BonesRepo\Bones-Engine\room.cpp(71,13): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
+C:\Users\gagan\Desktop\BonesRepo\Bones-Engine\room.cpp(85,13): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
+C:\Users\gagan\Desktop\BonesRepo\Bones-Engine\room.cpp(135,45): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\gagan\Desktop\BonesRepo\Bones-Engine\room.cpp(135,37): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\gagan\Desktop\BonesRepo\Bones-Engine\room.cpp(139,42): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\gagan\Desktop\BonesRepo\Bones-Engine\room.cpp(142,45): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\gagan\Desktop\BonesRepo\Bones-Engine\room.cpp(240,20): warning C4018: '<': signed/unsigned mismatch
+C:\Users\gagan\Desktop\BonesRepo\Bones-Engine\room.cpp(171): warning C4172: returning address of local variable or temporary: size
   Game.vcxproj -> C:\Users\gagan\Desktop\BonesRepo\Bones-Engine\Debug\Game.exe
