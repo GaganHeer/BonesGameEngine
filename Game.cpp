@@ -179,6 +179,11 @@ void Game::ProcessInput() {
 					waitForEnemyAttack = false;
 					waitForEnemyDeath = false;
 					waitForPlayerDeath = false;
+					playerHealthBar->SetPosition(Vector3(-280.0f, 340.0f, 0.0f));
+					playerXPBar->SetPosition(Vector3(-280.0f, 310.0f, 0.0f));
+					playerHealthLabel_text->SetPosition(Vector3(-450.0f, 340.0f, 0.0f));
+					playerXPLabel_text->SetPosition(Vector3(-450.0f, 310.0f, 0.0f));
+					playerLevel_text->SetPosition(Vector3(-440.0f, 280.0f, 0.0f));
 				}
 			}
 		}
@@ -248,13 +253,13 @@ void Game::UpdateGame()
 		gameMessage_text->UpdateText("Stairs found!");
 		
 		enemyCombat->enemyLevel(10, 10, 50);
-		if (level >= 1) {
+		if (level >= 5) {
 			if (currentAudioInstance) {
 				AE->stopAudio(currentAudioInstance);
 			}
 			currentAudioInstance = AE->startBossBGM();
 			scene = BOSS_FIGHT_SCENE;
-			enemyCombat->enemyLevel(150, 30, 500);
+			enemyCombat->enemyLevel(180, 20, 500);
 		}
 		isLoading = true;
 		stairCollision = false;
@@ -275,8 +280,10 @@ void Game::UpdateGame()
 				playerHealth_text->UpdateText("player health: " + std::to_string(playerCombat->getCurrentHealth()));
 				enemyHealth_text->UpdateText("enemy health: " + std::to_string(enemyCombat->getCurrentHealth()));
 
-				playerAttack_text->UpdateText("player attack: " + std::to_string(playerCombat->getCurrentAtk()));
+				playerAttack_text->UpdateText("player attack: " + std::to_string(playerCombat->getBaseAtk()));
 				enemnyAttack_text->UpdateText("enemy attack: " + std::to_string(enemyCombat->getAtk()));
+
+				debuffAmt_text->UpdateText("debuff amount: " + std::to_string(playerCombat->getDebuffAmt()));
 				
 				playerHealthBar->updateRange(0, playerCombat->getBaseHealth());
 				playerHealthBar->update(playerCombat->getCurrentHealth());
@@ -301,8 +308,10 @@ void Game::UpdateGame()
 				playerHealth_text->UpdateText("player health: " + std::to_string(playerCombat->getCurrentHealth()));
 				enemyHealth_text->UpdateText("enemy health: " + std::to_string(enemyCombat->getCurrentHealth()));
 
-				playerAttack_text->UpdateText("player attack: " + std::to_string(playerCombat->getCurrentAtk()));
+				playerAttack_text->UpdateText("player attack: " + std::to_string(playerCombat->getBaseAtk()));
 				enemnyAttack_text->UpdateText("enemy attack: " + std::to_string(enemyCombat->getAtk()));
+				
+				debuffAmt_text->UpdateText("debuff amount: " + std::to_string(playerCombat->getDebuffAmt()));
 				
 				playerHealthBar->updateRange(0, playerCombat->getBaseHealth());
 				playerHealthBar->update(playerCombat->getCurrentHealth());
@@ -717,8 +726,10 @@ void Game::LoadData() {
 		playerHealth_text->UpdateText("player health: " + std::to_string(playerCombat->getCurrentHealth()));
 		enemyHealth_text->UpdateText("enemy health: " + std::to_string(enemyCombat->getCurrentHealth()));
 
-		playerAttack_text->UpdateText("player attack: " + std::to_string(playerCombat->getCurrentAtk()));
+		playerAttack_text->UpdateText("player attack: " + std::to_string(playerCombat->getBaseAtk()));
 		enemnyAttack_text->UpdateText("enemy attack: " + std::to_string(enemyCombat->getAtk()));
+		
+		debuffAmt_text->UpdateText("debuff amount: " + std::to_string(playerCombat->getDebuffAmt()));
 		
 		playerHealthBar->updateRange(0, playerCombat->getBaseHealth());
 		playerHealthBar->update(playerCombat->getCurrentHealth());
@@ -733,7 +744,7 @@ void Game::LoadData() {
 		waitForEnemyAttack = false;
 		AE->stopAudio(currentAudioInstance);
 		currentAudioInstance = AE->startBossBGM();
-		enemyCombat = new EnemyCombatSystem(200, 25, 500);
+		//enemyCombat = new EnemyCombatSystem(200, 25, 500);
 
 		Actor* combatText = new Actor(this);
 		combatText->SetPosition(Vector3(0.0f, -210.0f, 0.0f));
@@ -745,8 +756,10 @@ void Game::LoadData() {
 		playerHealth_text->UpdateText("player health: " + std::to_string(playerCombat->getCurrentHealth()));
 		enemyHealth_text->UpdateText("enemy health: " + std::to_string(enemyCombat->getCurrentHealth()));
 
-		playerAttack_text->UpdateText("player attack: " + std::to_string(playerCombat->getCurrentAtk()));
+		playerAttack_text->UpdateText("player attack: " + std::to_string(playerCombat->getBaseAtk()));
 		enemnyAttack_text->UpdateText("enemy attack: " + std::to_string(enemyCombat->getAtk()));
+		
+		debuffAmt_text->UpdateText("debuff amount: " + std::to_string(playerCombat->getDebuffAmt()));
 		
 		playerHealthBar->updateRange(0, playerCombat->getBaseHealth());
 		playerHealthBar->update(playerCombat->getCurrentHealth());
@@ -761,6 +774,11 @@ void Game::LoadData() {
 		bossSprite->SetScale(5.f);
 	}
 	else if (scene == END_GAME_SCENE) {
+		playerHealthBar->SetPosition(Vector3(500, 500, 500));
+		playerXPBar->SetPosition(Vector3(500, 500, 500));
+		playerHealthLabel_text->SetPosition(Vector3(500, 500, 500));
+		playerXPLabel_text->SetPosition(Vector3(500, 500, 500));
+		playerLevel_text->SetPosition(Vector3(500, 500, 500));
 		string endTextStr;
 		if (doesWin) {
 			if (currentAudioInstance) {
@@ -1106,11 +1124,11 @@ void Game::InitHUD()
 	hud = new HUD();
 	
 	playerHealth_text = (TextBox*)hud->addElement(new Actor(this), HUD::TEXT_BOX);
-	playerHealth_text->SetPosition(Vector3(-300.0f, 180.0f, 0.0f));
+	playerHealth_text->SetPosition(Vector3(-300.0f, 240.0f, 0.0f));
 	playerHealth_text->UpdateFontProperties(Color::LightGreen, Font::BIG_FONT_1);
 
 	enemyHealth_text = (TextBox*)hud->addElement(new Actor(this), HUD::TEXT_BOX);
-	enemyHealth_text->SetPosition(Vector3(300.0f, 180.0f, 0.0f));
+	enemyHealth_text->SetPosition(Vector3(300.0f, 240.0f, 0.0f));
 	enemyHealth_text->UpdateFontProperties(Color::LightGreen, Font::BIG_FONT_1);
 
 	playerAttack_text = (TextBox*)hud->addElement(new Actor(this), HUD::TEXT_BOX);
@@ -1120,6 +1138,10 @@ void Game::InitHUD()
 	enemnyAttack_text = (TextBox*)hud->addElement(new Actor(this), HUD::TEXT_BOX);
 	enemnyAttack_text->SetPosition(Vector3(300.0f, 210.0f, 0.0f));
 	enemnyAttack_text->UpdateFontProperties(Color::LightPink, Font::BIG_FONT_1);
+
+	debuffAmt_text = (TextBox*)hud->addElement(new Actor(this), HUD::TEXT_BOX);
+	debuffAmt_text->SetPosition(Vector3(-300.0f, 180.0f, 0.0f));
+	debuffAmt_text->UpdateFontProperties(Color::LightBlue, Font::BIG_FONT_1);
 
 	gameMessage_text = (TextBox*)hud->addElement(new Actor(this), HUD::TEXT_BOX);
 	gameMessage_text->SetPosition(Vector3(-340.0f, -350.0f, 0.0f));

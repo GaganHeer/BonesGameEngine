@@ -1,11 +1,3 @@
-﻿  Game.cpp
-C:\Users\happi\Documents\BonesEngine\Game.cpp(445,30): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
-C:\Users\happi\Documents\BonesEngine\Game.cpp(446,30): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
-C:\Users\happi\Documents\BonesEngine\Game.cpp(597,30): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
-C:\Users\happi\Documents\BonesEngine\Game.cpp(598,30): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
-C:\Users\happi\Documents\BonesEngine\Game.cpp(610,23): warning C4018: '<': signed/unsigned mismatch
-C:\Users\happi\Documents\BonesEngine\Game.cpp(615,16): warning C4244: 'initializing': conversion from 'const float' to 'int', possible loss of data
-C:\Users\happi\Documents\BonesEngine\Game.cpp(616,16): warning C4244: 'initializing': conversion from 'const float' to 'int', possible loss of data
-C:\Users\happi\Documents\BonesEngine\Game.cpp(618,31): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
-C:\Users\happi\Documents\BonesEngine\Game.cpp(619,31): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
-  Game.vcxproj -> C:\Users\happi\Documents\BonesEngine\Debug\Game.exe
+﻿  PlayerCombatSystem.cpp
+C:\Users\gagan\Desktop\BonesRepo\Bones-Engine\PlayerCombatSystem.cpp(62,12): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
+  Game.vcxproj -> C:\Users\gagan\Desktop\BonesRepo\Bones-Engine\Debug\Game.exe
