@@ -61,13 +61,12 @@ int Generator::getNumRooms() {
 }
 
 void Generator::genRoomTh(bool temp) {
+	mtx.lock();
 	if (idx < NUM_ROOMS) {
-		mutex mtx;
-		mtx.lock();
 		temp = rooms[idx]->generate(temp);
 		idx++;
-		mtx.unlock();
 	}
+	mtx.unlock();
 }
 
 //{ _width, _height, _entry, _entryDoor, _exit, _exitDoor, _isStart, _isEnd, _stairX, _stairY, _nextRoomCorridor };

@@ -45,7 +45,7 @@ private:
 	int diffInc = 1;
 
 	Game* game;
-
+	mutex mtx;
 
 	vector<Room*> rooms;
 
