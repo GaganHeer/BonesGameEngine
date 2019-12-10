@@ -5,10 +5,17 @@
 class HealthBar : public HudElement
 {
 public:
-	const char* ASSET_BG = "Assets/healthbar_bg.png";
-	const char* ASSET_FG = "Assets/healthbar_fg2.png";
+	enum Type
+	{
+		RED_BAR,
+		GREEN_BAR
+	};
 
-	HealthBar(Actor* actor, Vector3 pos, int minValue, int maxValue);
+	const char* ASSET_BG = "Assets/healthbar_bg.png";
+	const char* ASSET_FG_RED = "Assets/healthbar_red.png";
+	const char* ASSET_FG_GREEN = "Assets/healthbar_green.png";
+
+	HealthBar(Actor* actor, Vector3 pos, int minValue, int maxValue, Type type);
 	~HealthBar();
 
 	void update(int value);
@@ -24,6 +31,8 @@ private:
 	Texture* textureFG;
 	int minRange;
 	int maxRange;
+	Type type;
+
 	int currentValue;
 	int textureFG_width;
 	int textureBG_width;

@@ -14,8 +14,11 @@ HudElement* HUD::addElement(Actor* actor, ElementType type)
 {
 	switch (type)
 	{
-	case HEALTH_BAR:
-		hud_elements.push_back(new HealthBar(actor, Vector3(), 0, 0));
+	case HEALTH_BAR_RED:
+		hud_elements.push_back(new HealthBar(actor, Vector3(), 0, 0, HealthBar::RED_BAR));
+		break;
+	case HEALTH_BAR_GREEN:
+		hud_elements.push_back(new HealthBar(actor, Vector3(), 0, 0, HealthBar::GREEN_BAR));
 		break;
 	case TEXT_BOX:
 	default:

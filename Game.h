@@ -149,7 +149,14 @@ private:
 	class TextBox* gameMessage_text;
 	class TextBox* endMessage_text;
 	class TextBox* replayMessage_text;
+	class TextBox* playerLevel_text;
+	class TextBox* playerAttack_text;
+	class TextBox* enemnyAttack_text;
+
+	class TextBox* playerHealthLabel_text;
+	class TextBox* playerXPLabel_text;
 	class HealthBar* playerHealthBar;
+	class HealthBar* playerXPBar;
 	
 	bool isReturning;
 	bool enemyCollision;
