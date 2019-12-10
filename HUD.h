@@ -11,7 +11,8 @@ class HUD
 		enum ElementType
 		{
 			TEXT_BOX,
-			HEALTH_BAR,
+			HEALTH_BAR_RED,
+			HEALTH_BAR_GREEN,
 			DIALOG_BOX
 		};
 

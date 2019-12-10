@@ -274,8 +274,15 @@ void Game::UpdateGame()
 				
 				playerHealth_text->UpdateText("player health: " + std::to_string(playerCombat->getCurrentHealth()));
 				enemyHealth_text->UpdateText("enemy health: " + std::to_string(enemyCombat->getCurrentHealth()));
+
+				playerAttack_text->UpdateText("player attack: " + std::to_string(playerCombat->getCurrentAtk()));
+				enemnyAttack_text->UpdateText("enemy attack: " + std::to_string(enemyCombat->getAtk()));
+				
 				playerHealthBar->updateRange(0, playerCombat->getBaseHealth());
 				playerHealthBar->update(playerCombat->getCurrentHealth());
+
+				playerXPBar->updateRange(0, playerLevels->getRequiredXP());
+				playerXPBar->update(playerLevels->getCurrentXP());
 				
 			}
 		}
@@ -293,8 +300,15 @@ void Game::UpdateGame()
 				
 				playerHealth_text->UpdateText("player health: " + std::to_string(playerCombat->getCurrentHealth()));
 				enemyHealth_text->UpdateText("enemy health: " + std::to_string(enemyCombat->getCurrentHealth()));
+
+				playerAttack_text->UpdateText("player attack: " + std::to_string(playerCombat->getCurrentAtk()));
+				enemnyAttack_text->UpdateText("enemy attack: " + std::to_string(enemyCombat->getAtk()));
+				
 				playerHealthBar->updateRange(0, playerCombat->getBaseHealth());
 				playerHealthBar->update(playerCombat->getCurrentHealth());
+
+				playerXPBar->updateRange(0, playerLevels->getRequiredXP());
+				playerXPBar->update(playerLevels->getCurrentXP());
 			}
 		}
 	}
@@ -527,6 +541,9 @@ void Game::LoadData() {
 			playerHealthBar->updateRange(0, playerCombat->getBaseHealth());
 			playerHealthBar->update(playerCombat->getCurrentHealth());
 
+			playerXPBar->updateRange(0, playerLevels->getRequiredXP());
+			playerXPBar->update(playerLevels->getCurrentXP());
+
 			isReturning = false;
 		}
 		else { // ----------------------------------------------------------------------------------------------------------------------
@@ -677,6 +694,9 @@ void Game::LoadData() {
 			gameMessage_text->UpdateText("Find an exit point");
 			playerHealthBar->updateRange(0, playerCombat->getBaseHealth());
 			playerHealthBar->update(playerCombat->getCurrentHealth());
+
+			playerXPBar->updateRange(0, playerLevels->getRequiredXP());
+			playerXPBar->update(playerLevels->getCurrentXP());
 			
 			level++;
 		}
@@ -696,8 +716,15 @@ void Game::LoadData() {
 		
 		playerHealth_text->UpdateText("player health: " + std::to_string(playerCombat->getCurrentHealth()));
 		enemyHealth_text->UpdateText("enemy health: " + std::to_string(enemyCombat->getCurrentHealth()));
+
+		playerAttack_text->UpdateText("player attack: " + std::to_string(playerCombat->getCurrentAtk()));
+		enemnyAttack_text->UpdateText("enemy attack: " + std::to_string(enemyCombat->getAtk()));
+		
 		playerHealthBar->updateRange(0, playerCombat->getBaseHealth());
 		playerHealthBar->update(playerCombat->getCurrentHealth());
+
+		playerXPBar->updateRange(0, playerLevels->getRequiredXP());
+		playerXPBar->update(playerLevels->getCurrentXP());
 
 		skeletonSprite = new SkeletonSprite(this);
 		knightSprite = new KnightSprite(this);
@@ -717,8 +744,15 @@ void Game::LoadData() {
 		
 		playerHealth_text->UpdateText("player health: " + std::to_string(playerCombat->getCurrentHealth()));
 		enemyHealth_text->UpdateText("enemy health: " + std::to_string(enemyCombat->getCurrentHealth()));
+
+		playerAttack_text->UpdateText("player attack: " + std::to_string(playerCombat->getCurrentAtk()));
+		enemnyAttack_text->UpdateText("enemy attack: " + std::to_string(enemyCombat->getAtk()));
+		
 		playerHealthBar->updateRange(0, playerCombat->getBaseHealth());
 		playerHealthBar->update(playerCombat->getCurrentHealth());
+
+		playerXPBar->updateRange(0, playerLevels->getRequiredXP());
+		playerXPBar->update(playerLevels->getCurrentXP());
 
 		skeletonSprite = new SkeletonSprite(this);
 
@@ -1023,11 +1057,17 @@ void Game::CombatRound(int atkType) {
 		waitForEnemyDeath = true;
 		int XPAmt = enemyCombat->getXP();
 		bool doesLevel = playerLevels->addXP(XPAmt);
+
 		if (doesLevel) {
 			playerCombat->increaseStats();
 			playerHealthBar->updateRange(0, playerCombat->getBaseHealth());
 			playerHealthBar->update(playerCombat->getCurrentHealth());
 		}
+
+		playerXPBar->updateRange(0, playerLevels->getRequiredXP());
+		playerXPBar->update(playerLevels->getCurrentXP());
+
+		playerLevel_text->UpdateText("Level: " + std::to_string(playerLevels->getCurrentLevel()));
 	}
 	else {
 		enemyStatus = "alive";
@@ -1066,11 +1106,20 @@ void Game::InitHUD()
 	hud = new HUD();
 	
 	playerHealth_text = (TextBox*)hud->addElement(new Actor(this), HUD::TEXT_BOX);
-	//assert(playerHealth_text != NULL);
 	playerHealth_text->SetPosition(Vector3(-300.0f, 180.0f, 0.0f));
+	playerHealth_text->UpdateFontProperties(Color::LightGreen, Font::BIG_FONT_1);
 
 	enemyHealth_text = (TextBox*)hud->addElement(new Actor(this), HUD::TEXT_BOX);
 	enemyHealth_text->SetPosition(Vector3(300.0f, 180.0f, 0.0f));
+	enemyHealth_text->UpdateFontProperties(Color::LightGreen, Font::BIG_FONT_1);
+
+	playerAttack_text = (TextBox*)hud->addElement(new Actor(this), HUD::TEXT_BOX);
+	playerAttack_text->SetPosition(Vector3(-300.0f, 210.0f, 0.0f));
+	playerAttack_text->UpdateFontProperties(Color::LightPink, Font::BIG_FONT_1);
+
+	enemnyAttack_text = (TextBox*)hud->addElement(new Actor(this), HUD::TEXT_BOX);
+	enemnyAttack_text->SetPosition(Vector3(300.0f, 210.0f, 0.0f));
+	enemnyAttack_text->UpdateFontProperties(Color::LightPink, Font::BIG_FONT_1);
 
 	gameMessage_text = (TextBox*)hud->addElement(new Actor(this), HUD::TEXT_BOX);
 	gameMessage_text->SetPosition(Vector3(-340.0f, -350.0f, 0.0f));
@@ -1081,9 +1130,28 @@ void Game::InitHUD()
 	replayMessage_text = (TextBox*)hud->addElement(new Actor(this), HUD::TEXT_BOX);
 	replayMessage_text->SetPosition(Vector3(0.0f, 0.0f, 0.0f));
 	
-	playerHealthBar = (HealthBar*)hud->addElement(new Actor(this), HUD::HEALTH_BAR);
-	playerHealthBar->SetPosition(Vector3(-300.0f, 340.0f, 0.0f));
+	playerHealthBar = (HealthBar*)hud->addElement(new Actor(this), HUD::HEALTH_BAR_GREEN);
+	playerHealthBar->SetPosition(Vector3(-280.0f, 340.0f, 0.0f));
 	playerHealthBar->updateRange(0, playerCombat->getBaseHealth());
+
+	playerXPBar = (HealthBar*)hud->addElement(new Actor(this), HUD::HEALTH_BAR_RED);
+	playerXPBar->SetPosition(Vector3(-280.0f, 310.0f, 0.0f));
+	playerXPBar->updateRange(0, playerLevels->getRequiredXP());
+
+	playerHealthLabel_text = (TextBox*)hud->addElement(new Actor(this), HUD::TEXT_BOX);
+	playerHealthLabel_text->SetPosition(Vector3(-450.0f, 340.0f, 0.0f));
+	playerHealthLabel_text->UpdateFontProperties(Color::LightBlue, Font::MEDIUM_FONT_1);
+	playerHealthLabel_text->UpdateText("Health");
+
+	playerXPLabel_text = (TextBox*)hud->addElement(new Actor(this), HUD::TEXT_BOX);
+	playerXPLabel_text->SetPosition(Vector3(-450.0f, 310.0f, 0.0f));
+	playerXPLabel_text->UpdateFontProperties(Color::LightBlue, Font::MEDIUM_FONT_1);
+	playerXPLabel_text->UpdateText("XP");
+
+	playerLevel_text = (TextBox*)hud->addElement(new Actor(this), HUD::TEXT_BOX);
+	playerLevel_text->SetPosition(Vector3(-440.0f, 280.0f, 0.0f));
+	playerLevel_text->UpdateFontProperties(Color::LightBlue, Font::MEDIUM_FONT_1);
+	playerLevel_text->UpdateText("Level: " + std::to_string(playerLevels->getCurrentLevel()));
 }
 
 void Game::UnloadHud()

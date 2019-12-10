@@ -24,7 +24,6 @@ void HudElement::SetPosition(Vector3 pos)
 
 HudElement::~HudElement()
 {
-	printf("~HudElement()");
 	delete sc;
 	delete element;
 }

@@ -1,20 +1,22 @@
 #include "HealthBar.h"
 
-HealthBar::HealthBar(Actor* actor, Vector3 pos, int minValue, int maxValue) : HudElement(actor, pos)
+HealthBar::HealthBar(Actor* actor, Vector3 pos, int minValue, int maxValue, Type type) : HudElement(actor, pos)
 {
 	textureBG = nullptr;
 	textureFG = nullptr;
 	minRange = minValue;
 	maxRange = maxValue;
 	currentValue = minValue;
+	this->type = type;
+
 	actorFG = new Actor(actor->GetGame());
 	sc_FG = new SpriteComponent(actorFG);
+
 	loadTexture();
 }
 
 HealthBar::~HealthBar()
 {
-	printf("~HealthBar()");
 	if (textureBG != nullptr) textureBG->Unload();
 	if (textureFG != nullptr) textureFG->Unload();
 
@@ -62,7 +64,17 @@ void HealthBar::loadTexture()
 	textureBG->Load(ASSET_BG);
 
 	textureFG = new Texture();
-	textureFG->Load(ASSET_FG);
+	switch (type)
+	{
+		case RED_BAR:
+			textureFG->Load(ASSET_FG_RED);
+		break;
+		case GREEN_BAR:
+		default:
+			textureFG->Load(ASSET_FG_GREEN);
+			break;
+	}
+	
 
 	textureFG_width = textureFG->GetWidth();
 	textureBG_width = textureBG->GetWidth();
