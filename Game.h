@@ -146,6 +146,7 @@ private:
 	
 	class TextBox* playerHealth_text;
 	class TextBox* enemyHealth_text;
+	class TextBox* debuffAmt_text;
 	class TextBox* gameMessage_text;
 	class TextBox* endMessage_text;
 	class TextBox* replayMessage_text;
