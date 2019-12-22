@@ -14,6 +14,25 @@ The objective of the game is to climb the dungeon up to the last floor and defea
 * Harpreet Bains
 * Eric Lin
 
+### Controls
+
+#### Dungeon
+W to move up
+
+A to move left
+
+S to move down
+
+D to move right
+
+#### Combat
+H for heavy attack
+
+L for light attack
+
+#### Game End
+R to restart
+
 ### Gameplay
 
 #### Dungeon
