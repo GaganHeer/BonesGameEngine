@@ -1,128 +1,341 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClCompile Include="Actor.cpp" />
-    <ClCompile Include="Animation.cpp" />
-    <ClCompile Include="AudioEngine.cpp" />
-    <ClCompile Include="BoneTransform.cpp" />
-    <ClCompile Include="CameraComponent.cpp" />
-    <ClCompile Include="CameraTargetActor.cpp" />
-    <ClCompile Include="CircleComponent.cpp" />
-    <ClCompile Include="Component.cpp" />
-    <ClCompile Include="CubeActor.cpp" />
-    <ClCompile Include="EnemyActor.cpp" />
-    <ClCompile Include="EnemyCombatSystem.cpp" />
-    <ClCompile Include="EnemyMoveComponent.cpp" />
-    <ClCompile Include="Font.cpp" />
-    <ClCompile Include="Game.cpp" />
-    <ClCompile Include="GBuffer.cpp" />
-    <ClCompile Include="Generator.cpp" />
-    <ClCompile Include="GUI.cpp" />
-    <ClCompile Include="HUD.cpp" />
-    <ClCompile Include="HudElement.cpp" />
-    <ClCompile Include="InputSystem.cpp" />
-    <ClCompile Include="LevelUpSystem.cpp" />
-    <ClCompile Include="Main.cpp" />
-    <ClCompile Include="Math.cpp" />
-    <ClCompile Include="Mesh.cpp" />
-    <ClCompile Include="MeshComponent.cpp" />
-    <ClCompile Include="MoveComponent.cpp" />
-    <ClCompile Include="PlaneActor.cpp" />
-    <ClCompile Include="PlayerCombatSystem.cpp" />
-    <ClCompile Include="PointLightComponent.cpp" />
-    <ClCompile Include="Renderer.cpp" />
-    <ClCompile Include="room.cpp" />
-    <ClCompile Include="Shader.cpp" />
-    <ClCompile Include="SkeletalMeshComponent.cpp" />
-    <ClCompile Include="Skeleton.cpp" />
-    <ClCompile Include="SpriteComponent.cpp" />
-    <ClCompile Include="Texture.cpp" />
-    <ClCompile Include="TopDownCamera.cpp" />
-    <ClCompile Include="VertexArray.cpp" />
-    <ClCompile Include="StairActor.cpp" />
-<<<<<<< HEAD
-    <ClCompile Include="AStar.cpp" />
-=======
-    <ClCompile Include="BossSprite.cpp" />
-    <ClCompile Include="SkeletonSprite.cpp" />
-    <ClCompile Include="KnightSprite.cpp" />
-    <ClCompile Include="VictorySprite.cpp" />
-<<<<<<< HEAD
-    <ClCompile Include="TextBox.cpp" />
-    <ClCompile Include="HealthBar.cpp" />
-=======
->>>>>>> 14923dc897b70832f63414ac0aafa398b2479ad3
->>>>>>> ccf5a11fbabd6e6fa1461f49130ca56c32642162
+    <ClCompile Include="src\Actor.cpp">
+      <Filter>Src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Animation.cpp">
+      <Filter>Src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\AStar.cpp">
+      <Filter>Src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\AudioEngine.cpp">
+      <Filter>Src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\BoneTransform.cpp">
+      <Filter>Src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\BossSprite.cpp">
+      <Filter>Src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\CameraComponent.cpp">
+      <Filter>Src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\CameraTargetActor.cpp">
+      <Filter>Src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\CircleComponent.cpp">
+      <Filter>Src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Component.cpp">
+      <Filter>Src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\CubeActor.cpp">
+      <Filter>Src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\EnemyActor.cpp">
+      <Filter>Src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\EnemyCombatSystem.cpp">
+      <Filter>Src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\EnemyMoveComponent.cpp">
+      <Filter>Src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Font.cpp">
+      <Filter>Src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Game.cpp">
+      <Filter>Src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GBuffer.cpp">
+      <Filter>Src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Generator.cpp">
+      <Filter>Src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GUI.cpp">
+      <Filter>Src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\HealthBar.cpp">
+      <Filter>Src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\HUD.cpp">
+      <Filter>Src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\HudElement.cpp">
+      <Filter>Src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\InputSystem.cpp">
+      <Filter>Src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\KnightSprite.cpp">
+      <Filter>Src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\LevelUpSystem.cpp">
+      <Filter>Src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Main.cpp">
+      <Filter>Src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Mesh.cpp">
+      <Filter>Src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\MeshComponent.cpp">
+      <Filter>Src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\MoveComponent.cpp">
+      <Filter>Src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\PlaneActor.cpp">
+      <Filter>Src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\PlayerCombatSystem.cpp">
+      <Filter>Src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\PointLightComponent.cpp">
+      <Filter>Src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Renderer.cpp">
+      <Filter>Src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\room.cpp">
+      <Filter>Src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Shader.cpp">
+      <Filter>Src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\SkeletalMeshComponent.cpp">
+      <Filter>Src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Skeleton.cpp">
+      <Filter>Src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\SkeletonSprite.cpp">
+      <Filter>Src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\SpriteComponent.cpp">
+      <Filter>Src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\StairActor.cpp">
+      <Filter>Src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\TextBox.cpp">
+      <Filter>Src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Texture.cpp">
+      <Filter>Src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\TopDownCamera.cpp">
+      <Filter>Src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\VertexArray.cpp">
+      <Filter>Src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\VictorySprite.cpp">
+      <Filter>Src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\MathT.cpp">
+      <Filter>Src</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Actor.h" />
-    <ClInclude Include="Animation.h" />
-    <ClInclude Include="AudioEngine.h" />
-    <ClInclude Include="BoneTransform.h" />
-    <ClInclude Include="CameraComponent.h" />
-    <ClInclude Include="CameraTargetActor.h" />
-    <ClInclude Include="CircleComponent.h" />
-    <ClInclude Include="Component.h" />
-    <ClInclude Include="CubeActor.h" />
-    <ClInclude Include="EnemyActor.h" />
-    <ClInclude Include="EnemyCombatSystem.h" />
-    <ClInclude Include="EnemyMoveComponent.h" />
-    <ClInclude Include="Font.h" />
-    <ClInclude Include="Game.h" />
-    <ClInclude Include="GBuffer.h" />
-    <ClInclude Include="Generator.h" />
-    <ClInclude Include="GUI.h" />
-    <ClInclude Include="HUD.h" />
-    <ClInclude Include="HudElement.h" />
-    <ClInclude Include="InputSystem.h" />
-    <ClInclude Include="LevelUpSystem.h" />
-    <ClInclude Include="Math.h" />
-    <ClInclude Include="MatrixPalette.h" />
-    <ClInclude Include="Mesh.h" />
-    <ClInclude Include="MeshComponent.h" />
-    <ClInclude Include="MoveComponent.h" />
-    <ClInclude Include="PlaneActor.h" />
-    <ClInclude Include="PlayerCombatSystem.h" />
-    <ClInclude Include="PointLightComponent.h" />
-    <ClInclude Include="Renderer.h" />
-    <ClInclude Include="room.h" />
-    <ClInclude Include="Shader.h" />
-    <ClInclude Include="SkeletalMeshComponent.h" />
-    <ClInclude Include="Skeleton.h" />
-    <ClInclude Include="SpriteComponent.h" />
-    <ClInclude Include="Texture.h" />
-    <ClInclude Include="TopDownCamera.h" />
-    <ClInclude Include="VertexArray.h" />
-    <ClInclude Include="StairActor.h" />
-<<<<<<< HEAD
-    <ClInclude Include="AStar.h" />
-=======
-    <ClInclude Include="BossSprite.h" />
-    <ClInclude Include="SkeletonSprite.h" />
-    <ClInclude Include="KnightSprite.h" />
-    <ClInclude Include="VictorySprite.h" />
-<<<<<<< HEAD
-    <ClInclude Include="TextBox.h" />
-    <ClInclude Include="HealthBar.h" />
-=======
->>>>>>> 14923dc897b70832f63414ac0aafa398b2479ad3
->>>>>>> ccf5a11fbabd6e6fa1461f49130ca56c32642162
+    <ClInclude Include="headers\Actor.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="headers\Animation.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="headers\AStar.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="headers\AudioEngine.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="headers\BoneTransform.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="headers\BossSprite.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="headers\CameraComponent.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="headers\CameraTargetActor.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="headers\CircleComponent.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="headers\Component.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="headers\CubeActor.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="headers\EnemyActor.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="headers\EnemyCombatSystem.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="headers\EnemyMoveComponent.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="headers\Font.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="headers\Game.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="headers\GBuffer.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="headers\Generator.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="headers\GUI.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="headers\HealthBar.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="headers\HUD.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="headers\HudElement.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="headers\InputSystem.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="headers\KnightSprite.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="headers\LevelUpSystem.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="headers\MatrixPalette.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="headers\Mesh.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="headers\MeshComponent.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="headers\MoveComponent.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="headers\PlaneActor.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="headers\PlayerCombatSystem.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="headers\PointLightComponent.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="headers\Renderer.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="headers\room.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="headers\Shader.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="headers\SkeletalMeshComponent.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="headers\Skeleton.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="headers\SkeletonSprite.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="headers\SpriteComponent.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="headers\StairActor.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="headers\TextBox.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="headers\Texture.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="headers\TopDownCamera.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="headers\VertexArray.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="headers\VictorySprite.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="headers\MathT.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Shaders\BasicMesh.frag" />
-    <None Include="Shaders\BasicMesh.vert" />
-    <None Include="Shaders\DepthMap.frag" />
-    <None Include="Shaders\DepthMap.vert" />
-    <None Include="Shaders\GBufferGlobal.frag" />
-    <None Include="Shaders\GBufferGlobal.vert" />
-    <None Include="Shaders\GBufferPointLight.frag" />
-    <None Include="Shaders\GBufferWrite.frag" />
-    <None Include="Shaders\Phong.frag" />
-    <None Include="Shaders\Phong.vert" />
-    <None Include="Shaders\Shadows.frag" />
-    <None Include="Shaders\Shadows.vert" />
-    <None Include="Shaders\Skinned.vert" />
-    <None Include="Shaders\Sprite.frag" />
-    <None Include="Shaders\Sprite.vert" />
+    <None Include="Shaders\DepthMap.vert">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="Shaders\DepthMap.frag">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="Shaders\BasicMesh.frag">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="Shaders\BasicMesh.vert">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="Shaders\GBufferGlobal.frag">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="Shaders\GBufferGlobal.vert">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="Shaders\GBufferPointLight.frag">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="Shaders\GBufferWrite.frag">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="Shaders\Phong.frag">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="Shaders\Phong.vert">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="Shaders\Shadows.frag">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="Shaders\Shadows.vert">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="Shaders\Skinned.vert">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="Shaders\Sprite.frag">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="Shaders\Sprite.vert">
+      <Filter>Shaders</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Headers">
+      <UniqueIdentifier>{5ebd9d1c-f1c9-4903-8358-b0d55cdbcc6c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src">
+      <UniqueIdentifier>{aed424d1-d648-4ab9-92ad-16bb715be196}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders">
+      <UniqueIdentifier>{bea122df-8162-4586-ac42-33f4288d0320}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
 </Project>

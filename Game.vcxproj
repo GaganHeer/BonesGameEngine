@@ -11,100 +11,100 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Actor.cpp" />
-    <ClCompile Include="Animation.cpp" />
-    <ClCompile Include="AStar.cpp" />
-    <ClCompile Include="AudioEngine.cpp" />
-    <ClCompile Include="BoneTransform.cpp" />
-    <ClCompile Include="BossSprite.cpp" />
-    <ClCompile Include="CameraComponent.cpp" />
-    <ClCompile Include="CameraTargetActor.cpp" />
-    <ClCompile Include="CircleComponent.cpp" />
-    <ClCompile Include="Component.cpp" />
-    <ClCompile Include="CubeActor.cpp" />
-    <ClCompile Include="EnemyActor.cpp" />
-    <ClCompile Include="EnemyCombatSystem.cpp" />
-    <ClCompile Include="EnemyMoveComponent.cpp" />
-    <ClCompile Include="Font.cpp" />
-    <ClCompile Include="Game.cpp" />
-    <ClCompile Include="GBuffer.cpp" />
-    <ClCompile Include="Generator.cpp" />
-    <ClCompile Include="GUI.cpp" />
-    <ClCompile Include="HealthBar.cpp" />
-    <ClCompile Include="HUD.cpp" />
-    <ClCompile Include="HudElement.cpp" />
-    <ClCompile Include="InputSystem.cpp" />
-    <ClCompile Include="KnightSprite.cpp" />
-    <ClCompile Include="LevelUpSystem.cpp" />
-    <ClCompile Include="Main.cpp" />
-    <ClCompile Include="Math.cpp" />
-    <ClCompile Include="Mesh.cpp" />
-    <ClCompile Include="MeshComponent.cpp" />
-    <ClCompile Include="MoveComponent.cpp" />
-    <ClCompile Include="PlaneActor.cpp" />
-    <ClCompile Include="PlayerCombatSystem.cpp" />
-    <ClCompile Include="PointLightComponent.cpp" />
-    <ClCompile Include="Renderer.cpp" />
-    <ClCompile Include="room.cpp" />
-    <ClCompile Include="Shader.cpp" />
-    <ClCompile Include="SkeletalMeshComponent.cpp" />
-    <ClCompile Include="Skeleton.cpp" />
-    <ClCompile Include="SkeletonSprite.cpp" />
-    <ClCompile Include="SpriteComponent.cpp" />
-    <ClCompile Include="StairActor.cpp" />
-    <ClCompile Include="TextBox.cpp" />
-    <ClCompile Include="Texture.cpp" />
-    <ClCompile Include="TopDownCamera.cpp" />
-    <ClCompile Include="VertexArray.cpp" />
-    <ClCompile Include="VictorySprite.cpp" />
+    <ClCompile Include="src\Actor.cpp" />
+    <ClCompile Include="src\Animation.cpp" />
+    <ClCompile Include="src\AStar.cpp" />
+    <ClCompile Include="src\AudioEngine.cpp" />
+    <ClCompile Include="src\BoneTransform.cpp" />
+    <ClCompile Include="src\BossSprite.cpp" />
+    <ClCompile Include="src\CameraComponent.cpp" />
+    <ClCompile Include="src\CameraTargetActor.cpp" />
+    <ClCompile Include="src\CircleComponent.cpp" />
+    <ClCompile Include="src\Component.cpp" />
+    <ClCompile Include="src\CubeActor.cpp" />
+    <ClCompile Include="src\EnemyActor.cpp" />
+    <ClCompile Include="src\EnemyCombatSystem.cpp" />
+    <ClCompile Include="src\EnemyMoveComponent.cpp" />
+    <ClCompile Include="src\Font.cpp" />
+    <ClCompile Include="src\Game.cpp" />
+    <ClCompile Include="src\GBuffer.cpp" />
+    <ClCompile Include="src\Generator.cpp" />
+    <ClCompile Include="src\GUI.cpp" />
+    <ClCompile Include="src\HealthBar.cpp" />
+    <ClCompile Include="src\HUD.cpp" />
+    <ClCompile Include="src\HudElement.cpp" />
+    <ClCompile Include="src\InputSystem.cpp" />
+    <ClCompile Include="src\KnightSprite.cpp" />
+    <ClCompile Include="src\LevelUpSystem.cpp" />
+    <ClCompile Include="src\Main.cpp" />
+    <ClCompile Include="src\MathT.cpp" />
+    <ClCompile Include="src\Mesh.cpp" />
+    <ClCompile Include="src\MeshComponent.cpp" />
+    <ClCompile Include="src\MoveComponent.cpp" />
+    <ClCompile Include="src\PlaneActor.cpp" />
+    <ClCompile Include="src\PlayerCombatSystem.cpp" />
+    <ClCompile Include="src\PointLightComponent.cpp" />
+    <ClCompile Include="src\Renderer.cpp" />
+    <ClCompile Include="src\room.cpp" />
+    <ClCompile Include="src\Shader.cpp" />
+    <ClCompile Include="src\SkeletalMeshComponent.cpp" />
+    <ClCompile Include="src\Skeleton.cpp" />
+    <ClCompile Include="src\SkeletonSprite.cpp" />
+    <ClCompile Include="src\SpriteComponent.cpp" />
+    <ClCompile Include="src\StairActor.cpp" />
+    <ClCompile Include="src\TextBox.cpp" />
+    <ClCompile Include="src\Texture.cpp" />
+    <ClCompile Include="src\TopDownCamera.cpp" />
+    <ClCompile Include="src\VertexArray.cpp" />
+    <ClCompile Include="src\VictorySprite.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Actor.h" />
-    <ClInclude Include="Animation.h" />
-    <ClInclude Include="AStar.h" />
-    <ClInclude Include="AudioEngine.h" />
-    <ClInclude Include="BoneTransform.h" />
-    <ClInclude Include="BossSprite.h" />
-    <ClInclude Include="CameraComponent.h" />
-    <ClInclude Include="CameraTargetActor.h" />
-    <ClInclude Include="CircleComponent.h" />
-    <ClInclude Include="Component.h" />
-    <ClInclude Include="CubeActor.h" />
-    <ClInclude Include="EnemyActor.h" />
-    <ClInclude Include="EnemyCombatSystem.h" />
-    <ClInclude Include="EnemyMoveComponent.h" />
-    <ClInclude Include="Font.h" />
-    <ClInclude Include="Game.h" />
-    <ClInclude Include="GBuffer.h" />
-    <ClInclude Include="Generator.h" />
-    <ClInclude Include="GUI.h" />
-    <ClInclude Include="HealthBar.h" />
-    <ClInclude Include="HUD.h" />
-    <ClInclude Include="HudElement.h" />
-    <ClInclude Include="InputSystem.h" />
-    <ClInclude Include="KnightSprite.h" />
-    <ClInclude Include="LevelUpSystem.h" />
-    <ClInclude Include="Math.h" />
-    <ClInclude Include="MatrixPalette.h" />
-    <ClInclude Include="Mesh.h" />
-    <ClInclude Include="MeshComponent.h" />
-    <ClInclude Include="MoveComponent.h" />
-    <ClInclude Include="PlaneActor.h" />
-    <ClInclude Include="PlayerCombatSystem.h" />
-    <ClInclude Include="PointLightComponent.h" />
-    <ClInclude Include="Renderer.h" />
-    <ClInclude Include="room.h" />
-    <ClInclude Include="Shader.h" />
-    <ClInclude Include="SkeletalMeshComponent.h" />
-    <ClInclude Include="Skeleton.h" />
-    <ClInclude Include="SkeletonSprite.h" />
-    <ClInclude Include="SpriteComponent.h" />
-    <ClInclude Include="StairActor.h" />
-    <ClInclude Include="TextBox.h" />
-    <ClInclude Include="Texture.h" />
-    <ClInclude Include="TopDownCamera.h" />
-    <ClInclude Include="VertexArray.h" />
-    <ClInclude Include="VictorySprite.h" />
+    <ClInclude Include="headers\Actor.h" />
+    <ClInclude Include="headers\Animation.h" />
+    <ClInclude Include="headers\AStar.h" />
+    <ClInclude Include="headers\AudioEngine.h" />
+    <ClInclude Include="headers\BoneTransform.h" />
+    <ClInclude Include="headers\BossSprite.h" />
+    <ClInclude Include="headers\CameraComponent.h" />
+    <ClInclude Include="headers\CameraTargetActor.h" />
+    <ClInclude Include="headers\CircleComponent.h" />
+    <ClInclude Include="headers\Component.h" />
+    <ClInclude Include="headers\CubeActor.h" />
+    <ClInclude Include="headers\EnemyActor.h" />
+    <ClInclude Include="headers\EnemyCombatSystem.h" />
+    <ClInclude Include="headers\EnemyMoveComponent.h" />
+    <ClInclude Include="headers\Font.h" />
+    <ClInclude Include="headers\Game.h" />
+    <ClInclude Include="headers\GBuffer.h" />
+    <ClInclude Include="headers\Generator.h" />
+    <ClInclude Include="headers\GUI.h" />
+    <ClInclude Include="headers\HealthBar.h" />
+    <ClInclude Include="headers\HUD.h" />
+    <ClInclude Include="headers\HudElement.h" />
+    <ClInclude Include="headers\InputSystem.h" />
+    <ClInclude Include="headers\KnightSprite.h" />
+    <ClInclude Include="headers\LevelUpSystem.h" />
+    <ClInclude Include="headers\MathT.h" />
+    <ClInclude Include="headers\MatrixPalette.h" />
+    <ClInclude Include="headers\Mesh.h" />
+    <ClInclude Include="headers\MeshComponent.h" />
+    <ClInclude Include="headers\MoveComponent.h" />
+    <ClInclude Include="headers\PlaneActor.h" />
+    <ClInclude Include="headers\PlayerCombatSystem.h" />
+    <ClInclude Include="headers\PointLightComponent.h" />
+    <ClInclude Include="headers\Renderer.h" />
+    <ClInclude Include="headers\room.h" />
+    <ClInclude Include="headers\Shader.h" />
+    <ClInclude Include="headers\SkeletalMeshComponent.h" />
+    <ClInclude Include="headers\Skeleton.h" />
+    <ClInclude Include="headers\SkeletonSprite.h" />
+    <ClInclude Include="headers\SpriteComponent.h" />
+    <ClInclude Include="headers\StairActor.h" />
+    <ClInclude Include="headers\TextBox.h" />
+    <ClInclude Include="headers\Texture.h" />
+    <ClInclude Include="headers\TopDownCamera.h" />
+    <ClInclude Include="headers\VertexArray.h" />
+    <ClInclude Include="headers\VictorySprite.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Shaders\BasicMesh.frag" />
@@ -127,7 +127,7 @@
     <ProjectGuid>{BC508D87-495F-4554-932D-DD68388B63CC}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>Game</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.18362.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -166,14 +166,14 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>$(SolutionDir)libraries\SDL2\include;$(SolutionDir)libraries\glew\include;$(SolutionDir)libraries\FMOD Studio API Windows\api\core\inc;$(SolutionDir)libraries\FMOD Studio API Windows\api\studio\inc;$(SolutionDir)libraries\freeglut\include;$(SolutionDir)libraries\rapidjson\include;$(SolutionDir)libraries\soil\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)libraries\SDL2\include;$(SolutionDir)libraries\glew\include;$(SolutionDir)libraries\FMOD Studio API Windows\api\core\inc;$(SolutionDir)libraries\FMOD Studio API Windows\api\studio\inc;$(SolutionDir)libraries\rapidjson\include;$(SolutionDir)libraries\soil\include;$(SolutionDir)headers;$(SolutionDir)src;$(SolutionDir)</AdditionalIncludeDirectories>
       <RuntimeTypeInfo>false</RuntimeTypeInfo>
       <ExceptionHandling>Sync</ExceptionHandling>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(SolutionDir)libraries\SDL2\lib\x86;$(SolutionDir)libraries\glew\lib\Release\Win32;$(SolutionDir)libraries\freeglut\lib;$(SolutionDir)libraries\FMOD Studio API Windows\api\studio\lib\x86;$(SolutionDir)libraries\FMOD Studio API Windows\api\core\lib\x86;$(SolutionDir)libraries\soil\libs\x86</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)libraries\SDL2\lib\x86;$(SolutionDir)libraries\glew\lib\Release\Win32;$(SolutionDir)libraries\FMOD Studio API Windows\api\studio\lib\x86;$(SolutionDir)libraries\FMOD Studio API Windows\api\core\lib\x86;$(SolutionDir)libraries\soil\libs\x86;$(SolutionDir)headers;$(SolutionDir)src;$(SolutionDir)</AdditionalLibraryDirectories>
       <AdditionalDependencies>opengl32.lib;SDL2.lib;SDL2main.lib;SDL2_ttf.lib;SDL2_mixer.lib;SDL2_image.lib;glew32.lib;SOIL.lib;fmodstudio_vc.lib;fmodstudioL_vc.lib;fmod_vc.lib;fmodL_vc.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalOptions>/NODEFAULTLIB:msvcrt.lib %(AdditionalOptions)</AdditionalOptions>
     </Link>
